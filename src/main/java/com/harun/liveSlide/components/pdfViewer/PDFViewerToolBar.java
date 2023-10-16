@@ -1,12 +1,13 @@
 package com.harun.liveSlide.components.pdfViewer;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+
+import java.util.Objects;
 
 public class PDFViewerToolBar extends ToolBar {
     private PDFViewer pdfViewer;
@@ -30,7 +31,6 @@ public class PDFViewerToolBar extends ToolBar {
 
     public void setupLayout(double prefHeight) {
         this.setPrefHeight(prefHeight);
-
         //PDF Title
         pdfTitle = new Label("pdf nameeeeee");
         this.getItems().add(pdfTitle);
@@ -44,9 +44,11 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(leftSpacer);
 
         //Back Button
-        backButton = new Button("Back");
+        backButton = new Button();
         backButton.setOnAction(pdfViewer.pdfViewerNavigationController::goBackPage);
         backButton.setDisable(true);
+        backButton.setGraphic(getButtonIcon("/img/back.png", prefHeight));
+        backButton.setTooltip(new Tooltip("Go previous page"));
         this.getItems().add(backButton);
 
         // Page Indicator
@@ -54,8 +56,10 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(pageIndicator);
 
         // Next Button
-        nextButton = new Button("Next");
+        nextButton = new Button();
         nextButton.setOnAction(pdfViewer.pdfViewerNavigationController::goNextPage);
+        nextButton.setGraphic(getButtonIcon("/img/next.png", prefHeight));
+        nextButton.setTooltip(new Tooltip("Go next page"));
         this.getItems().add(nextButton);
 
         //Divider 1
@@ -63,7 +67,9 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(divider1);
 
         //Zoom Out Button
-        zoomOutButton = new Button("Zoom Out");
+        zoomOutButton = new Button();
+        zoomOutButton.setGraphic(getButtonIcon("/img/zoom-out.png", prefHeight));
+        zoomOutButton.setTooltip(new Tooltip("Zoom Out"));
         this.getItems().add(zoomOutButton);
 
         //Zoom Rate Label
@@ -71,7 +77,9 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(zoomRateLabel);
 
         //Zoom In Button
-        zoomInButton = new Button("Zoom In");
+        zoomInButton = new Button();
+        zoomInButton.setGraphic(getButtonIcon("/img/zoom-in.png", prefHeight));
+        zoomInButton.setTooltip(new Tooltip("Zoom In"));
         this.getItems().add(zoomInButton);
 
         //Divider 2
@@ -79,7 +87,9 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(divider2);
 
         //Rotate Button
-        rotateButton = new Button("Rotate");
+        rotateButton = new Button();
+        rotateButton.setGraphic(getButtonIcon("/img/rotate.png", prefHeight));
+        rotateButton.setTooltip(new Tooltip("Rotate"));
         this.getItems().add(rotateButton);
 
         //Divider 3
@@ -87,11 +97,15 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(divider3);
 
         //Pointer Button
-        pointerButton = new Button("Pointer");
+        pointerButton = new Button();
+        pointerButton.setGraphic(getButtonIcon("/img/pointer.png", prefHeight));
+        pointerButton.setTooltip(new Tooltip("Pointer"));
         this.getItems().add(pointerButton);
 
         //Draw Button
-        drawButton = new Button("Draw");
+        drawButton = new Button();
+        drawButton.setGraphic(getButtonIcon("/img/pen.png", prefHeight));
+        drawButton.setTooltip(new Tooltip("Draw"));
         this.getItems().add(drawButton);
 
         //Right Spacer
@@ -103,11 +117,14 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(rightSpacer);
 
         //Fullscreen Button
-        fullscreenButton = new Button("Fullscreen");
+        fullscreenButton = new Button();
+        fullscreenButton.setGraphic(getButtonIcon("/img/fullscreen.png", prefHeight));
+        fullscreenButton.setTooltip(new Tooltip("Full Screen"));
         this.getItems().add(fullscreenButton);
 
         //Download Button
-        downloadButton = new Button("Download");
+        downloadButton = new Button();
+        downloadButton.setGraphic(getButtonIcon("/img/download.png", prefHeight));
         this.getItems().add(downloadButton);
     }
 
@@ -133,5 +150,11 @@ public class PDFViewerToolBar extends ToolBar {
         sb.append(" / ");
         sb.append(pageCount);
         this.setPageIndicatorText(sb.toString());
+    }
+    private ImageView getButtonIcon(String path , double prefHeight) {
+        ImageView iconImage = new ImageView(new Image(String.valueOf(getClass().getResource(path))));
+        iconImage.setFitWidth(prefHeight / 1.5);
+        iconImage.setFitHeight(prefHeight / 1.5);
+        return iconImage;
     }
 }

@@ -26,7 +26,6 @@ public class PDFViewerNavigationController {
     public void goNextPage(ActionEvent actionEvent) {
         pdfViewer.showPage(++pageIndex);
 
-        System.out.println(pageIndex);
         if (pageIndex == pageCount) {
             pdfViewer.toolBar.setDisableNextButton(true);
         }

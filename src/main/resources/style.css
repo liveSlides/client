@@ -31,10 +31,19 @@
 
 #pdf-viewer-toolbar {
     -fx-background-color: rgb(51,54,57);
+    -fx-spacing: 10px;
 }
 
 #pdf-viewer-toolbar .label {
     -fx-text-fill: white;
+}
+
+#pdf-viewer-toolbar .button {
+    -fx-background-color: rgb(83,86,89);
+}
+
+#pdf-viewer-toolbar .button:hover {
+    -fx-background-color: rgb(93,96,99);
 }
 
 #pdf-page {
