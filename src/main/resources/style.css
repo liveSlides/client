@@ -1,0 +1,42 @@
+#pdf-viewer .scroll-pane {
+    -fx-background: rgb(83,86,89);
+    -fx-background-color: rgb(83,86,89);
+}
+
+#pdf-viewer .scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+#pdf-viewer .increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+#pdf-viewer .scroll-bar:horizontal .track,
+#pdf-viewer .scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+#pdf-viewer .scroll-bar:horizontal .thumb,
+#pdf-viewer .scroll-bar:vertical .thumb {
+    -fx-background-color: rgb(51,54,57);
+    -fx-background-radius: 5em;
+}
+
+#pdf-viewer .scroll-pane > .corner {
+    -fx-background-color: rgb(83,86,89);
+}
+
+#pdf-viewer-toolbar {
+    -fx-background-color: rgb(51,54,57);
+}
+
+#pdf-viewer-toolbar .label {
+    -fx-text-fill: white;
+}
+
+#pdf-page {
+    -fx-background-color: rgb(83,86,89);
+}
