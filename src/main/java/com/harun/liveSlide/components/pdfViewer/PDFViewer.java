@@ -1,5 +1,6 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.model.MouseCoordinate;
 import com.harun.liveSlide.utils.BFImageConverter;
 import com.harun.liveSlide.utils.DPICalculator;
 import com.harun.liveSlide.utils.FileNameExtractor;
@@ -7,24 +8,32 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.rendering.ImageType;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class PDFViewer extends BorderPane {
-    public PDFViewerZoomController pdfViewerZoomController;
-    public PDFViewerNavigationController pdfViewerNavigationController;
+    private PDFViewerZoomController pdfViewerZoomController;
+    private PDFViewerScrollController pdfViewerScrollController;
+    private PDFViewerRotateController pdfViewerRotateController;
+    private PDFViewerDrawController pdfViewerDrawController;
+    private PDFViewerNavigationController pdfViewerNavigationController;
     public ScrollPane viewArea;
     public PDFViewerToolBar toolBar;
-    private Group[] pdfPages;
+    public ArrayList<Group> pdfPages;
 
 
     public PDFViewer(double prefWidth, double prefHeight) {
         this.setId("pdf-viewer");
         this.pdfViewerZoomController = new PDFViewerZoomController();
+        this.pdfViewerScrollController = new PDFViewerScrollController();
+        this.pdfViewerRotateController = new PDFViewerRotateController();
+        this.pdfViewerDrawController = new PDFViewerDrawController();
         this.pdfViewerNavigationController = new PDFViewerNavigationController(this,0);
         setupLayout(prefWidth,prefHeight);
     }
@@ -33,7 +42,7 @@ public class PDFViewer extends BorderPane {
         setPrefSize(prefWidth, prefHeight);
 
         // Tool Bar
-        toolBar = new PDFViewerToolBar(30,this);
+        toolBar = new PDFViewerToolBar(30,pdfViewerNavigationController);
         toolBar.setId("pdf-viewer-toolbar");
         this.setTop(toolBar);
 
@@ -42,10 +51,40 @@ public class PDFViewer extends BorderPane {
         viewArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         viewArea.setOnZoom((ZoomEvent event) -> {
             double zoomFactor = event.getZoomFactor();
-            pdfViewerZoomController.zoom(zoomFactor,viewArea);
+            pdfViewerZoomController.zoom(zoomFactor);
             event.consume();
         });
         this.setCenter(viewArea);
+
+        setViewAreaToControllers();
+    }
+
+    private void setViewAreaToControllers(){
+        pdfViewerZoomController.setViewArea(viewArea);
+        pdfViewerScrollController.setViewArea(viewArea);
+        pdfViewerRotateController.setViewArea(viewArea);
+        pdfViewerDrawController.setViewArea(viewArea);
+    }
+
+    public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
+
+        if (pdfPages != null) {
+            pdfPages.clear();
+        }
+        else {
+            pdfPages = new ArrayList<Group>();
+        }
+
+        for (int page = 0; page < bufferedImages.length; ++page) {
+            PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(viewArea.getViewportBounds().getWidth(),bufferedImages[page]),pdfViewerDrawController);
+            pdfPage.setMinWidth(viewArea.getViewportBounds().getWidth());
+            Group group = new Group(pdfPage);
+            pdfPages.add(group);
+        }
+
+        toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(fileName));
+        pdfViewerNavigationController.setPageCount(bufferedImages.length);
+        goPage(1);
     }
 
     public void loadPDF(String path) throws IOException {
@@ -55,28 +94,61 @@ public class PDFViewer extends BorderPane {
         int numberOfPages = document.getNumberOfPages();
         int dpi = DPICalculator.calculateDPI(numberOfPages);
 
-        pdfPages = new Group[numberOfPages];
+        if (pdfPages != null) {
+            pdfPages.clear();
+        }
+        else {
+            pdfPages = new ArrayList<Group>();
+        }
 
         for (int page = 0; page < numberOfPages; ++page) {
             BufferedImage bim = pdfRenderer.renderImageWithDPI(page, dpi, ImageType.RGB);
-            PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(viewArea.getViewportBounds().getWidth(),bim));
+            PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(viewArea.getViewportBounds().getWidth(),bim) ,pdfViewerDrawController);
             pdfPage.setMinWidth(viewArea.getViewportBounds().getWidth());
             Group group = new Group(pdfPage);
-            pdfPages[page] = group;
+            pdfPages.add(group);
         }
 
         toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(path));
         pdfViewerNavigationController.setPageCount(numberOfPages);
-        showPage(1);
+        goPage(1);
 
         document.close();
     }
 
-    public void showPage(int index) {
-        viewArea.setContent(pdfPages[index - 1]);
-        toolBar.updatePageIndicator(index , pdfPages.length);
+    public void goPage(int index) {
+        pdfViewerNavigationController.goPage(index);
     }
 
+    public void goBackPage() {
+        pdfViewerNavigationController.goBackPage();
+    }
 
+    public void goNextPage() {
+        pdfViewerNavigationController.goNextPage();
+    }
 
+    public void zoom(double zoomFactor) {
+        pdfViewerZoomController.zoom(zoomFactor);
+    }
+
+    public void scrollVerticallyTo(double vValue) {
+        pdfViewerScrollController.scrollVerticallyTo(vValue);
+    }
+
+    public void scrollHorizontallyTo(double hValue) {
+        pdfViewerScrollController.scrollHorizontallyTo(hValue);
+    }
+
+    public void rotate() {
+        pdfViewerRotateController.rotate();
+    }
+
+    public void draw(MouseCoordinate[] mouseCoordinates, Color color, double size) {
+        pdfViewerDrawController.draw(mouseCoordinates,color,size);
+    }
+
+    public void reloadGraphicsContext(){
+        pdfViewerDrawController.reloadGraphicsContext();
+    }
 }

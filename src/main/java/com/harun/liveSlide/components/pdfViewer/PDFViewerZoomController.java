@@ -4,11 +4,12 @@ import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 
 public class PDFViewerZoomController {
+    private ScrollPane viewArea;
     private double totalZoom = 1;
     final private double ZOOM_SPEED = 1.020;
     final private double NEGATIVE_ZOOM_SPEED = 2 - ZOOM_SPEED;
 
-    public void zoom(double zoomFactor , ScrollPane viewArea) {
+    public void zoom(double zoomFactor) {
         double zoomRate = getStaticZoomRate(zoomFactor);
 
         // If Zoom is in limited rate
@@ -37,6 +38,10 @@ public class PDFViewerZoomController {
 
     private boolean isZoomable (double totalZoom , double zoomRate) {
         return (totalZoom > 0.7 || zoomRate > 1) && ((totalZoom < 3) || zoomRate < 1);
+    }
+
+    public void setViewArea(ScrollPane viewArea) {
+        this.viewArea = viewArea;
     }
 
     /* For scrollable multi-view */

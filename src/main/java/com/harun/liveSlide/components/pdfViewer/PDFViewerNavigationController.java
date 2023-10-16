@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 
 public class PDFViewerNavigationController {
     private PDFViewer pdfViewer;
-    private int pageIndex = 1;
+    private int currentPageIndex = 1;
     private int pageCount;
 
     public PDFViewerNavigationController(PDFViewer pdfViewer , int pageCount){
@@ -12,29 +12,66 @@ public class PDFViewerNavigationController {
         this.pageCount = pageCount;
     }
 
-    public void goBackPage(ActionEvent actionEvent) {
-        pdfViewer.showPage(--pageIndex);
+    private void showPage() {
+        pdfViewer.viewArea.setContent(pdfViewer.pdfPages.get(currentPageIndex-1));
+        pdfViewer.toolBar.updatePageIndicator(currentPageIndex , pdfViewer.pdfPages.size());
+        pdfViewer.reloadGraphicsContext();
+    }
 
-        if (pageIndex == 1) {
-            pdfViewer.toolBar.setDisableBackButton(true);
+    public void goPage(int index) {
+        if (index < 1 || index > pageCount)
+            return;
+
+        currentPageIndex = index;
+        showPage();
+        manageNavigationButtons();
+    }
+
+    public void goBackPage() {
+        if (currentPageIndex == 1){
+            return;
         }
-        if (pageIndex != pageCount) {
-            pdfViewer.toolBar.setDisableNextButton(false);
+
+        currentPageIndex--;
+        showPage();
+        manageNavigationButtons();
+    }
+
+    public void goNextPage() {
+        if (currentPageIndex == pageCount){
+            return;
         }
+
+        currentPageIndex++;
+        showPage();
+        manageNavigationButtons();
+    }
+
+    public void goBackPage(ActionEvent actionEvent) {
+        goBackPage();
     }
 
     public void goNextPage(ActionEvent actionEvent) {
-        pdfViewer.showPage(++pageIndex);
+        goNextPage();
+    }
 
-        if (pageIndex == pageCount) {
-            pdfViewer.toolBar.setDisableNextButton(true);
+    private void manageNavigationButtons() {
+        pdfViewer.toolBar.setDisableBackButton(false);
+        pdfViewer.toolBar.setDisableNextButton(false);
+
+        if (currentPageIndex == 1) {
+            pdfViewer.toolBar.setDisableBackButton(true);
         }
-        if (pageIndex == 2) {
-            pdfViewer.toolBar.setDisableBackButton(false);
+        if (currentPageIndex == pageCount) {
+            pdfViewer.toolBar.setDisableNextButton(true);
         }
     }
 
     public void setPageCount(int pageCount) {
         this.pageCount = pageCount;
+    }
+
+    public int getPageCount() {
+        return pageCount;
     }
 }

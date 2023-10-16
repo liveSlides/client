@@ -12,10 +12,11 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class PDFPage extends StackPane {
+    public PDFViewerDrawController pdfViewerDrawController;
     public ImageView image;
     public Canvas canvas;
     private GraphicsContext gc;
-    private ArrayList<MouseCoordinate> drawingCoordinates;
+
 
 
     public PDFPage() {
@@ -23,11 +24,11 @@ public class PDFPage extends StackPane {
         this.canvas = null;
     }
 
-    public PDFPage(ImageView image) {
-        this.image = image;
-        if (image != null) {
-            drawingCoordinates = new ArrayList<>();
+    public PDFPage(ImageView image , PDFViewerDrawController pdfViewerDrawController) {
+        if (image != null && pdfViewerDrawController != null) {
+            this.image = image;
             this.canvas = new Canvas(image.getFitWidth(), image.getFitHeight());
+            this.pdfViewerDrawController = pdfViewerDrawController;
             setupLayout();
         }
     }
@@ -46,30 +47,8 @@ public class PDFPage extends StackPane {
         this.getChildren().add(image);
         this.getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, this::onMouseExited);
-    }
-
-    private void onMousePressed(MouseEvent event) {
-        // Start drawing when the mouse button is pressed
-        gc.beginPath();
-        gc.moveTo(event.getX(), event.getY());
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(2);
-        drawingCoordinates.add(new MouseCoordinate(event.getX(),event.getY()));
-    }
-
-    private void onMouseDragged(MouseEvent event) {
-        // Draw when the mouse is dragged
-        gc.lineTo(event.getX(), event.getY());
-        gc.stroke();
-        drawingCoordinates.add(new MouseCoordinate(event.getX(),event.getY()));
-    }
-
-    private void onMouseExited(MouseEvent event) {
-
-        System.out.println(drawingCoordinates);
-        drawingCoordinates.clear();
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, pdfViewerDrawController::onMousePressed);
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, pdfViewerDrawController::onMouseDragged);
+        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, pdfViewerDrawController::onMouseExited);
     }
 }

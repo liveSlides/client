@@ -16,9 +16,9 @@ public class LiveSlideApp extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
-        //      stage.setFullScreen(true);
+        //stage.setFullScreen(true);
 
-        main.pdfViewer.loadPDF("/Users/harun/Desktop/Git.pdf");
+        main.pdfViewer.loadPDF("/Users/harun/Desktop/Adres.pdf");
     }
 
     public static void main(String[] args) {

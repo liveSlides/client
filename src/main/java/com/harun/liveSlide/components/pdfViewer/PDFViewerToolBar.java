@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import java.util.Objects;
 
 public class PDFViewerToolBar extends ToolBar {
-    private PDFViewer pdfViewer;
+    private PDFViewerNavigationController pdfViewerNavigationController;
     private Label pdfTitle;
     private Label pageIndicator;
     private Button backButton;
@@ -24,8 +24,8 @@ public class PDFViewerToolBar extends ToolBar {
     private Button fullscreenButton;
     private Button downloadButton;
 
-    public PDFViewerToolBar(double prefHeight , PDFViewer pdfViewer) {
-        this.pdfViewer = pdfViewer;
+    public PDFViewerToolBar(double prefHeight , PDFViewerNavigationController pdfViewerNavigationController) {
+        this.pdfViewerNavigationController = pdfViewerNavigationController;
         setupLayout(prefHeight);
     }
 
@@ -45,7 +45,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Back Button
         backButton = new Button();
-        backButton.setOnAction(pdfViewer.pdfViewerNavigationController::goBackPage);
+        backButton.setOnAction(pdfViewerNavigationController::goBackPage);
         backButton.setDisable(true);
         backButton.setGraphic(getButtonIcon("/img/back.png", prefHeight));
         backButton.setTooltip(new Tooltip("Go previous page"));
@@ -57,7 +57,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         // Next Button
         nextButton = new Button();
-        nextButton.setOnAction(pdfViewer.pdfViewerNavigationController::goNextPage);
+        nextButton.setOnAction(pdfViewerNavigationController::goNextPage);
         nextButton.setGraphic(getButtonIcon("/img/next.png", prefHeight));
         nextButton.setTooltip(new Tooltip("Go next page"));
         this.getItems().add(nextButton);
