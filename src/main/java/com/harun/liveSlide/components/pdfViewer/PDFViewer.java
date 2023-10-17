@@ -23,6 +23,7 @@ public class PDFViewer extends BorderPane {
     private PDFViewerRotateController pdfViewerRotateController;
     private PDFViewerDrawController pdfViewerDrawController;
     private PDFViewerNavigationController pdfViewerNavigationController;
+    private PDFViewerFileController pdfViewerFileController;
     public ScrollPane viewArea;
     public PDFViewerToolBar toolBar;
     public ArrayList<Group> pdfPages;
@@ -35,6 +36,7 @@ public class PDFViewer extends BorderPane {
         this.pdfViewerRotateController = new PDFViewerRotateController();
         this.pdfViewerDrawController = new PDFViewerDrawController();
         this.pdfViewerNavigationController = new PDFViewerNavigationController(this,0);
+        this.pdfViewerFileController = new PDFViewerFileController(this);
         setupLayout(prefWidth,prefHeight);
     }
 
@@ -42,7 +44,7 @@ public class PDFViewer extends BorderPane {
         setPrefSize(prefWidth, prefHeight);
 
         // Tool Bar
-        toolBar = new PDFViewerToolBar(30,pdfViewerNavigationController);
+        toolBar = new PDFViewerToolBar(30,pdfViewerNavigationController,pdfViewerFileController);
         toolBar.setId("pdf-viewer-toolbar");
         this.setTop(toolBar);
 
@@ -64,56 +66,6 @@ public class PDFViewer extends BorderPane {
         pdfViewerScrollController.setViewArea(viewArea);
         pdfViewerRotateController.setViewArea(viewArea);
         pdfViewerDrawController.setViewArea(viewArea);
-    }
-
-    public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
-
-        if (pdfPages != null) {
-            pdfPages.clear();
-        }
-        else {
-            pdfPages = new ArrayList<Group>();
-        }
-
-        for (int page = 0; page < bufferedImages.length; ++page) {
-            PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(viewArea.getViewportBounds().getWidth(),bufferedImages[page]),pdfViewerDrawController);
-            pdfPage.setMinWidth(viewArea.getViewportBounds().getWidth());
-            Group group = new Group(pdfPage);
-            pdfPages.add(group);
-        }
-
-        toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(fileName));
-        pdfViewerNavigationController.setPageCount(bufferedImages.length);
-        goPage(1);
-    }
-
-    public void loadPDF(String path) throws IOException {
-        PDDocument document = PDDocument.load(new File(path));
-        PDFRenderer pdfRenderer = new PDFRenderer(document);
-
-        int numberOfPages = document.getNumberOfPages();
-        int dpi = DPICalculator.calculateDPI(numberOfPages);
-
-        if (pdfPages != null) {
-            pdfPages.clear();
-        }
-        else {
-            pdfPages = new ArrayList<Group>();
-        }
-
-        for (int page = 0; page < numberOfPages; ++page) {
-            BufferedImage bim = pdfRenderer.renderImageWithDPI(page, dpi, ImageType.RGB);
-            PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(viewArea.getViewportBounds().getWidth(),bim) ,pdfViewerDrawController);
-            pdfPage.setMinWidth(viewArea.getViewportBounds().getWidth());
-            Group group = new Group(pdfPage);
-            pdfPages.add(group);
-        }
-
-        toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(path));
-        pdfViewerNavigationController.setPageCount(numberOfPages);
-        goPage(1);
-
-        document.close();
     }
 
     public void goPage(int index) {
@@ -148,7 +100,23 @@ public class PDFViewer extends BorderPane {
         pdfViewerDrawController.draw(mouseCoordinates,color,size);
     }
 
+    public void loadPDF(String path) throws IOException {
+        pdfViewerFileController.loadPDF(path);
+    }
+
+    public void loadPDF(BufferedImage[] bufferedImages , String fileName) throws IOException {
+        pdfViewerFileController.loadPDF(bufferedImages , fileName);
+    }
+
     public void reloadGraphicsContext(){
         pdfViewerDrawController.reloadGraphicsContext();
+    }
+
+    public PDFViewerDrawController getPdfViewerDrawController() {
+        return pdfViewerDrawController;
+    }
+
+    public PDFViewerNavigationController getPdfViewerNavigationController() {
+        return pdfViewerNavigationController;
     }
 }

@@ -11,6 +11,7 @@ import java.util.Objects;
 
 public class PDFViewerToolBar extends ToolBar {
     private PDFViewerNavigationController pdfViewerNavigationController;
+    private PDFViewerFileController pdfViewerFileController;
     private Label pdfTitle;
     private Button changePdfButton;
     private Label pageIndicator;
@@ -25,20 +26,24 @@ public class PDFViewerToolBar extends ToolBar {
     private Button fullscreenButton;
     private Button downloadButton;
 
-    public PDFViewerToolBar(double prefHeight , PDFViewerNavigationController pdfViewerNavigationController) {
+    public PDFViewerToolBar(double prefHeight , PDFViewerNavigationController pdfViewerNavigationController , PDFViewerFileController pdfViewerFileController) {
         this.pdfViewerNavigationController = pdfViewerNavigationController;
+        this.pdfViewerFileController = pdfViewerFileController;
         setupLayout(prefHeight);
     }
 
     public void setupLayout(double prefHeight) {
         this.setPrefHeight(prefHeight);
+        this.setPadding(new Insets(7,10,7,10));
+
         //PDF Title
-        pdfTitle = new Label("");
+        pdfTitle = new Label("Select a File");
         this.getItems().add(pdfTitle);
 
         //PDF Change Button
         changePdfButton = new Button();
         changePdfButton.setGraphic(getButtonIcon("/img/changePDF.png", prefHeight));
+        changePdfButton.setOnAction(pdfViewerFileController::openFileSelection);
         this.getItems().add(changePdfButton);
 
         //Left Spacer

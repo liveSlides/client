@@ -28,7 +28,7 @@ public class PDFViewerNavigationController {
     }
 
     public void goBackPage() {
-        if (currentPageIndex == 1){
+        if (currentPageIndex == 1 || pageCount == 0){
             return;
         }
 
@@ -38,7 +38,7 @@ public class PDFViewerNavigationController {
     }
 
     public void goNextPage() {
-        if (currentPageIndex == pageCount){
+        if (currentPageIndex == pageCount || pageCount == 0){
             return;
         }
 
