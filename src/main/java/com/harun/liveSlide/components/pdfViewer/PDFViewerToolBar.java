@@ -12,6 +12,7 @@ import java.util.Objects;
 public class PDFViewerToolBar extends ToolBar {
     private PDFViewerNavigationController pdfViewerNavigationController;
     private Label pdfTitle;
+    private Button changePdfButton;
     private Label pageIndicator;
     private Button backButton;
     private Button nextButton;
@@ -34,6 +35,11 @@ public class PDFViewerToolBar extends ToolBar {
         //PDF Title
         pdfTitle = new Label("");
         this.getItems().add(pdfTitle);
+
+        //PDF Change Button
+        changePdfButton = new Button();
+        changePdfButton.setGraphic(getButtonIcon("/img/changePDF.png", prefHeight));
+        this.getItems().add(changePdfButton);
 
         //Left Spacer
         Pane leftSpacer = new Pane();
