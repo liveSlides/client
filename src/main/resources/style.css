@@ -36,6 +36,7 @@
 
 #pdf-viewer-toolbar .label {
     -fx-text-fill: white;
+    -fx-font-size : 10pt;
 }
 
 #pdf-viewer-toolbar .button {

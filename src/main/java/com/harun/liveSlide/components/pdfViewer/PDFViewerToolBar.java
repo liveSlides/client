@@ -32,7 +32,7 @@ public class PDFViewerToolBar extends ToolBar {
     public void setupLayout(double prefHeight) {
         this.setPrefHeight(prefHeight);
         //PDF Title
-        pdfTitle = new Label("pdf nameeeeee");
+        pdfTitle = new Label("");
         this.getItems().add(pdfTitle);
 
         //Left Spacer
