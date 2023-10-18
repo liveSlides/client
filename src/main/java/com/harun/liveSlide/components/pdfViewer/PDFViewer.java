@@ -57,6 +57,16 @@ public class PDFViewer extends BorderPane {
             event.consume();
         });
         this.setCenter(viewArea);
+        this.widthProperty().addListener((observable, oldValue, newValue) -> {
+            double viewportWidth = viewArea.getViewportBounds().getWidth();
+            double viewportHeight = viewArea.getViewportBounds().getHeight();
+
+            for (Group group : pdfPages) {
+                PDFPage pdfPage = (PDFPage) group.getChildren().get(0);
+                pdfPage.setMinWidth(viewportWidth);
+                pdfPage.setMinHeight(viewportHeight);
+            }
+        });
 
         setViewAreaToControllers();
     }

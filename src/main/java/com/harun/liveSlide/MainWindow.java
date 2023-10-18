@@ -13,10 +13,9 @@ public class MainWindow extends Pane {
     private Pane rightSide;
     public PDFViewer pdfViewer;
 
-    public MainWindow() throws IOException {
+    public MainWindow(double sceneWidth , double sceneHeight) throws IOException {
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
-        
         topSide = new Pane();
         topSide.setPrefHeight(80);
         mainGrid.setTop(topSide);
@@ -29,8 +28,17 @@ public class MainWindow extends Pane {
         rightSide.setPrefWidth(0);
         mainGrid.setRight(rightSide);
 
-        pdfViewer = new PDFViewer(1680,920);
+        pdfViewer = new PDFViewer(sceneWidth,sceneHeight * 0.92);
         mainGrid.setCenter(pdfViewer);
+    }
 
+    public void setResponsiveWidth(double width) {
+        double pdfViewerWidth = width;
+        pdfViewer.setPrefWidth(pdfViewerWidth);
+    }
+
+    public void setResponsiveHeight(double height) {
+        double pdfViewerHeight = height * 0.92;
+        pdfViewer.setPrefHeight(pdfViewerHeight);
     }
 }

@@ -10,15 +10,25 @@ public class LiveSlideApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        MainWindow main = new MainWindow();
-        Scene scene = new Scene(main, 1920, 1080);
+        double sceneWidth = 1680;
+        double sceneHeight = 1000;
+        MainWindow main = new MainWindow(sceneWidth,sceneHeight);
+        Scene scene = new Scene(main, sceneWidth, sceneHeight);
         scene.getStylesheets().add("style.css");
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
-        //stage.setFullScreen(true);
 
+        scene.widthProperty().addListener((observable, oldValue, newValue) -> {
+            main.setResponsiveWidth(newValue.doubleValue());
+        });
+
+        scene.heightProperty().addListener((observable, oldValue, newValue) -> {
+            main.setResponsiveHeight(newValue.doubleValue());
+        });
     }
+
+
 
     public static void main(String[] args) {
         launch();
