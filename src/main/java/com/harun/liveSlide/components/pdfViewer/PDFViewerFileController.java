@@ -5,6 +5,8 @@ import com.harun.liveSlide.utils.DPICalculator;
 import com.harun.liveSlide.utils.FileNameExtractor;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 
 public class PDFViewerFileController {
     PDFViewer pdfViewer;
+    private PDDocument openDocument = null;
+    private Canvas[] canvases;
 
     public PDFViewerFileController(PDFViewer pdfViewer) {
         this.pdfViewer = pdfViewer;
@@ -33,10 +37,10 @@ public class PDFViewerFileController {
         }
 
         for (int page = 0; page < bufferedImages.length; ++page) {
-            PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bufferedImages[page]),pdfViewer.getPdfViewerDrawController());
-            pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
-            Group group = new Group(pdfPage);
-            pdfViewer.pdfPages.add(group);
+            //PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bufferedImages[page]),pdfViewer.getPdfViewerDrawController());
+            //pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
+            //Group group = new Group(pdfPage);
+            //pdfViewer.pdfPages.add(group);
         }
 
         pdfViewer.toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(fileName));
@@ -44,47 +48,46 @@ public class PDFViewerFileController {
         pdfViewer.goPage(1);
     }
 
-    public void loadPDF(String path , int currentIndex) throws IOException {
-        PDDocument document = PDDocument.load(new File(path));
-        PDFRenderer pdfRenderer = new PDFRenderer(document);
+    public void loadPDF(String path, int currentIndex) {
+        try {
 
-        int numberOfPages = document.getNumberOfPages();
-        int dpi = DPICalculator.calculateDPI(numberOfPages);
+            int numberOfPages = 0;
+            int range = 20;
 
-        if (pdfViewer.pdfPages != null) {
-            pdfViewer.pdfPages.clear();
+            if (openDocument == null || !openDocument.getCurrentAccessPermission().canModify()) {
+                openDocument = PDDocument.load(new File(path));
+                numberOfPages = openDocument.getNumberOfPages();
+                canvases = new Canvas[numberOfPages];
+                for (int i = 0; i < numberOfPages; i++) {
+                    canvases[i] = new Canvas();
+                }
+            }
+            numberOfPages = openDocument.getNumberOfPages();
+            PDFRenderer pdfRenderer = new PDFRenderer(openDocument);
+
+            clearPdfPages();
+
+            int startIndex = Math.max(1, currentIndex - range);
+            int endIndex = Math.min(numberOfPages, currentIndex + range);
+
+            loadPDF(pdfRenderer, numberOfPages, startIndex, endIndex);
+
+            pdfViewer.toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(path));
+            pdfViewer.getPdfViewerNavigationController().setPageCount(numberOfPages);
+            pdfViewer.getPdfViewerNavigationController().setPageStartIndex(startIndex);
+            pdfViewer.getPdfViewerNavigationController().setPageEndIndex(endIndex);
+            pdfViewer.goPage(currentIndex);
+            pdfViewer.currentFilePath = path;
+        } catch (IOException e) {
+            System.out.println("ERROR: File can not be opened!");
         }
-        else {
-            pdfViewer.pdfPages = new ArrayList<Group>();
-        }
-
-        int startIndex = 1;
-        if (currentIndex - 10 >= 1) {
-            startIndex = currentIndex - 10;
-        }
-
-        int endIndex = numberOfPages;
-        if (currentIndex + 10 < numberOfPages ){
-            endIndex = currentIndex + 10;
-        }
-
-        loadPDF(pdfRenderer,numberOfPages,dpi,startIndex,endIndex);
-
-        pdfViewer.toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(path));
-        pdfViewer.getPdfViewerNavigationController().setPageCount(numberOfPages);
-        pdfViewer.getPdfViewerNavigationController().setPageStartIndex(startIndex);
-        pdfViewer.getPdfViewerNavigationController().setPageEndIndex(endIndex);
-        pdfViewer.goPage(currentIndex);
-        pdfViewer.currentFilePath = path;
-
-        document.close();
     }
 
-    private void loadPDF(PDFRenderer pdfRenderer , int numberOfPages , int dpi , int startIndex , int endIndex) throws IOException {
+    private void loadPDF(PDFRenderer pdfRenderer , int numberOfPages , int startIndex , int endIndex) throws IOException {
         for (int page = 0; page < numberOfPages; ++page) {
             if (page + 1 >= startIndex && page + 1 <= endIndex){
-                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, dpi, ImageType.RGB);
-                PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) , pdfViewer.getPdfViewerDrawController());
+                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 200, ImageType.RGB);
+                PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController());
                 pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
                 Group group = new Group(pdfPage);
                 pdfViewer.pdfPages.add(group);
@@ -99,11 +102,21 @@ public class PDFViewerFileController {
                 new FileChooser.ExtensionFilter("PDF", "*.pdf")
         );
         File file = fileChooser.showOpenDialog(new Stage());
-        try{
-            loadPDF(file.getAbsolutePath() , 1);
+        if (openDocument != null){
+            try {
+                openDocument.close();
+            }catch (Exception e){
+                System.out.println("Dosya kapatılamadı!");
+            }
         }
-        catch (IOException e) {
-            System.out.println("ERROR : File can not be opened!");
+        loadPDF(file.getAbsolutePath() , 1);
+    }
+
+    private void clearPdfPages() {
+        if (pdfViewer.pdfPages != null) {
+            pdfViewer.pdfPages.clear();
+        } else {
+            pdfViewer.pdfPages = new ArrayList<>();
         }
     }
 }

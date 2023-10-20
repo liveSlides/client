@@ -1,34 +1,26 @@
 package com.harun.liveSlide.components.pdfViewer;
 
 import com.harun.liveSlide.model.MouseCoordinate;
-import com.harun.liveSlide.utils.BFImageConverter;
-import com.harun.liveSlide.utils.DPICalculator;
-import com.harun.liveSlide.utils.FileNameExtractor;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.rendering.ImageType;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class PDFViewer extends BorderPane {
-    private PDFViewerZoomController pdfViewerZoomController;
-    private PDFViewerScrollController pdfViewerScrollController;
-    private PDFViewerRotateController pdfViewerRotateController;
-    private PDFViewerDrawController pdfViewerDrawController;
-    private PDFViewerNavigationController pdfViewerNavigationController;
-    private PDFViewerFileController pdfViewerFileController;
+    private final PDFViewerZoomController pdfViewerZoomController;
+    private final PDFViewerScrollController pdfViewerScrollController;
+    private final PDFViewerRotateController pdfViewerRotateController;
+    private final PDFViewerDrawController pdfViewerDrawController;
+    private final PDFViewerNavigationController pdfViewerNavigationController;
+    private final PDFViewerFileController pdfViewerFileController;
     public ScrollPane viewArea;
     public PDFViewerToolBar toolBar;
     public ArrayList<Group> pdfPages;
     public String currentFilePath;
-
 
     public PDFViewer(double prefWidth, double prefHeight) {
         this.setId("pdf-viewer");
@@ -57,16 +49,19 @@ public class PDFViewer extends BorderPane {
             pdfViewerZoomController.zoom(zoomFactor);
             event.consume();
         });
+
         this.setCenter(viewArea);
         this.widthProperty().addListener((observable, oldValue, newValue) -> {
             //TODO control if content is null
             double viewportWidth = viewArea.getViewportBounds().getWidth();
             double viewportHeight = viewArea.getViewportBounds().getHeight();
 
-            for (Group group : pdfPages) {
-                PDFPage pdfPage = (PDFPage) group.getChildren().get(0);
-                pdfPage.setMinWidth(viewportWidth);
-                pdfPage.setMinHeight(viewportHeight);
+            if (pdfPages != null) {
+                for (Group group : pdfPages) {
+                    PDFPage pdfPage = (PDFPage) group.getChildren().get(0);
+                    pdfPage.setMinWidth(viewportWidth);
+                    pdfPage.setMinHeight(viewportHeight);
+                }
             }
         });
 

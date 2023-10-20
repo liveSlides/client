@@ -16,18 +16,18 @@ public class PDFPage extends StackPane {
     public ImageView image;
     public Canvas canvas;
     private GraphicsContext gc;
-
-
-
+    
     public PDFPage() {
         this.image = null;
         this.canvas = null;
     }
 
-    public PDFPage(ImageView image , PDFViewerDrawController pdfViewerDrawController) {
+    public PDFPage(ImageView image , Canvas canvas , PDFViewerDrawController pdfViewerDrawController) {
         if (image != null && pdfViewerDrawController != null) {
             this.image = image;
-            this.canvas = new Canvas(image.getFitWidth(), image.getFitHeight());
+            this.canvas = canvas;
+            canvas.setWidth(image.getFitWidth());
+            canvas.setHeight(image.getFitHeight());
             this.pdfViewerDrawController = pdfViewerDrawController;
             setupLayout();
         }

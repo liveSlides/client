@@ -38,7 +38,6 @@ public class PDFViewerDrawController {
     }
 
     private void onMouseExited() {
-        System.out.println(drawingCoordinates);
         drawingCoordinates.clear();
     }
 
