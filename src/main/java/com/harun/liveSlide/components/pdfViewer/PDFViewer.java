@@ -27,6 +27,7 @@ public class PDFViewer extends BorderPane {
     public ScrollPane viewArea;
     public PDFViewerToolBar toolBar;
     public ArrayList<Group> pdfPages;
+    public String currentFilePath;
 
 
     public PDFViewer(double prefWidth, double prefHeight) {
@@ -58,6 +59,7 @@ public class PDFViewer extends BorderPane {
         });
         this.setCenter(viewArea);
         this.widthProperty().addListener((observable, oldValue, newValue) -> {
+            //TODO control if content is null
             double viewportWidth = viewArea.getViewportBounds().getWidth();
             double viewportHeight = viewArea.getViewportBounds().getHeight();
 
@@ -111,7 +113,11 @@ public class PDFViewer extends BorderPane {
     }
 
     public void loadPDF(String path) throws IOException {
-        pdfViewerFileController.loadPDF(path);
+        loadPDF(path,1);
+    }
+
+    public void loadPDF(String path , int currentIndex) throws IOException {
+        pdfViewerFileController.loadPDF(path , currentIndex);
     }
 
     public void loadPDF(BufferedImage[] bufferedImages , String fileName) throws IOException {

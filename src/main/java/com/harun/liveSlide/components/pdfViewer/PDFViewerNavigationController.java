@@ -2,9 +2,13 @@ package com.harun.liveSlide.components.pdfViewer;
 
 import javafx.event.ActionEvent;
 
+import java.io.IOException;
+
 public class PDFViewerNavigationController {
     private PDFViewer pdfViewer;
     private int currentPageIndex = 1;
+    private int pageStartIndex = 1;
+    private int pageEndIndex = 10;
     private int pageCount;
 
     public PDFViewerNavigationController(PDFViewer pdfViewer , int pageCount){
@@ -13,8 +17,21 @@ public class PDFViewerNavigationController {
     }
 
     private void showPage() {
-        pdfViewer.viewArea.setContent(pdfViewer.pdfPages.get(currentPageIndex-1));
-        pdfViewer.toolBar.updatePageIndicator(currentPageIndex , pdfViewer.pdfPages.size());
+        if (currentPageIndex > pageEndIndex || currentPageIndex < pageStartIndex) {
+            try {
+                pdfViewer.loadPDF(pdfViewer.currentFilePath,currentPageIndex);
+                System.out.println("Girdi");
+                System.out.println("currentPageIndex : " + currentPageIndex);
+                System.out.println("pageStartIndex : " + pageStartIndex);
+                System.out.println("pageEndIndex : " + pageEndIndex);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else{
+            pdfViewer.viewArea.setContent(pdfViewer.pdfPages.get(currentPageIndex - pageStartIndex));
+        }
+        pdfViewer.toolBar.updatePageIndicator(currentPageIndex , pageCount);
         pdfViewer.reloadGraphicsContext();
     }
 
@@ -43,6 +60,7 @@ public class PDFViewerNavigationController {
         }
 
         currentPageIndex++;
+
         showPage();
         manageNavigationButtons();
     }
@@ -73,5 +91,21 @@ public class PDFViewerNavigationController {
 
     public int getPageCount() {
         return pageCount;
+    }
+
+    public int getPageStartIndex() {
+        return pageStartIndex;
+    }
+
+    public void setPageStartIndex(int pageStartIndex) {
+        this.pageStartIndex = pageStartIndex;
+    }
+
+    public int getPageEndIndex() {
+        return pageEndIndex;
+    }
+
+    public void setPageEndIndex(int pageEndIndex) {
+        this.pageEndIndex = pageEndIndex;
     }
 }
