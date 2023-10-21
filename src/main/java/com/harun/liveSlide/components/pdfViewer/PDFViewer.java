@@ -49,10 +49,21 @@ public class PDFViewer extends BorderPane {
             pdfViewerZoomController.zoom(zoomFactor);
             event.consume();
         });
+        viewArea.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case LEFT:
+                    goBackPage();
+                    break;
+                case RIGHT:
+                    goNextPage();
+                    break;
+                default:
+                    break;
+            }
+        });
 
         this.setCenter(viewArea);
         this.widthProperty().addListener((observable, oldValue, newValue) -> {
-            //TODO control if content is null
             double viewportWidth = viewArea.getViewportBounds().getWidth();
             double viewportHeight = viewArea.getViewportBounds().getHeight();
 
