@@ -24,7 +24,7 @@ public class PDFViewer extends BorderPane {
 
     public PDFViewer(double prefWidth, double prefHeight) {
         this.setId("pdf-viewer");
-        this.pdfViewerZoomController = new PDFViewerZoomController();
+        this.pdfViewerZoomController = new PDFViewerZoomController(this);
         this.pdfViewerScrollController = new PDFViewerScrollController();
         this.pdfViewerRotateController = new PDFViewerRotateController();
         this.pdfViewerDrawController = new PDFViewerDrawController();
@@ -37,7 +37,7 @@ public class PDFViewer extends BorderPane {
         setPrefSize(prefWidth, prefHeight);
 
         // Tool Bar
-        toolBar = new PDFViewerToolBar(30,pdfViewerNavigationController,pdfViewerFileController);
+        toolBar = new PDFViewerToolBar(30,this);
         toolBar.setId("pdf-viewer-toolbar");
         this.setTop(toolBar);
 
@@ -130,6 +130,10 @@ public class PDFViewer extends BorderPane {
         pdfViewerFileController.loadPDF(bufferedImages , fileName);
     }
 
+    public void updateZoomRateLabelText(int zoomRate) {
+        toolBar.updateZoomRateLabelText(zoomRate);
+    }
+
     public void reloadGraphicsContext(){
         pdfViewerDrawController.reloadGraphicsContext();
     }
@@ -140,5 +144,13 @@ public class PDFViewer extends BorderPane {
 
     public PDFViewerNavigationController getPdfViewerNavigationController() {
         return pdfViewerNavigationController;
+    }
+
+    public PDFViewerFileController getPdfViewerFileController() {
+        return pdfViewerFileController;
+    }
+
+    public PDFViewerZoomController getPdfViewerZoomController() {
+        return pdfViewerZoomController;
     }
 }

@@ -27,7 +27,7 @@ public class PDFViewerNavigationController {
         else{
             pdfViewer.viewArea.setContent(pdfViewer.pdfPages.get(currentPageIndex - pageStartIndex));
         }
-        pdfViewer.toolBar.updatePageIndicator(currentPageIndex , pageCount);
+        pdfViewer.toolBar.updatePageIndicatorLabelText(currentPageIndex , pageCount);
         pdfViewer.reloadGraphicsContext();
     }
 

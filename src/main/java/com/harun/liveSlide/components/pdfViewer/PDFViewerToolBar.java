@@ -10,8 +10,7 @@ import javafx.scene.paint.Color;
 import java.util.Objects;
 
 public class PDFViewerToolBar extends ToolBar {
-    private PDFViewerNavigationController pdfViewerNavigationController;
-    private PDFViewerFileController pdfViewerFileController;
+    private PDFViewer pdfViewer;
     private Label pdfTitle;
     private Button changePdfButton;
     private Label pageIndicator;
@@ -23,12 +22,12 @@ public class PDFViewerToolBar extends ToolBar {
     private Button rotateButton;
     private Button pointerButton;
     private Button drawButton;
+    private Button eraserButton;
     private Button fullscreenButton;
     private Button downloadButton;
 
-    public PDFViewerToolBar(double prefHeight , PDFViewerNavigationController pdfViewerNavigationController , PDFViewerFileController pdfViewerFileController) {
-        this.pdfViewerNavigationController = pdfViewerNavigationController;
-        this.pdfViewerFileController = pdfViewerFileController;
+    public PDFViewerToolBar(double prefHeight , PDFViewer pdfViewer) {
+        this.pdfViewer = pdfViewer;
         setupLayout(prefHeight);
     }
 
@@ -43,7 +42,7 @@ public class PDFViewerToolBar extends ToolBar {
         //PDF Change Button
         changePdfButton = new Button();
         changePdfButton.setGraphic(getButtonIcon("/img/changePDF.png", prefHeight));
-        changePdfButton.setOnAction(pdfViewerFileController::openFileSelection);
+        changePdfButton.setOnAction(pdfViewer.getPdfViewerFileController()::openFileSelection);
         this.getItems().add(changePdfButton);
 
         //Left Spacer
@@ -56,7 +55,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Back Button
         backButton = new Button();
-        backButton.setOnAction(pdfViewerNavigationController::goBackPage);
+        backButton.setOnAction(pdfViewer.getPdfViewerNavigationController()::goBackPage);
         backButton.setDisable(true);
         backButton.setGraphic(getButtonIcon("/img/back.png", prefHeight));
         backButton.setTooltip(new Tooltip("Go previous page"));
@@ -68,7 +67,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         // Next Button
         nextButton = new Button();
-        nextButton.setOnAction(pdfViewerNavigationController::goNextPage);
+        nextButton.setOnAction(pdfViewer.getPdfViewerNavigationController()::goNextPage);
         nextButton.setGraphic(getButtonIcon("/img/next.png", prefHeight));
         nextButton.setTooltip(new Tooltip("Go next page"));
         this.getItems().add(nextButton);
@@ -79,6 +78,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Zoom Out Button
         zoomOutButton = new Button();
+        zoomOutButton.setOnAction(pdfViewer.getPdfViewerZoomController()::zoomOut);
         zoomOutButton.setGraphic(getButtonIcon("/img/zoom-out.png", prefHeight));
         zoomOutButton.setTooltip(new Tooltip("Zoom Out"));
         this.getItems().add(zoomOutButton);
@@ -89,6 +89,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Zoom In Button
         zoomInButton = new Button();
+        zoomInButton.setOnAction(pdfViewer.getPdfViewerZoomController()::zoomIn);
         zoomInButton.setGraphic(getButtonIcon("/img/zoom-in.png", prefHeight));
         zoomInButton.setTooltip(new Tooltip("Zoom In"));
         this.getItems().add(zoomInButton);
@@ -118,6 +119,12 @@ public class PDFViewerToolBar extends ToolBar {
         drawButton.setGraphic(getButtonIcon("/img/pen.png", prefHeight));
         drawButton.setTooltip(new Tooltip("Draw"));
         this.getItems().add(drawButton);
+
+        //Eraser Button
+        eraserButton = new Button();
+        eraserButton.setGraphic(getButtonIcon("/img/eraser.png", prefHeight));
+        eraserButton.setTooltip(new Tooltip("Erase"));
+        this.getItems().add(eraserButton);
 
         //Right Spacer
         Pane rightSpacer = new Pane();
@@ -155,12 +162,16 @@ public class PDFViewerToolBar extends ToolBar {
         this.nextButton.setDisable(status);
     }
 
-    public void updatePageIndicator(int pageIndex , int pageCount) {
+    public void updatePageIndicatorLabelText(int pageIndex , int pageCount) {
         StringBuilder sb = new StringBuilder();
         sb.append(pageIndex);
         sb.append(" / ");
         sb.append(pageCount);
         this.setPageIndicatorText(sb.toString());
+    }
+
+    public void updateZoomRateLabelText(int rate) {
+        this.zoomRateLabel.setText(String.valueOf(rate) + "%");
     }
     private ImageView getButtonIcon(String path , double prefHeight) {
         ImageView iconImage = new ImageView(new Image(String.valueOf(getClass().getResource(path))));
@@ -168,4 +179,5 @@ public class PDFViewerToolBar extends ToolBar {
         iconImage.setFitHeight(prefHeight / 1.5);
         return iconImage;
     }
+
 }

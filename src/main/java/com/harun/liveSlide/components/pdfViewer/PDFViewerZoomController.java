@@ -1,13 +1,20 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 
 public class PDFViewerZoomController {
+    private PDFViewer pdfViewer;
     private ScrollPane viewArea;
     private double totalZoom = 1;
     final private double ZOOM_SPEED = 1.020;
     final private double NEGATIVE_ZOOM_SPEED = 2 - ZOOM_SPEED;
+    int currentZoomRate = 100;
+
+    public PDFViewerZoomController(PDFViewer pdfViewer){
+        this.pdfViewer = pdfViewer;
+    }
 
     public void zoom(double zoomFactor) {
         double zoomRate = getStaticZoomRate(zoomFactor);
@@ -42,6 +49,22 @@ public class PDFViewerZoomController {
 
     public void setViewArea(ScrollPane viewArea) {
         this.viewArea = viewArea;
+    }
+
+    public void zoomOut(ActionEvent actionEvent) {
+        zoom(0);
+        if (isZoomable(totalZoom,NEGATIVE_ZOOM_SPEED)){
+            currentZoomRate -= 5;
+            pdfViewer.updateZoomRateLabelText(currentZoomRate);
+        }
+    }
+
+    public void zoomIn(ActionEvent actionEvent) {
+        zoom(2);
+        if (isZoomable(totalZoom,ZOOM_SPEED)){
+            currentZoomRate += 5;
+            pdfViewer.updateZoomRateLabelText(currentZoomRate);
+        }
     }
 
     /* For scrollable multi-view */
