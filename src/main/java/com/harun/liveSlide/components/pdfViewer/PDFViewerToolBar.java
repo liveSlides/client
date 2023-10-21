@@ -102,6 +102,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Rotate Button
         rotateButton = new Button();
+        rotateButton.setOnAction(pdfViewer.getPdfViewerRotateController()::rotate);
         rotateButton.setGraphic(getButtonIcon("/img/rotate.png", prefHeight));
         rotateButton.setTooltip(new Tooltip("Rotate"));
         this.getItems().add(rotateButton);

@@ -153,4 +153,7 @@ public class PDFViewer extends BorderPane {
     public PDFViewerZoomController getPdfViewerZoomController() {
         return pdfViewerZoomController;
     }
+    public PDFViewerRotateController getPdfViewerRotateController() {
+        return pdfViewerRotateController;
+    }
 }

@@ -93,6 +93,7 @@ public class PDFViewerFileController {
                 BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
                 PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController());
                 pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
+                pdfPage.setMinHeight(pdfViewer.viewArea.getViewportBounds().getWidth());
                 Group group = new Group(pdfPage);
                 pdfViewer.pdfPages.add(group);
             }
@@ -114,6 +115,7 @@ public class PDFViewerFileController {
             }
         }
         loadPDF(file.getAbsolutePath() , 1 , true);
+        pdfViewer.viewArea.setVvalue(0.5);
     }
 
     private void clearPdfPages() {
