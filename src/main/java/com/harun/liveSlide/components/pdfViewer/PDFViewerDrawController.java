@@ -12,13 +12,16 @@ import javafx.scene.paint.Paint;
 import java.util.ArrayList;
 
 public class PDFViewerDrawController {
+    private PDFViewer pdfViewer;
     private ScrollPane viewArea;
     private GraphicsContext gc;
     private ArrayList<MouseCoordinate> drawingCoordinates;
+    private ArrayList<MouseCoordinate> erasingCoordinates;
     private Paint prefferedPenColor = Color.BLACK;
     private double prefferedPenSize = 2;
 
-    public PDFViewerDrawController(){
+    public PDFViewerDrawController(PDFViewer pdfViewer){
+        this.pdfViewer = pdfViewer;
         drawingCoordinates = new ArrayList<>();
     }
 
@@ -32,14 +35,21 @@ public class PDFViewerDrawController {
     }
 
     private void onMouseDragged(double x , double y) {
-        gc.lineTo(x, y);
-        gc.stroke();
-        drawingCoordinates.add(new MouseCoordinate(x,y));
+        if (pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.DRAW) {
+            gc.lineTo(x, y);
+            gc.stroke();
+            drawingCoordinates.add(new MouseCoordinate(x,y));
+        }
+        else if(pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.ERASER) {
+            gc.clearRect(x,y,prefferedPenSize * 10,prefferedPenSize * 10);
+            erasingCoordinates.add(new MouseCoordinate(x,y));
+        }
     }
 
     private void onMouseExited() {
         System.out.println(drawingCoordinates);
         drawingCoordinates.clear();
+        erasingCoordinates.clear();
     }
 
     public void onMousePressed(MouseEvent event) {

@@ -28,7 +28,7 @@ public class PDFViewer extends BorderPane {
         this.pdfViewerZoomController = new PDFViewerZoomController(this);
         this.pdfViewerScrollController = new PDFViewerScrollController();
         this.pdfViewerRotateController = new PDFViewerRotateController();
-        this.pdfViewerDrawController = new PDFViewerDrawController();
+        this.pdfViewerDrawController = new PDFViewerDrawController(this);
         this.pdfViewerNavigationController = new PDFViewerNavigationController(this,0);
         this.pdfViewerFileController = new PDFViewerFileController(this);
         this.pdfViewerToolController = new PDFViewerToolController(this);
