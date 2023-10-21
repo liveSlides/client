@@ -50,3 +50,11 @@
 #pdf-page {
     -fx-background-color: rgb(83,86,89);
 }
+
+.selected-tool-button {
+    -fx-background-color: rgb(83,86,89);
+    -fx-border-color: white;
+    -fx-border-width: 1px;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+}

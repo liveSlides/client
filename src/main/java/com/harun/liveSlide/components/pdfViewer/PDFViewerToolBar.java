@@ -113,18 +113,21 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Pointer Button
         pointerButton = new Button();
+        pointerButton.setOnAction(pdfViewer.getPdfViewerToolController()::pointer);
         pointerButton.setGraphic(getButtonIcon("/img/pointer.png", prefHeight));
         pointerButton.setTooltip(new Tooltip("Pointer"));
         this.getItems().add(pointerButton);
 
         //Draw Button
         drawButton = new Button();
+        drawButton.setOnAction(pdfViewer.getPdfViewerToolController()::draw);
         drawButton.setGraphic(getButtonIcon("/img/pen.png", prefHeight));
         drawButton.setTooltip(new Tooltip("Draw"));
         this.getItems().add(drawButton);
 
         //Eraser Button
         eraserButton = new Button();
+        eraserButton.setOnAction(pdfViewer.getPdfViewerToolController()::eraser);
         eraserButton.setGraphic(getButtonIcon("/img/eraser.png", prefHeight));
         eraserButton.setTooltip(new Tooltip("Erase"));
         this.getItems().add(eraserButton);
@@ -183,6 +186,25 @@ public class PDFViewerToolBar extends ToolBar {
     public void updateZoomRateLabelText(int rate) {
         this.zoomRateLabel.setText(String.valueOf(rate) + "%");
     }
+
+    public void setPointerSelected() {
+        pointerButton.getStyleClass().add("selected-tool-button");
+        drawButton.getStyleClass().remove("selected-tool-button");
+        eraserButton.getStyleClass().remove("selected-tool-button");
+    }
+
+    public void setDrawSelected() {
+        drawButton.getStyleClass().add("selected-tool-button");
+        pointerButton.getStyleClass().remove("selected-tool-button");
+        eraserButton.getStyleClass().remove("selected-tool-button");
+    }
+
+    public void setEraserSelected() {
+        eraserButton.getStyleClass().add("selected-tool-button");
+        pointerButton.getStyleClass().remove("selected-tool-button");
+        drawButton.getStyleClass().remove("selected-tool-button");
+    }
+
     private ImageView getButtonIcon(String path , double prefHeight) {
         ImageView iconImage = new ImageView(new Image(String.valueOf(getClass().getResource(path))));
         iconImage.setFitWidth(prefHeight / 1.5);

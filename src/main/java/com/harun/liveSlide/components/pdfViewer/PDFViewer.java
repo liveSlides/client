@@ -17,6 +17,7 @@ public class PDFViewer extends BorderPane {
     private final PDFViewerDrawController pdfViewerDrawController;
     private final PDFViewerNavigationController pdfViewerNavigationController;
     private final PDFViewerFileController pdfViewerFileController;
+    private final PDFViewerToolController pdfViewerToolController;
     public ScrollPane viewArea;
     public PDFViewerToolBar toolBar;
     public ArrayList<Group> pdfPages;
@@ -30,6 +31,7 @@ public class PDFViewer extends BorderPane {
         this.pdfViewerDrawController = new PDFViewerDrawController();
         this.pdfViewerNavigationController = new PDFViewerNavigationController(this,0);
         this.pdfViewerFileController = new PDFViewerFileController(this);
+        this.pdfViewerToolController = new PDFViewerToolController(this);
         setupLayout(prefWidth,prefHeight);
     }
 
@@ -155,5 +157,8 @@ public class PDFViewer extends BorderPane {
     }
     public PDFViewerRotateController getPdfViewerRotateController() {
         return pdfViewerRotateController;
+    }
+    public PDFViewerToolController getPdfViewerToolController() {
+        return pdfViewerToolController;
     }
 }

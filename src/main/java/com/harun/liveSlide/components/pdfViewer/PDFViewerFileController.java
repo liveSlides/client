@@ -116,6 +116,7 @@ public class PDFViewerFileController {
         }
         loadPDF(file.getAbsolutePath() , 1 , true);
         pdfViewer.viewArea.setVvalue(0.5);
+        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.POINTER);
     }
 
     private void clearPdfPages() {
