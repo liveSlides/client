@@ -31,6 +31,14 @@ public class PDFViewerZoomController {
             pdfPage.canvas.setScaleX(pdfPage.canvas.getScaleX() * zoomRate);
             pdfPage.canvas.setScaleY(pdfPage.canvas.getScaleY() * zoomRate);
 
+            if (zoomRate > 1) {
+                currentZoomRate += 5;
+            }
+            else{
+                currentZoomRate -= 5;
+            }
+
+            pdfViewer.updateZoomRateLabelText(currentZoomRate);
         }
     }
 
@@ -53,18 +61,10 @@ public class PDFViewerZoomController {
 
     public void zoomOut(ActionEvent actionEvent) {
         zoom(0);
-        if (isZoomable(totalZoom,NEGATIVE_ZOOM_SPEED)){
-            currentZoomRate -= 5;
-            pdfViewer.updateZoomRateLabelText(currentZoomRate);
-        }
     }
 
     public void zoomIn(ActionEvent actionEvent) {
         zoom(2);
-        if (isZoomable(totalZoom,ZOOM_SPEED)){
-            currentZoomRate += 5;
-            pdfViewer.updateZoomRateLabelText(currentZoomRate);
-        }
     }
 
     /* For scrollable multi-view */

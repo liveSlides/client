@@ -1,6 +1,7 @@
 package com.harun.liveSlide.components.pdfViewer;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -60,6 +61,7 @@ public class PDFViewerToolBar extends ToolBar {
         backButton.setGraphic(getButtonIcon("/img/back.png", prefHeight));
         backButton.setTooltip(new Tooltip("Go previous page"));
         this.getItems().add(backButton);
+        backButton.setAlignment(Pos.CENTER);
 
         // Page Indicator
         pageIndicator = new Label();
@@ -147,7 +149,14 @@ public class PDFViewerToolBar extends ToolBar {
     }
 
     public void setPdfTitleText(String text) {
-        this.pdfTitle.setText(text);
+        if (text.length() > 8) {
+            text = text.substring(0,8);
+            text = text + "...";
+            this.pdfTitle.setText(text);
+        }
+        else{
+            this.pdfTitle.setText(text);
+        }
     }
 
     public void setPageIndicatorText(String text) {
