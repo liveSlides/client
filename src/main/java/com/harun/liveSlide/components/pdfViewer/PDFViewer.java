@@ -107,15 +107,15 @@ public class PDFViewer extends BorderPane {
         pdfViewerDrawController.draw(mouseCoordinates,color,size);
     }
 
-    public void loadPDF(String path) throws IOException {
-        loadPDF(path,1);
+    public void loadPDF(String path) {
+        pdfViewerFileController.loadPDF(path , 1 , true);
     }
 
     public void loadPDF(String path , int currentIndex) throws IOException {
-        pdfViewerFileController.loadPDF(path , currentIndex);
+        pdfViewerFileController.loadPDF(path , currentIndex , false);
     }
 
-    public void loadPDF(BufferedImage[] bufferedImages , String fileName) throws IOException {
+    public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
         pdfViewerFileController.loadPDF(bufferedImages , fileName);
     }
 

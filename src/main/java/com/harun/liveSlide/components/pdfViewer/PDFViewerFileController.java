@@ -1,12 +1,10 @@
 package com.harun.liveSlide.components.pdfViewer;
 
 import com.harun.liveSlide.utils.BFImageConverter;
-import com.harun.liveSlide.utils.DPICalculator;
 import com.harun.liveSlide.utils.FileNameExtractor;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -33,7 +31,7 @@ public class PDFViewerFileController {
             pdfViewer.pdfPages.clear();
         }
         else {
-            pdfViewer.pdfPages = new ArrayList<Group>();
+            pdfViewer.pdfPages = new ArrayList<>();
         }
 
         for (int page = 0; page < bufferedImages.length; ++page) {
@@ -48,13 +46,16 @@ public class PDFViewerFileController {
         pdfViewer.goPage(1);
     }
 
-    public void loadPDF(String path, int currentIndex) {
+    public void loadPDF(String path, int currentIndex , boolean initialization) {
         try {
 
             int numberOfPages = 0;
-            int range = 20;
+            int range = 10;
 
-            if (openDocument == null || !openDocument.getCurrentAccessPermission().canModify()) {
+            if (initialization && openDocument != null) {
+                openDocument.close();
+            }
+            if (initialization) {
                 openDocument = PDDocument.load(new File(path));
                 numberOfPages = openDocument.getNumberOfPages();
                 canvases = new Canvas[numberOfPages];
@@ -62,7 +63,10 @@ public class PDFViewerFileController {
                     canvases[i] = new Canvas();
                 }
             }
-            numberOfPages = openDocument.getNumberOfPages();
+            else {
+                numberOfPages = openDocument.getNumberOfPages();
+            }
+            
             PDFRenderer pdfRenderer = new PDFRenderer(openDocument);
 
             clearPdfPages();
@@ -86,7 +90,7 @@ public class PDFViewerFileController {
     private void loadPDF(PDFRenderer pdfRenderer , int numberOfPages , int startIndex , int endIndex) throws IOException {
         for (int page = 0; page < numberOfPages; ++page) {
             if (page + 1 >= startIndex && page + 1 <= endIndex){
-                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 200, ImageType.RGB);
+                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
                 PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController());
                 pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
                 Group group = new Group(pdfPage);
@@ -109,7 +113,7 @@ public class PDFViewerFileController {
                 System.out.println("Dosya kapatılamadı!");
             }
         }
-        loadPDF(file.getAbsolutePath() , 1);
+        loadPDF(file.getAbsolutePath() , 1 , true);
     }
 
     private void clearPdfPages() {

@@ -20,10 +20,6 @@ public class PDFViewerNavigationController {
         if (currentPageIndex > pageEndIndex || currentPageIndex < pageStartIndex) {
             try {
                 pdfViewer.loadPDF(pdfViewer.currentFilePath,currentPageIndex);
-                System.out.println("Girdi");
-                System.out.println("currentPageIndex : " + currentPageIndex);
-                System.out.println("pageStartIndex : " + pageStartIndex);
-                System.out.println("pageEndIndex : " + pageEndIndex);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
