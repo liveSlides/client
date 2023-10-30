@@ -24,8 +24,20 @@ public class PDFViewerToolBar extends ToolBar {
     private Button pointerButton;
     private Button drawButton;
     private Button eraserButton;
+    private Button sizeDrawSmallButton;
+    private Button sizeDrawMediumButton;
+    private Button sizeDrawBigButton;
+    private Button sizeEraserSmallButton;
+    private Button sizeEraserMediumButton;
+    private Button sizeEraserBigButton;
+    private Button colorBlackButton;
+    private Button colorRedButton;
+    private Button colorBlueButton;
     private Button fullscreenButton;
-    private Button downloadButton;
+    private SplitPane divider4;
+    private SplitPane divider5;
+    private Pane rightSpacer;
+
 
     public PDFViewerToolBar(double prefHeight , PDFViewer pdfViewer) {
         this.pdfViewer = pdfViewer;
@@ -132,8 +144,68 @@ public class PDFViewerToolBar extends ToolBar {
         eraserButton.setTooltip(new Tooltip("Erase"));
         this.getItems().add(eraserButton);
 
+        //Divider 4
+        divider4 = new SplitPane();
+
+        //Size Draw Small Button
+        sizeDrawSmallButton = new Button();
+        sizeDrawSmallButton.setOnAction(pdfViewer.getPdfViewerToolController()::setDrawSizeSmall);
+        sizeDrawSmallButton.setGraphic(getButtonIcon("/img/smallDot.png", prefHeight / 2.5));
+        sizeDrawSmallButton.setTooltip(new Tooltip("Small"));
+
+        //Size Draw Medium Button
+        sizeDrawMediumButton = new Button();
+        sizeDrawMediumButton.setOnAction(pdfViewer.getPdfViewerToolController()::setDrawSizeMedium);
+        sizeDrawMediumButton.setGraphic(getButtonIcon("/img/mediumDot.png", prefHeight / 1.5));
+        sizeDrawMediumButton.setTooltip(new Tooltip("Medium"));
+
+        //Size Draw Big Button
+        sizeDrawBigButton = new Button();
+        sizeDrawBigButton.setOnAction(pdfViewer.getPdfViewerToolController()::setDrawSizeBig);
+        sizeDrawBigButton.setGraphic(getButtonIcon("/img/bigDot.png", prefHeight));
+        sizeDrawBigButton.setTooltip(new Tooltip("Big"));
+
+        //Size Eraser Small Button
+        sizeEraserSmallButton = new Button();
+        sizeEraserSmallButton.setOnAction(pdfViewer.getPdfViewerToolController()::setEraserSizeSmall);
+        sizeEraserSmallButton.setGraphic(getButtonIcon("/img/smallDot.png", prefHeight / 2.5));
+        sizeEraserSmallButton.setTooltip(new Tooltip("Small"));
+
+        //Size Eraser Medium Button
+        sizeEraserMediumButton = new Button();
+        sizeEraserMediumButton.setOnAction(pdfViewer.getPdfViewerToolController()::setEraserSizeMedium);
+        sizeEraserMediumButton.setGraphic(getButtonIcon("/img/mediumDot.png", prefHeight / 1.5));
+        sizeEraserMediumButton.setTooltip(new Tooltip("Medium"));
+
+        //Size Eraser Big Button
+        sizeEraserBigButton = new Button();
+        sizeEraserBigButton.setOnAction(pdfViewer.getPdfViewerToolController()::setEraserSizeBig);
+        sizeEraserBigButton.setGraphic(getButtonIcon("/img/bigDot.png", prefHeight));
+        sizeEraserBigButton.setTooltip(new Tooltip("Big"));
+
+        //Divider 5
+        divider5 = new SplitPane();
+
+        //Color Black Button
+        colorBlackButton = new Button();
+        colorBlackButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorBlack);
+        colorBlackButton.setGraphic(getButtonIcon("/img/drawBlack.png", prefHeight));
+        colorBlackButton.setTooltip(new Tooltip("Black"));
+
+        //Color Red Button
+        colorRedButton = new Button();
+        colorRedButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorRed);
+        colorRedButton.setGraphic(getButtonIcon("/img/drawRed.png", prefHeight));
+        colorRedButton.setTooltip(new Tooltip("Red"));
+
+        //Color Blue Button
+        colorBlueButton = new Button();
+        colorBlueButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorBlack);
+        colorBlueButton.setGraphic(getButtonIcon("/img/drawBlue.png", prefHeight));
+        colorBlueButton.setTooltip(new Tooltip("Blue"));
+
         //Right Spacer
-        Pane rightSpacer = new Pane();
+        rightSpacer = new Pane();
         HBox.setHgrow(
                 rightSpacer,
                 Priority.SOMETIMES
@@ -147,9 +219,10 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(fullscreenButton);
 
         //Download Button
+        /*
         downloadButton = new Button();
         downloadButton.setGraphic(getButtonIcon("/img/download.png", prefHeight));
-        this.getItems().add(downloadButton);
+        this.getItems().add(downloadButton);*/
     }
 
     public void setPdfTitleText(String text) {
@@ -188,21 +261,61 @@ public class PDFViewerToolBar extends ToolBar {
     }
 
     public void setPointerSelected() {
-        pointerButton.getStyleClass().add("selected-tool-button");
         drawButton.getStyleClass().remove("selected-tool-button");
         eraserButton.getStyleClass().remove("selected-tool-button");
+        pointerButton.getStyleClass().add("selected-tool-button");
+        removeSizeAndColorButtons();
+        this.getItems().add(rightSpacer);
+        this.getItems().add(fullscreenButton);
     }
 
     public void setDrawSelected() {
-        drawButton.getStyleClass().add("selected-tool-button");
         pointerButton.getStyleClass().remove("selected-tool-button");
         eraserButton.getStyleClass().remove("selected-tool-button");
+        drawButton.getStyleClass().add("selected-tool-button");
+
+        removeSizeAndColorButtons();
+        this.getItems().add(divider4);
+        this.getItems().add(sizeDrawSmallButton);
+        this.getItems().add(sizeDrawMediumButton);
+        this.getItems().add(sizeDrawBigButton);
+        this.getItems().add(divider5);
+        this.getItems().add(colorBlackButton);
+        this.getItems().add(colorRedButton);
+        this.getItems().add(colorBlueButton);
+        this.getItems().add(rightSpacer);
+        this.getItems().add(fullscreenButton);
+
     }
 
     public void setEraserSelected() {
-        eraserButton.getStyleClass().add("selected-tool-button");
         pointerButton.getStyleClass().remove("selected-tool-button");
         drawButton.getStyleClass().remove("selected-tool-button");
+        eraserButton.getStyleClass().add("selected-tool-button");
+
+        removeSizeAndColorButtons();
+        this.getItems().add(divider4);
+        this.getItems().add(sizeEraserSmallButton);
+        this.getItems().add(sizeEraserMediumButton);
+        this.getItems().add(sizeEraserBigButton);
+        this.getItems().add(rightSpacer);
+        this.getItems().add(fullscreenButton);
+    }
+
+    private void removeSizeAndColorButtons() {
+        this.getItems().remove(sizeDrawSmallButton);
+        this.getItems().remove(sizeDrawMediumButton);
+        this.getItems().remove(sizeDrawBigButton);
+        this.getItems().remove(sizeEraserSmallButton);
+        this.getItems().remove(sizeEraserMediumButton);
+        this.getItems().remove(sizeEraserBigButton);
+        this.getItems().remove(colorBlackButton);
+        this.getItems().remove(colorRedButton);
+        this.getItems().remove(colorBlueButton);
+        this.getItems().remove(divider4);
+        this.getItems().remove(divider5);
+        this.getItems().remove(rightSpacer);
+        this.getItems().remove(fullscreenButton);
     }
 
     private ImageView getButtonIcon(String path , double prefHeight) {
