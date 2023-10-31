@@ -3,21 +3,24 @@ package com.harun.liveSlide;
 import com.harun.liveSlide.components.pdfViewer.PDFViewer;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class MainWindow extends Pane {
 
-    private Pane topSide;
+    public Pane topSide;
     private Pane leftSide;
     private Pane rightSide;
-    public PDFViewer pdfViewer;
 
-    public MainWindow(double sceneWidth , double sceneHeight) throws IOException {
+    public PDFViewer pdfViewer;
+    public double sceneHeight;
+
+    public MainWindow(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
         topSide = new Pane();
-        topSide.setPrefHeight(80);
+        topSide.setPrefHeight(sceneHeight * 0.08);
         mainGrid.setTop(topSide);
 
         leftSide = new Pane();
@@ -28,8 +31,10 @@ public class MainWindow extends Pane {
         rightSide.setPrefWidth(0);
         mainGrid.setRight(rightSide);
 
-        pdfViewer = new PDFViewer(sceneWidth,sceneHeight * 0.92);
+        pdfViewer = new PDFViewer(stage , this , sceneWidth,sceneHeight * 0.92);
         mainGrid.setCenter(pdfViewer);
+
+        this.sceneHeight = sceneHeight;
     }
 
     public void setResponsiveWidth(double width) {

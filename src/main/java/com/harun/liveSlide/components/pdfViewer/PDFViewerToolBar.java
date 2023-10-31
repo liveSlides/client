@@ -214,6 +214,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Fullscreen Button
         fullscreenButton = new Button();
+        fullscreenButton.setOnAction(pdfViewer.getPdfViewerToolController()::showFullScreen);
         fullscreenButton.setGraphic(getButtonIcon("/img/fullscreen.png", prefHeight));
         fullscreenButton.setTooltip(new Tooltip("Full Screen"));
         this.getItems().add(fullscreenButton);

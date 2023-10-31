@@ -12,6 +12,7 @@ public class PDFViewerToolController {
     private int currentDrawSize = 0;
     private int currentEraserSize = 0;
     private String currentDrawColor = "red";
+    private boolean isFullScreen = false;
 
     public PDFViewerToolController(PDFViewer pdfViewer) {
         this.pdfViewer = pdfViewer;
@@ -152,5 +153,18 @@ public class PDFViewerToolController {
 
     public void setEraserSizeBig(ActionEvent actionEvent) {
         setCurrentEraserSize(3);
+    }
+
+    public void showFullScreen(ActionEvent actionEvent) {
+        setFullScreen(!isFullScreen);
+    }
+
+    public boolean isFullScreen() {
+        return isFullScreen;
+    }
+
+    public void setFullScreen(boolean isFullScreen) {
+        this.isFullScreen = isFullScreen;
+        pdfViewer.showFullScreen(isFullScreen);
     }
 }

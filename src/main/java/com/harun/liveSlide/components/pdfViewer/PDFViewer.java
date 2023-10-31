@@ -1,11 +1,15 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.MainWindow;
 import com.harun.liveSlide.model.MouseCoordinate;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,8 +26,10 @@ public class PDFViewer extends BorderPane {
     public PDFViewerToolBar toolBar;
     public ArrayList<Group> pdfPages;
     public String currentFilePath;
+    private final Stage stage;
+    private final MainWindow mainWindow;
 
-    public PDFViewer(double prefWidth, double prefHeight) {
+    public PDFViewer(Stage stage , MainWindow mainWindow , double prefWidth, double prefHeight) {
         this.setId("pdf-viewer");
         this.pdfViewerZoomController = new PDFViewerZoomController(this);
         this.pdfViewerScrollController = new PDFViewerScrollController();
@@ -33,6 +39,16 @@ public class PDFViewer extends BorderPane {
         this.pdfViewerFileController = new PDFViewerFileController(this);
         this.pdfViewerToolController = new PDFViewerToolController(this);
         setupLayout(prefWidth,prefHeight);
+        this.stage = stage;
+        this.mainWindow = mainWindow;
+
+        // If esc is pressed then exit fullscreen with our function
+        stage.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                pdfViewerToolController.setFullScreen(false);
+                event.consume();
+            }
+        });
     }
 
     private void setupLayout(double prefWidth , double prefHeight){
@@ -134,6 +150,19 @@ public class PDFViewer extends BorderPane {
 
     public void updateZoomRateLabelText(int zoomRate) {
         toolBar.updateZoomRateLabelText(zoomRate);
+    }
+
+    public void showFullScreen(boolean isShowFullScreen) {
+
+        stage.setFullScreen(isShowFullScreen);
+        if (isShowFullScreen) {
+            mainWindow.topSide.setPrefHeight(0);
+            mainWindow.pdfViewer.setPrefHeight(mainWindow.sceneHeight * 1.05);
+        }
+        else {
+            mainWindow.topSide.setPrefHeight(mainWindow.sceneHeight * 0.08);
+        }
+
     }
 
     public void reloadGraphicsContext(){

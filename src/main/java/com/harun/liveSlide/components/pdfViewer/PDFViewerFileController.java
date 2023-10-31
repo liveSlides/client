@@ -26,6 +26,7 @@ public class PDFViewerFileController {
     }
 
     public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
+        /*
 
         if (pdfViewer.pdfPages != null) {
             pdfViewer.pdfPages.clear();
@@ -43,7 +44,7 @@ public class PDFViewerFileController {
 
         pdfViewer.toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(fileName));
         pdfViewer.getPdfViewerNavigationController().setPageCount(bufferedImages.length);
-        pdfViewer.goPage(1);
+        pdfViewer.goPage(1);*/
     }
 
     public void loadPDF(String path, int currentIndex , boolean initialization) {
