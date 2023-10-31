@@ -38,7 +38,7 @@ public class PDFViewerZoomController {
                 currentZoomRate -= 5;
             }
 
-            pdfViewer.updateZoomRateLabelText(currentZoomRate);
+            pdfViewer.toolBar.updateZoomRateLabelText(currentZoomRate);
         }
     }
 

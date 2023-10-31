@@ -67,7 +67,19 @@ public class PDFViewerDrawController {
     }
 
     public void draw(MouseCoordinate[] mouseCoordinates, Color color, double size) {
-        onMousePressed(mouseCoordinates[0].x , mouseCoordinates[0].y , color , size);
+        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.DRAW);
+        pdfViewer.getPdfViewerToolController().setCurrentDrawSize((int) size);
+        // TODO control color.toString()
+        pdfViewer.getPdfViewerToolController().setCurrentDrawColor(color.toString());
+        onMousePressed(mouseCoordinates[0].x , mouseCoordinates[0].y , prefferedPenColor , prefferedPenSize);
+        for (MouseCoordinate draw : mouseCoordinates) {
+            onMouseDragged(mouseCoordinates[0].x , mouseCoordinates[0].y);
+        }
+    }
+
+    public void erase(MouseCoordinate[] mouseCoordinates, double size) {
+        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.ERASER);
+        pdfViewer.getPdfViewerToolController().setCurrentEraserSize((int) size);
         for (MouseCoordinate draw : mouseCoordinates) {
             onMouseDragged(mouseCoordinates[0].x , mouseCoordinates[0].y);
         }

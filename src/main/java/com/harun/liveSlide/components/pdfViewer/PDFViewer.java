@@ -136,6 +136,10 @@ public class PDFViewer extends BorderPane {
         pdfViewerDrawController.draw(mouseCoordinates,color,size);
     }
 
+    public void erase(MouseCoordinate[] mouseCoordinates, double size) {
+        pdfViewerDrawController.erase(mouseCoordinates,size);
+    }
+
     public void loadPDF(String path) {
         pdfViewerFileController.loadPDF(path , 1 , true);
     }
@@ -148,10 +152,6 @@ public class PDFViewer extends BorderPane {
         pdfViewerFileController.loadPDF(bufferedImages , fileName);
     }
 
-    public void updateZoomRateLabelText(int zoomRate) {
-        toolBar.updateZoomRateLabelText(zoomRate);
-    }
-
     public void showFullScreen(boolean isShowFullScreen) {
 
         stage.setFullScreen(isShowFullScreen);
@@ -162,7 +162,6 @@ public class PDFViewer extends BorderPane {
         else {
             mainWindow.topSide.setPrefHeight(mainWindow.sceneHeight * 0.08);
         }
-
     }
 
     public void reloadGraphicsContext(){
