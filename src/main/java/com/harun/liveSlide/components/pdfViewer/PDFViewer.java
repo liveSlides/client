@@ -38,9 +38,9 @@ public class PDFViewer extends BorderPane {
         this.pdfViewerNavigationController = new PDFViewerNavigationController(this,0);
         this.pdfViewerFileController = new PDFViewerFileController(this);
         this.pdfViewerToolController = new PDFViewerToolController(this);
-        setupLayout(prefWidth,prefHeight);
         this.stage = stage;
         this.mainWindow = mainWindow;
+        setupLayout(prefWidth,prefHeight);
 
         // If esc is pressed then exit fullscreen with our function
         stage.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {

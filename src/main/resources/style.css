@@ -58,3 +58,13 @@
     -fx-background-radius: 3;
     -fx-border-radius: 3;
 }
+
+.meeting-top-bar {
+    -fx-background-color: #262627;
+    -fx-text-fill: white;
+}
+
+.meeting-timer {
+    -fx-text-fill: white;
+    -fx-font-size : 15pt;
+}

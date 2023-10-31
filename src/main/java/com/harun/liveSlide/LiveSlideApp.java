@@ -2,10 +2,14 @@ package com.harun.liveSlide;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class LiveSlideApp extends Application {
     @Override
@@ -16,7 +20,7 @@ public class LiveSlideApp extends Application {
         MainWindow main = new MainWindow(stage , sceneWidth,sceneHeight);
         Scene scene = new Scene(main, sceneWidth, sceneHeight);
         scene.getStylesheets().add("style.css");
-        stage.setTitle("Hello!");
+        stage.setTitle("Live Slide");
         stage.setScene(scene);
         stage.show();
 

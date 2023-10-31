@@ -1,5 +1,6 @@
 package com.harun.liveSlide;
 
+import com.harun.liveSlide.components.meetingTopBar.MeetingTopBar;
 import com.harun.liveSlide.components.pdfViewer.PDFViewer;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -9,7 +10,7 @@ import java.io.IOException;
 
 public class MainWindow extends Pane {
 
-    public Pane topSide;
+    public MeetingTopBar topSide;
     private Pane leftSide;
     private Pane rightSide;
 
@@ -19,7 +20,7 @@ public class MainWindow extends Pane {
     public MainWindow(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
-        topSide = new Pane();
+        topSide = new MeetingTopBar();
         topSide.setPrefHeight(sceneHeight * 0.08);
         mainGrid.setTop(topSide);
 

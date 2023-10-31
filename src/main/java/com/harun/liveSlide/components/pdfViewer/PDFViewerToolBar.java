@@ -46,7 +46,7 @@ public class PDFViewerToolBar extends ToolBar {
 
     public void setupLayout(double prefHeight) {
         this.setPrefHeight(prefHeight);
-        this.setPadding(new Insets(7,10,7,10));
+        this.setPadding(new Insets(6,10,7,10));
 
         //PDF Title
         pdfTitle = new Label("Select a File");
