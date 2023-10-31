@@ -20,8 +20,10 @@ public class MainWindow extends Pane {
     public MainWindow(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
-        topSide = new MeetingTopBar();
-        topSide.setPrefHeight(sceneHeight * 0.08);
+        topSide = new MeetingTopBar(stage);
+        topSide.setPrefHeight(sceneHeight * 0.065);
+        topSide.setMaxHeight(sceneHeight * 0.065);
+        topSide.setMinHeight(sceneHeight * 0.065);
         mainGrid.setTop(topSide);
 
         leftSide = new Pane();
@@ -32,7 +34,7 @@ public class MainWindow extends Pane {
         rightSide.setPrefWidth(0);
         mainGrid.setRight(rightSide);
 
-        pdfViewer = new PDFViewer(stage , this , sceneWidth,sceneHeight * 0.92);
+        pdfViewer = new PDFViewer(stage , this , sceneWidth,sceneHeight * 0.935);
         mainGrid.setCenter(pdfViewer);
 
         this.sceneHeight = sceneHeight;

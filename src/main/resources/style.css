@@ -45,6 +45,7 @@
 
 #pdf-viewer-toolbar .button:hover {
     -fx-background-color: rgb(93,96,99);
+    -fx-cursor: hand;
 }
 
 #pdf-page {
@@ -62,9 +63,32 @@
 .meeting-top-bar {
     -fx-background-color: #262627;
     -fx-text-fill: white;
+    -fx-spacing: 10px;
 }
 
 .meeting-timer {
     -fx-text-fill: white;
     -fx-font-size : 15pt;
+}
+
+.leave-button {
+    -fx-background-color : rgb(193,66,63);
+    -fx-text-fill : white;
+    -fx-font-size : 13pt;
+}
+
+.meeting-top-bar .leave-button:hover {
+    -fx-background-color: rgb(108,36,35);
+    -fx-cursor: hand;
+}
+
+.take-control-button {
+    -fx-background-color : #004080;
+    -fx-text-fill : white;
+    -fx-font-size : 13pt;
+}
+
+.meeting-top-bar .take-control-button:hover {
+    -fx-background-color: #003366;
+    -fx-cursor: hand;
 }

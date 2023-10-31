@@ -157,10 +157,15 @@ public class PDFViewer extends BorderPane {
         stage.setFullScreen(isShowFullScreen);
         if (isShowFullScreen) {
             mainWindow.topSide.setPrefHeight(0);
-            mainWindow.pdfViewer.setPrefHeight(mainWindow.sceneHeight * 1.05);
+            mainWindow.topSide.setMinHeight(0);
+            mainWindow.topSide.setMaxHeight(0);
+            mainWindow.pdfViewer.setPrefHeight(mainWindow.sceneHeight * 1.052);
         }
         else {
-            mainWindow.topSide.setPrefHeight(mainWindow.sceneHeight * 0.08);
+            mainWindow.topSide.setPrefHeight(mainWindow.sceneHeight * 0.065);
+            mainWindow.topSide.setMinHeight(mainWindow.sceneHeight * 0.065);
+            mainWindow.topSide.setMaxHeight(mainWindow.sceneHeight * 0.065);
+            mainWindow.pdfViewer.setPrefHeight(mainWindow.sceneHeight * 0.935);
         }
     }
 
