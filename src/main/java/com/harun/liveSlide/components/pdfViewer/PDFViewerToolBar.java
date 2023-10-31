@@ -200,7 +200,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Color Blue Button
         colorBlueButton = new Button();
-        colorBlueButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorBlack);
+        colorBlueButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorBlue);
         colorBlueButton.setGraphic(getButtonIcon("/img/drawBlue.png", prefHeight));
         colorBlueButton.setTooltip(new Tooltip("Blue"));
 
@@ -316,6 +316,60 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().remove(divider5);
         this.getItems().remove(rightSpacer);
         this.getItems().remove(fullscreenButton);
+    }
+
+    public void drawSmallSizeSelected() {
+        sizeDrawBigButton.getStyleClass().remove("selected-tool-button");
+        sizeDrawMediumButton.getStyleClass().remove("selected-tool-button");
+        sizeDrawSmallButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void drawMediumSizeSelected() {
+        sizeDrawBigButton.getStyleClass().remove("selected-tool-button");
+        sizeDrawSmallButton.getStyleClass().remove("selected-tool-button");
+        sizeDrawMediumButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void drawBigSizeSelected() {
+        sizeDrawMediumButton.getStyleClass().remove("selected-tool-button");
+        sizeDrawSmallButton.getStyleClass().remove("selected-tool-button");
+        sizeDrawBigButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void eraserSmallSizeSelected() {
+        sizeEraserBigButton.getStyleClass().remove("selected-tool-button");
+        sizeEraserMediumButton.getStyleClass().remove("selected-tool-button");
+        sizeEraserSmallButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void eraserMediumSizeSelected() {
+        sizeEraserBigButton.getStyleClass().remove("selected-tool-button");
+        sizeEraserSmallButton.getStyleClass().remove("selected-tool-button");
+        sizeEraserMediumButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void eraserBigSizeSelected() {
+        sizeEraserMediumButton.getStyleClass().remove("selected-tool-button");
+        sizeEraserSmallButton.getStyleClass().remove("selected-tool-button");
+        sizeEraserBigButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void drawBlackSelected() {
+        colorRedButton.getStyleClass().remove("selected-tool-button");
+        colorBlueButton.getStyleClass().remove("selected-tool-button");
+        colorBlackButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void drawRedSelected() {
+        colorBlackButton.getStyleClass().remove("selected-tool-button");
+        colorBlueButton.getStyleClass().remove("selected-tool-button");
+        colorRedButton.getStyleClass().add("selected-tool-button");
+    }
+
+    public void drawBlueSelected() {
+        colorBlackButton.getStyleClass().remove("selected-tool-button");
+        colorRedButton.getStyleClass().remove("selected-tool-button");
+        colorBlueButton.getStyleClass().add("selected-tool-button");
     }
 
     private ImageView getButtonIcon(String path , double prefHeight) {

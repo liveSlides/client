@@ -18,11 +18,13 @@ public class PDFViewerDrawController {
     private ArrayList<MouseCoordinate> drawingCoordinates;
     private ArrayList<MouseCoordinate> erasingCoordinates;
     private Paint prefferedPenColor = Color.BLACK;
-    private double prefferedPenSize = 2;
+    private double prefferedPenSize = 1;
+    private double prefferedEraserSize = 1;
 
     public PDFViewerDrawController(PDFViewer pdfViewer){
         this.pdfViewer = pdfViewer;
         drawingCoordinates = new ArrayList<>();
+        erasingCoordinates = new ArrayList<>();
     }
 
     private void onMousePressed(double x , double y , Paint color , double size) {
@@ -41,7 +43,7 @@ public class PDFViewerDrawController {
             drawingCoordinates.add(new MouseCoordinate(x,y));
         }
         else if(pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.ERASER) {
-            gc.clearRect(x,y,prefferedPenSize * 10,prefferedPenSize * 10);
+            gc.clearRect(x,y,prefferedEraserSize,prefferedEraserSize);
             erasingCoordinates.add(new MouseCoordinate(x,y));
         }
     }
@@ -62,14 +64,6 @@ public class PDFViewerDrawController {
 
     public void onMouseExited(MouseEvent event) {
         onMouseExited();
-    }
-
-    public void setPenColor(Paint color) {
-        prefferedPenColor = color;
-    }
-
-    public void setPenSize(double size) {
-        prefferedPenSize  = size;
     }
 
     public void draw(MouseCoordinate[] mouseCoordinates, Color color, double size) {
@@ -98,4 +92,15 @@ public class PDFViewerDrawController {
         this.viewArea = viewArea;
     }
 
+    public void setPenColor(Paint color) {
+        prefferedPenColor = color;
+    }
+
+    public void setPenSize(double size) {
+        prefferedPenSize  = size;
+    }
+
+    public void setEraserSize(double prefferedEraserSize) {
+        this.prefferedEraserSize = prefferedEraserSize;
+    }
 }

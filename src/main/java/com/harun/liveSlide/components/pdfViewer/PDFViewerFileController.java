@@ -115,8 +115,13 @@ public class PDFViewerFileController {
             }
         }
         loadPDF(file.getAbsolutePath() , 1 , true);
+
+        //PDF Viewer initializing when file is uploaded
         pdfViewer.viewArea.setVvalue(0.5);
         pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.POINTER);
+        pdfViewer.getPdfViewerToolController().setCurrentDrawColor("black");
+        pdfViewer.getPdfViewerToolController().setCurrentDrawSize(1);
+        pdfViewer.getPdfViewerToolController().setCurrentEraserSize(1);
     }
 
     private void clearPdfPages() {
