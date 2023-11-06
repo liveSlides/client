@@ -17,7 +17,7 @@ public class LiveSlideApp extends Application {
 
         double sceneWidth = 1680;
         double sceneHeight = 1000;
-        MainWindow main = new MainWindow(stage , sceneWidth,sceneHeight);
+        MainWindow main = new MainWindow(stage , sceneWidth , sceneHeight);
         Scene scene = new Scene(main, sceneWidth, sceneHeight);
         scene.getStylesheets().add("style.css");
         stage.setTitle("Live Slide");

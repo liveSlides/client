@@ -83,17 +83,10 @@ public class PDFViewer extends BorderPane {
         });
 
         this.setCenter(viewArea);
-        this.widthProperty().addListener((observable, oldValue, newValue) -> {
-            double viewportWidth = viewArea.getViewportBounds().getWidth();
-            double viewportHeight = viewArea.getViewportBounds().getHeight();
 
-            if (pdfPages != null) {
-                for (PDFPageContainer pdfPageContainer : pdfPages) {
-                    PDFPage pdfPage = pdfPageContainer.getPDFPage();
-                    pdfPage.setMinWidth(viewportWidth);
-                    pdfPage.setMinHeight(viewportHeight);
-                }
-            }
+        // TODO when side bar is open , resizing window cause trouble
+        this.widthProperty().addListener((observable, oldValue, newValue) -> {
+            updateSizeOfPdfPages((Double) newValue);
         });
 
         setViewAreaToControllers();
@@ -103,6 +96,18 @@ public class PDFViewer extends BorderPane {
         pdfViewerScrollController.setViewArea(viewArea);
         pdfViewerRotateController.setViewArea(viewArea);
         pdfViewerDrawController.setViewArea(viewArea);
+    }
+
+    public void updateSizeOfPdfPages(double newWidth) {
+        double viewportHeight = viewArea.getViewportBounds().getHeight();
+
+        if (pdfPages != null) {
+            for (PDFPageContainer pdfPageContainer : pdfPages) {
+                PDFPage pdfPage = pdfPageContainer.getPDFPage();
+                pdfPage.setMinWidth(newWidth);
+                pdfPage.setMinHeight(viewportHeight);
+            }
+        }
     }
 
     public void goPage(int index) {

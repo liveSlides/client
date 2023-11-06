@@ -20,8 +20,8 @@ public class MeetingTopBarController {
 
     }
 
-    public void showParticipants() {
-
+    public void showHideParticipants() {
+        meetingTopBar.getMainWindow().showHideParticipantsTab();
     }
 
     public void leave(ActionEvent actionEvent) {
@@ -37,6 +37,6 @@ public class MeetingTopBarController {
     }
 
     public void showParticipants(ActionEvent actionEvent) {
-        showParticipants();
+        showHideParticipants();
     }
 }

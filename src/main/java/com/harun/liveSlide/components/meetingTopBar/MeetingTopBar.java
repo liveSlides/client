@@ -1,5 +1,6 @@
 package com.harun.liveSlide.components.meetingTopBar;
 
+import com.harun.liveSlide.MainWindow;
 import com.harun.liveSlide.components.meetingTopBar.meetingTimer.MeetingTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 
 public class MeetingTopBar extends ToolBar {
     private final Stage stage;
+    private final MainWindow mainWindow;
     private final double prefHeight;
     private final MeetingTopBarController controller;
     private MeetingTimer meetingTimer;
@@ -25,9 +27,10 @@ public class MeetingTopBar extends ToolBar {
     private Button requestControlButton;
     private Button participantButton;
 
-    public MeetingTopBar(Stage stage , double prefHeight) {
+    public MeetingTopBar(Stage stage , MainWindow mainWindow ,double prefHeight) {
         controller = new MeetingTopBarController(this);
         this.stage = stage;
+        this.mainWindow = mainWindow;
         this.prefHeight = prefHeight;
         this.getStyleClass().add("meeting-top-bar");
         setupLayout();
@@ -92,5 +95,9 @@ public class MeetingTopBar extends ToolBar {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public MainWindow getMainWindow() {
+        return mainWindow;
     }
 }
