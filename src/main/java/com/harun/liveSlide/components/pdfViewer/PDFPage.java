@@ -5,9 +5,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class PDFPage extends StackPane {
     public PDFViewerDrawController pdfViewerDrawController;
+    public PDFViewerPointerController pdfViewerPointerController;
     public ImageView image;
     public Canvas canvas;
 
@@ -16,13 +21,14 @@ public class PDFPage extends StackPane {
         this.canvas = null;
     }
 
-    public PDFPage(ImageView image , Canvas canvas , PDFViewerDrawController pdfViewerDrawController) {
+    public PDFPage(ImageView image , Canvas canvas , PDFViewerDrawController pdfViewerDrawController , PDFViewerPointerController pdfViewerPointerController) {
         if (image != null && pdfViewerDrawController != null) {
             this.image = image;
             this.canvas = canvas;
             canvas.setWidth(image.getFitWidth());
             canvas.setHeight(image.getFitHeight());
             this.pdfViewerDrawController = pdfViewerDrawController;
+            this.pdfViewerPointerController = pdfViewerPointerController;
             setupLayout();
         }
     }

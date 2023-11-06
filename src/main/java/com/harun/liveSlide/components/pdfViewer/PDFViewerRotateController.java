@@ -11,8 +11,8 @@ public class PDFViewerRotateController {
 
     public void rotate() {
         if (viewArea != null && viewArea.getContent() != null) {
-            Group group = (Group) viewArea.getContent();
-            PDFPage pdfPage = (PDFPage) group.getChildren().get(0);
+            PDFPageContainer pdfPageContainer = (PDFPageContainer) viewArea.getContent();
+            PDFPage pdfPage = pdfPageContainer.getPDFPage();
 
             Rotate rotate = new Rotate();
             rotate.setPivotX(pdfPage.getWidth() / 2);

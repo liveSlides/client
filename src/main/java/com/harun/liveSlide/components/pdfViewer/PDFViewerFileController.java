@@ -5,6 +5,9 @@ import com.harun.liveSlide.utils.FileNameExtractor;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -91,12 +94,20 @@ public class PDFViewerFileController {
     private void loadPDF(PDFRenderer pdfRenderer , int numberOfPages , int startIndex , int endIndex) throws IOException {
         for (int page = 0; page < numberOfPages; ++page) {
             if (page + 1 >= startIndex && page + 1 <= endIndex){
+                //Render pdf
                 BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
-                PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController());
+
+                //Create PDF Page
+                PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController(),pdfViewer.getPdfViewerPointerController());
                 pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
                 pdfPage.setMinHeight(pdfViewer.viewArea.getViewportBounds().getWidth());
-                Group group = new Group(pdfPage);
-                pdfViewer.pdfPages.add(group);
+
+                //Encapsulate PDF Page with PdfPageContainer
+                PDFPageContainer pdfPageContainer = new PDFPageContainer(pdfPage);
+                pdfPageContainer.addEventHandler(MouseEvent.MOUSE_MOVED,pdfViewer.getPdfViewerPointerController()::onMouseMoved);
+                pdfPageContainer.addEventHandler(MouseEvent.MOUSE_DRAGGED,pdfViewer.getPdfViewerPointerController()::onMouseMoved);
+
+                pdfViewer.pdfPages.add(pdfPageContainer);
             }
         }
     }
@@ -119,7 +130,7 @@ public class PDFViewerFileController {
 
         //PDF Viewer initializing when file is uploaded
         pdfViewer.viewArea.setVvalue(0.5);
-        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.POINTER);
+        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.CURSOR);
         pdfViewer.getPdfViewerToolController().setCurrentDrawColor("black");
         pdfViewer.getPdfViewerToolController().setCurrentDrawSize(1);
         pdfViewer.getPdfViewerToolController().setCurrentEraserSize(1);

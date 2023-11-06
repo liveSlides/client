@@ -21,6 +21,7 @@ public class PDFViewerToolBar extends ToolBar {
     private Button zoomInButton;
     private Label zoomRateLabel;
     private Button rotateButton;
+    private Button cursorButton;
     private Button pointerButton;
     private Button drawButton;
     private Button eraserButton;
@@ -123,11 +124,18 @@ public class PDFViewerToolBar extends ToolBar {
         SplitPane divider3 = new SplitPane();
         this.getItems().add(divider3);
 
+        //Cursor Button
+        cursorButton = new Button();
+        cursorButton.setOnAction(pdfViewer.getPdfViewerToolController()::cursor);
+        cursorButton.setGraphic(getButtonIcon("/img/cursor.png", prefHeight));
+        cursorButton.setTooltip(new Tooltip("Pan"));
+        this.getItems().add(cursorButton);
+
         //Pointer Button
         pointerButton = new Button();
         pointerButton.setOnAction(pdfViewer.getPdfViewerToolController()::pointer);
         pointerButton.setGraphic(getButtonIcon("/img/pointer.png", prefHeight));
-        pointerButton.setTooltip(new Tooltip("Pointer"));
+        pointerButton.setTooltip(new Tooltip("Laser Pointer"));
         this.getItems().add(pointerButton);
 
         //Draw Button
@@ -261,19 +269,36 @@ public class PDFViewerToolBar extends ToolBar {
         this.zoomRateLabel.setText(String.valueOf(rate) + "%");
     }
 
-    public void setPointerSelected() {
+    public void setCursorSelected() {
+        pointerButton.getStyleClass().remove("selected-tool-button");
         drawButton.getStyleClass().remove("selected-tool-button");
         eraserButton.getStyleClass().remove("selected-tool-button");
+        cursorButton.getStyleClass().add("selected-tool-button");
+        pdfViewer.getPdfViewerPointerController().isPointerVisible(false);
+
+        removeSizeAndColorButtons();
+        this.getItems().add(rightSpacer);
+        this.getItems().add(fullscreenButton);
+    }
+
+    public void setPointerSelected() {
+        drawButton.getStyleClass().remove("selected-tool-button");
+        cursorButton.getStyleClass().remove("selected-tool-button");
+        eraserButton.getStyleClass().remove("selected-tool-button");
         pointerButton.getStyleClass().add("selected-tool-button");
+        pdfViewer.getPdfViewerPointerController().isPointerVisible(true);
+
         removeSizeAndColorButtons();
         this.getItems().add(rightSpacer);
         this.getItems().add(fullscreenButton);
     }
 
     public void setDrawSelected() {
+        cursorButton.getStyleClass().remove("selected-tool-button");
         pointerButton.getStyleClass().remove("selected-tool-button");
         eraserButton.getStyleClass().remove("selected-tool-button");
         drawButton.getStyleClass().add("selected-tool-button");
+        pdfViewer.getPdfViewerPointerController().isPointerVisible(false);
 
         removeSizeAndColorButtons();
         this.getItems().add(divider4);
@@ -286,13 +311,14 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(colorBlueButton);
         this.getItems().add(rightSpacer);
         this.getItems().add(fullscreenButton);
-
     }
 
     public void setEraserSelected() {
+        cursorButton.getStyleClass().remove("selected-tool-button");
         pointerButton.getStyleClass().remove("selected-tool-button");
         drawButton.getStyleClass().remove("selected-tool-button");
         eraserButton.getStyleClass().add("selected-tool-button");
+        pdfViewer.getPdfViewerPointerController().isPointerVisible(false);
 
         removeSizeAndColorButtons();
         this.getItems().add(divider4);
@@ -379,5 +405,6 @@ public class PDFViewerToolBar extends ToolBar {
         iconImage.setFitHeight(prefHeight / 1.5);
         return iconImage;
     }
+
 
 }

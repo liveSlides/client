@@ -29,6 +29,7 @@ public class PDFViewerNavigationController {
         }
         pdfViewer.toolBar.updatePageIndicatorLabelText(currentPageIndex , pageCount);
         pdfViewer.reloadGraphicsContext();
+        pdfViewer.reloadPointerShape();
     }
 
     public void goPage(int index) {

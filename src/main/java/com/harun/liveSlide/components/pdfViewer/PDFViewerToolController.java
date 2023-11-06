@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class PDFViewerToolController {
     private final PDFViewer pdfViewer;
-    private PDFTool currentPdfTool = PDFTool.POINTER;
+    private PDFTool currentPdfTool = PDFTool.CURSOR;
     private int currentDrawSize = 0;
     private int currentEraserSize = 0;
     private String currentDrawColor = "red";
@@ -25,12 +25,17 @@ public class PDFViewerToolController {
     public void setCurrentPdfTool(PDFTool currentPdfTool) {
         this.currentPdfTool = currentPdfTool;
         if (pdfViewer.viewArea.getContent() != null) {
-            Group group = (Group) pdfViewer.viewArea.getContent();
-            PDFPage pdfPage = (PDFPage) group.getChildren().get(0);
+            PDFPageContainer pdfPageContainer = (PDFPageContainer) pdfViewer.viewArea.getContent();
+            PDFPage pdfPage = pdfPageContainer.getPDFPage();
 
-            if (currentPdfTool == PDFTool.POINTER) {
+            if (currentPdfTool == PDFTool.CURSOR) {
                 pdfViewer.viewArea.setPannable(true);
                 pdfPage.canvas.setMouseTransparent(true);
+                pdfViewer.toolBar.setCursorSelected();
+            }
+            else if(currentPdfTool == PDFTool.POINTER){
+                pdfViewer.viewArea.setPannable(false);
+                pdfPage.canvas.setMouseTransparent(false);
                 pdfViewer.toolBar.setPointerSelected();
             }
             else if(currentPdfTool == PDFTool.DRAW){
@@ -40,6 +45,7 @@ public class PDFViewerToolController {
             }
             else if(currentPdfTool == PDFTool.ERASER){
                 pdfViewer.viewArea.setPannable(false);
+                pdfPage.canvas.setMouseTransparent(false);
                 pdfViewer.toolBar.setEraserSelected();
             }
         }
@@ -104,9 +110,9 @@ public class PDFViewerToolController {
         }
     }
 
-    public void pointer(ActionEvent actionEvent) {
-        if (currentPdfTool != PDFTool.POINTER)
-            setCurrentPdfTool(PDFTool.POINTER);
+    public void cursor(ActionEvent actionEvent) {
+        if (currentPdfTool != PDFTool.CURSOR)
+            setCurrentPdfTool(PDFTool.CURSOR);
     }
 
     public void draw(ActionEvent actionEvent) {
@@ -117,6 +123,11 @@ public class PDFViewerToolController {
     public void eraser(ActionEvent actionEvent) {
         if (currentPdfTool != PDFTool.ERASER)
             setCurrentPdfTool(PDFTool.ERASER);
+    }
+
+    public void pointer(ActionEvent actionEvent) {
+        if (currentPdfTool != PDFTool.POINTER)
+            setCurrentPdfTool(PDFTool.POINTER);
     }
 
     public void setColorBlack(ActionEvent actionEvent) {
@@ -167,4 +178,6 @@ public class PDFViewerToolController {
         this.isFullScreen = isFullScreen;
         pdfViewer.showFullScreen(isFullScreen);
     }
+
+
 }

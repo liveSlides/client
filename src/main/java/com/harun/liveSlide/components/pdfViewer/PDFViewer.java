@@ -19,12 +19,13 @@ public class PDFViewer extends BorderPane {
     private final PDFViewerScrollController pdfViewerScrollController;
     private final PDFViewerRotateController pdfViewerRotateController;
     private final PDFViewerDrawController pdfViewerDrawController;
+    private final PDFViewerPointerController pdfViewerPointerController;
     private final PDFViewerNavigationController pdfViewerNavigationController;
     private final PDFViewerFileController pdfViewerFileController;
     private final PDFViewerToolController pdfViewerToolController;
     public ScrollPane viewArea;
     public PDFViewerToolBar toolBar;
-    public ArrayList<Group> pdfPages;
+    public ArrayList<PDFPageContainer> pdfPages;
     public String currentFilePath;
     private final Stage stage;
     private final MainWindow mainWindow;
@@ -35,6 +36,7 @@ public class PDFViewer extends BorderPane {
         this.pdfViewerScrollController = new PDFViewerScrollController();
         this.pdfViewerRotateController = new PDFViewerRotateController();
         this.pdfViewerDrawController = new PDFViewerDrawController(this);
+        this.pdfViewerPointerController = new PDFViewerPointerController(this);
         this.pdfViewerNavigationController = new PDFViewerNavigationController(this,0);
         this.pdfViewerFileController = new PDFViewerFileController(this);
         this.pdfViewerToolController = new PDFViewerToolController(this);
@@ -86,8 +88,8 @@ public class PDFViewer extends BorderPane {
             double viewportHeight = viewArea.getViewportBounds().getHeight();
 
             if (pdfPages != null) {
-                for (Group group : pdfPages) {
-                    PDFPage pdfPage = (PDFPage) group.getChildren().get(0);
+                for (PDFPageContainer pdfPageContainer : pdfPages) {
+                    PDFPage pdfPage = pdfPageContainer.getPDFPage();
                     pdfPage.setMinWidth(viewportWidth);
                     pdfPage.setMinHeight(viewportHeight);
                 }
@@ -98,7 +100,6 @@ public class PDFViewer extends BorderPane {
     }
 
     private void setViewAreaToControllers(){
-        pdfViewerZoomController.setViewArea(viewArea);
         pdfViewerScrollController.setViewArea(viewArea);
         pdfViewerRotateController.setViewArea(viewArea);
         pdfViewerDrawController.setViewArea(viewArea);
@@ -140,6 +141,10 @@ public class PDFViewer extends BorderPane {
         pdfViewerDrawController.erase(mouseCoordinates,size);
     }
 
+    public void point(double x , double y) {
+        pdfViewerPointerController.point(x ,y);
+    }
+
     public void loadPDF(String path) {
         pdfViewerFileController.loadPDF(path , 1 , true);
     }
@@ -172,6 +177,9 @@ public class PDFViewer extends BorderPane {
     public void reloadGraphicsContext(){
         pdfViewerDrawController.reloadGraphicsContext();
     }
+    public void reloadPointerShape() {
+        pdfViewerPointerController.updatePointerShape();
+    }
 
     public PDFViewerDrawController getPdfViewerDrawController() {
         return pdfViewerDrawController;
@@ -194,4 +202,10 @@ public class PDFViewer extends BorderPane {
     public PDFViewerToolController getPdfViewerToolController() {
         return pdfViewerToolController;
     }
+
+    public PDFViewerPointerController getPdfViewerPointerController() {
+        return pdfViewerPointerController;
+    }
+
+
 }

@@ -49,7 +49,6 @@ public class PDFViewerDrawController {
     }
 
     private void onMouseExited() {
-        System.out.println(drawingCoordinates);
         drawingCoordinates.clear();
         erasingCoordinates.clear();
     }
@@ -73,29 +72,25 @@ public class PDFViewerDrawController {
         pdfViewer.getPdfViewerToolController().setCurrentDrawColor(color.toString());
         onMousePressed(mouseCoordinates[0].x , mouseCoordinates[0].y , prefferedPenColor , prefferedPenSize);
         for (MouseCoordinate draw : mouseCoordinates) {
-            onMouseDragged(mouseCoordinates[0].x , mouseCoordinates[0].y);
+            onMouseDragged(draw.x , draw.y);
         }
     }
 
     public void erase(MouseCoordinate[] mouseCoordinates, double size) {
         pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.ERASER);
         pdfViewer.getPdfViewerToolController().setCurrentEraserSize((int) size);
-        for (MouseCoordinate draw : mouseCoordinates) {
-            onMouseDragged(mouseCoordinates[0].x , mouseCoordinates[0].y);
+        for (MouseCoordinate erase : mouseCoordinates) {
+            onMouseDragged(erase.x , erase.y);
         }
     }
 
     public void reloadGraphicsContext() {
-        if (viewArea != null && viewArea.getContent() instanceof Group) {
-            Group group = (Group) viewArea.getContent();
-            if (!group.getChildren().isEmpty()) {
-                Node firstChild = group.getChildren().get(0);
-                if (firstChild instanceof PDFPage) {
-                    PDFPage pdfPage = (PDFPage) firstChild;
-                    if (pdfPage.canvas != null) {
-                        this.gc = pdfPage.canvas.getGraphicsContext2D();
-                    }
-                }
+        if (viewArea != null && viewArea.getContent() instanceof PDFPageContainer) {
+            PDFPageContainer pdfPageContainer = (PDFPageContainer) viewArea.getContent();
+            PDFPage pdfPage = pdfPageContainer.getPDFPage();
+
+            if (pdfPage != null && pdfPage.canvas != null) {
+                this.gc = pdfPage.canvas.getGraphicsContext2D();
             }
         }
     }
