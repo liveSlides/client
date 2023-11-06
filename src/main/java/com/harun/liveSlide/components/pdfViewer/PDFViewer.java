@@ -83,8 +83,7 @@ public class PDFViewer extends BorderPane {
         });
 
         this.setCenter(viewArea);
-
-        // TODO when side bar is open , resizing window cause trouble
+        
         this.widthProperty().addListener((observable, oldValue, newValue) -> {
             updateSizeOfPdfPages((Double) newValue);
         });

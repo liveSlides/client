@@ -43,7 +43,7 @@ public class MainWindow extends Pane {
     }
 
     public void setResponsiveWidth(double width) {
-        double pdfViewerWidth = width;
+        double pdfViewerWidth = width - participantTab.getPrefWidth();
         pdfViewer.setPrefWidth(pdfViewerWidth);
     }
 
