@@ -14,6 +14,7 @@ public class PDFPageContainer extends Group {
         super(pdfPage);
         this.pdfPage = pdfPage;
         this.getChildren().add(pointerShape);
+        this.pointerShape.setVisible(false);
     }
 
     public PDFPage getPDFPage(){
