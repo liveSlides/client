@@ -12,7 +12,23 @@ public class MeetingTopBarController {
         meetingTopBar.getStage().close();
     }
 
+    public void takeControlBack() {
+
+    }
+
+    public void requestControl() {
+
+    }
+
     public void leave(ActionEvent actionEvent) {
         leave();
+    }
+
+    public void takeControlBack(ActionEvent actionEvent) {
+        takeControlBack();
+    }
+
+    public void requestControl(ActionEvent actionEvent) {
+        requestControl();
     }
 }

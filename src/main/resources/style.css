@@ -92,3 +92,14 @@
     -fx-background-color: #003366;
     -fx-cursor: hand;
 }
+
+.request-control-button {
+    -fx-background-color : #004080;
+    -fx-text-fill : white;
+    -fx-font-size : 13pt;
+}
+
+.meeting-top-bar .request-control-button:hover {
+    -fx-background-color: #003366;
+    -fx-cursor: hand;
+}

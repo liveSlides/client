@@ -18,6 +18,7 @@ public class MeetingTopBar extends ToolBar {
     private MeetingTimer meetingTimer;
     private Button leaveButton;
     private Button takeControlButton;
+    private Button requestControlButton;
 
     public MeetingTopBar(Stage stage) {
         controller = new MeetingTopBarController(this);
@@ -41,11 +42,19 @@ public class MeetingTopBar extends ToolBar {
         );
         this.getItems().add(spacer);
 
+        //Request Control Button
+        requestControlButton = new Button("Request Control");
+        requestControlButton.getStyleClass().add("request-control-button");
+        requestControlButton.setPadding(new Insets(10,30,10,30));
+        requestControlButton.setOnAction(controller::requestControl);
+        this.getItems().add(requestControlButton);
+
         //Take Control Back Button
-        takeControlButton = new Button("Take Control");
+        takeControlButton = new Button("Take Control Back");
         takeControlButton.getStyleClass().add("take-control-button");
         takeControlButton.setPadding(new Insets(10,30,10,30));
-        //this.getItems().add(takeControlButton);
+        takeControlButton.setOnAction(controller::takeControlBack);
+        this.getItems().add(takeControlButton);
 
         //Leave Button
         leaveButton = new Button("Leave");
