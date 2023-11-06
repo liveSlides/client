@@ -19,6 +19,8 @@ public class MainWindow extends Pane {
     public double sceneHeight;
 
     public MainWindow(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
+        this.getStyleClass().add("main-window");
+
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
         double prefHeight = sceneHeight * 0.065;

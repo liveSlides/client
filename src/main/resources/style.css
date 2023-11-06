@@ -1,3 +1,7 @@
+.main-window {
+    -fx-background: rgb(83,86,89);
+}
+
 #pdf-viewer .scroll-pane {
     -fx-background: rgb(83,86,89);
     -fx-background-color: rgb(83,86,89);
@@ -111,4 +115,15 @@
 .meeting-top-bar .participant-button:hover {
     -fx-background-color: rgb(93,96,99);
     -fx-cursor: hand;
+}
+
+.side-participant-tab {
+    -fx-background-color: #262627;
+    -fx-text-fill: white;
+    -fx-font-size : 13pt;
+}
+
+.side-participant-tab-title {
+    -fx-text-fill: white;
+    -fx-font-size : 13pt;
 }

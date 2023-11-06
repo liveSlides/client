@@ -1,7 +1,7 @@
 package com.harun.liveSlide.components.meetingSideBar;
 
 public class MeetingSideBarController {
-    private double sideBarWidth = 300;
+    private double sideBarWidth = 325   ;
     private boolean isShown = false;
     private MeetingSideBar meetingSideBar;
 
