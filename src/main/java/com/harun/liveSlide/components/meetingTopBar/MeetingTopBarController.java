@@ -20,6 +20,10 @@ public class MeetingTopBarController {
 
     }
 
+    public void showParticipants() {
+
+    }
+
     public void leave(ActionEvent actionEvent) {
         leave();
     }
@@ -30,5 +34,9 @@ public class MeetingTopBarController {
 
     public void requestControl(ActionEvent actionEvent) {
         requestControl();
+    }
+
+    public void showParticipants(ActionEvent actionEvent) {
+        showParticipants();
     }
 }

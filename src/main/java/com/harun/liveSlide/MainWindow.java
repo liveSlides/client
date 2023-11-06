@@ -20,10 +20,11 @@ public class MainWindow extends Pane {
     public MainWindow(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
-        topSide = new MeetingTopBar(stage);
-        topSide.setPrefHeight(sceneHeight * 0.065);
-        topSide.setMaxHeight(sceneHeight * 0.065);
-        topSide.setMinHeight(sceneHeight * 0.065);
+        double prefHeight = sceneHeight * 0.065;
+        topSide = new MeetingTopBar(stage,prefHeight);
+        topSide.setPrefHeight(prefHeight);
+        topSide.setMaxHeight(prefHeight);
+        topSide.setMinHeight(prefHeight);
         mainGrid.setTop(topSide);
 
         leftSide = new Pane();

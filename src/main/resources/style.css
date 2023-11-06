@@ -83,23 +83,32 @@
 }
 
 .take-control-button {
-    -fx-background-color : #004080;
+    -fx-background-color: rgb(83,86,89);
     -fx-text-fill : white;
     -fx-font-size : 13pt;
 }
 
 .meeting-top-bar .take-control-button:hover {
-    -fx-background-color: #003366;
+    -fx-background-color: rgb(93,96,99);
     -fx-cursor: hand;
 }
 
 .request-control-button {
-    -fx-background-color : #004080;
+    -fx-background-color: rgb(83,86,89);
     -fx-text-fill : white;
     -fx-font-size : 13pt;
 }
 
 .meeting-top-bar .request-control-button:hover {
-    -fx-background-color: #003366;
+    -fx-background-color: rgb(93,96,99);
+    -fx-cursor: hand;
+}
+
+.participant-button {
+    -fx-background-color: rgb(83,86,89);
+}
+
+.meeting-top-bar .participant-button:hover {
+    -fx-background-color: rgb(93,96,99);
     -fx-cursor: hand;
 }
