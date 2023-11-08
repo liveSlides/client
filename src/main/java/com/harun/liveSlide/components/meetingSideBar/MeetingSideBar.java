@@ -36,21 +36,21 @@ public class MeetingSideBar extends BorderPane {
         topBar.getChildren().add(participantTitle);
 
         Pane innerPane = new Pane();
-        innerPane.setBackground(new Background(new BackgroundFill(Color.GREEN,null,null)));
+
         this.setCenter(innerPane);
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setPadding(new Insets(0,10,0,10));
         scrollPane.getStyleClass().add("participant-tab-scroll");
         scrollPane.prefHeightProperty().bind(innerPane.heightProperty());
         innerPane.getChildren().add(scrollPane);
 
 
         vbox.setSpacing(10);
+        vbox.getStyleClass().add("participant-tab-scroll");
         for(int i = 0; i < 40; i++) {
-            vbox.getChildren().add(new ParticipantComponent("selam",meetingSideBarController.getSideBarWidth()));
+            vbox.getChildren().add(new ParticipantComponent("Harun Eren Özkaya",meetingSideBarController.getSideBarWidth()));
         }
         scrollPane.setContent(vbox);
 

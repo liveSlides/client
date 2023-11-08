@@ -131,3 +131,11 @@
 .participant-tab-scroll {
     -fx-background-color: #262627;
 }
+
+.participant-component:hover {
+    -fx-background-color : #202020;
+}
+
+.participant-component-hand-button {
+    -fx-background-color : transparent;
+}
