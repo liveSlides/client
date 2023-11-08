@@ -27,11 +27,12 @@ public class MeetingTopBar extends ToolBar {
     private Button requestControlButton;
     private Button participantButton;
 
-    public MeetingTopBar(Stage stage , MainWindow mainWindow ,double prefHeight) {
+    public MeetingTopBar(Stage stage , MainWindow mainWindow ,double prefHeight , double prefWidth) {
         controller = new MeetingTopBarController(this);
         this.stage = stage;
         this.mainWindow = mainWindow;
         this.prefHeight = prefHeight;
+        this.setPrefWidth(prefWidth);
         this.getStyleClass().add("meeting-top-bar");
         setupLayout();
     }

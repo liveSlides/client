@@ -23,11 +23,12 @@ public class MainWindow extends Pane {
 
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
-        double prefHeight = sceneHeight * 0.065;
-        topSide = new MeetingTopBar(stage, this, prefHeight);
-        topSide.setPrefHeight(prefHeight);
-        topSide.setMaxHeight(prefHeight);
-        topSide.setMinHeight(prefHeight);
+
+        double topBarHeight = sceneHeight * 0.065;
+        topSide = new MeetingTopBar(stage, this, topBarHeight , this.getPrefWidth());
+        topSide.setPrefHeight(topBarHeight);
+        topSide.setMaxHeight(topBarHeight);
+        topSide.setMinHeight(topBarHeight);
         mainGrid.setTop(topSide);
 
         leftSide = new Pane();

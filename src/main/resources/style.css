@@ -127,3 +127,7 @@
     -fx-text-fill: white;
     -fx-font-size : 13pt;
 }
+
+.participant-tab-scroll {
+    -fx-background-color: #262627;
+}
