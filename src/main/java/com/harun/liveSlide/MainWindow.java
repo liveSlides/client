@@ -31,12 +31,8 @@ public class MainWindow extends Pane {
         topSide.setMinHeight(topBarHeight);
         mainGrid.setTop(topSide);
 
-        leftSide = new Pane();
-        leftSide.setPrefWidth(0);
-        mainGrid.setLeft(leftSide);
-
         participantTab = new MeetingSideBar();
-        participantTab.setPrefWidth(0);
+        participantTab.hide();
         mainGrid.setRight(participantTab);
 
         pdfViewer = new PDFViewer(stage , this , sceneWidth,sceneHeight * 0.935);

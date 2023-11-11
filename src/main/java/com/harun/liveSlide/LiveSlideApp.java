@@ -2,14 +2,9 @@ package com.harun.liveSlide;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.Objects;
+
 
 public class LiveSlideApp extends Application {
     @Override
@@ -31,8 +26,6 @@ public class LiveSlideApp extends Application {
         scene.heightProperty().addListener((observable, oldValue, newValue) -> {
             main.setResponsiveHeight(newValue.doubleValue());
         });
-
-
     }
 
 

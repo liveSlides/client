@@ -132,10 +132,19 @@
     -fx-background-color: #262627;
 }
 
+.participant-component {
+    -fx-padding-left : 20px;
+    -fx-padding-right : 20px;
+}
+
 .participant-component:hover {
     -fx-background-color : #202020;
 }
 
 .participant-component-hand-button {
     -fx-background-color : transparent;
+}
+
+.participant-component-hand-button:hover {
+    -fx-cursor: hand;
 }

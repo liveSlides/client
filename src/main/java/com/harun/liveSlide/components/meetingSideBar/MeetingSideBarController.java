@@ -19,11 +19,13 @@ public class MeetingSideBarController {
 
     public void show() {
         meetingSideBar.setPrefWidth(sideBarWidth);
+        meetingSideBar.setMaxWidth(sideBarWidth);
         isShown = true;
     }
 
     public void hide() {
         meetingSideBar.setPrefWidth(0);
+        meetingSideBar.setMaxWidth(0);
         isShown = false;
     }
 }
