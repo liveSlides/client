@@ -1,6 +1,6 @@
 package com.harun.liveSlide;
 
-import com.harun.liveSlide.components.meetingSideBar.MeetingSideBar;
+import com.harun.liveSlide.components.meetingSideBar.MeetingParticipantsBar;
 import com.harun.liveSlide.components.meetingTopBar.MeetingTopBar;
 import com.harun.liveSlide.components.pdfViewer.PDFViewer;
 import javafx.scene.layout.BorderPane;
@@ -12,8 +12,7 @@ import java.io.IOException;
 public class MainWindow extends Pane {
 
     public MeetingTopBar topSide;
-    private Pane leftSide;
-    private MeetingSideBar participantTab;
+    private MeetingParticipantsBar participantTab;
 
     public PDFViewer pdfViewer;
     public double sceneHeight;
@@ -31,7 +30,7 @@ public class MainWindow extends Pane {
         topSide.setMinHeight(topBarHeight);
         mainGrid.setTop(topSide);
 
-        participantTab = new MeetingSideBar();
+        participantTab = new MeetingParticipantsBar();
         participantTab.hide();
         mainGrid.setRight(participantTab);
 
@@ -68,5 +67,17 @@ public class MainWindow extends Pane {
     private void showParticipantsTab() {
         participantTab.show();
         pdfViewer.setPrefWidth(pdfViewer.getPrefWidth() - participantTab.getSideBarWidth());
+    }
+
+    public MeetingTopBar getTopSide() {
+        return topSide;
+    }
+
+    public MeetingParticipantsBar getParticipantTab() {
+        return participantTab;
+    }
+
+    public PDFViewer getPdfViewer() {
+        return pdfViewer;
     }
 }

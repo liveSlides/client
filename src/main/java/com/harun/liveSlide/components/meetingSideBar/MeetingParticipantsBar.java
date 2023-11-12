@@ -1,20 +1,21 @@
 package com.harun.liveSlide.components.meetingSideBar;
 
+import com.harun.liveSlide.model.Participant;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 
-public class MeetingSideBar extends BorderPane {
-    private final MeetingSideBarController meetingSideBarController;
+public class MeetingParticipantsBar extends BorderPane {
+    private final MeetingParticipantsBarController meetingParticipantsBarController;
     private final Pane topBar;
     private final Pane participantListArea;
     private final Label participantTitle;
     private final ScrollPane scrollPane;
     private final VBox vbox;
 
-    public MeetingSideBar() {
-        this.meetingSideBarController = new MeetingSideBarController(this);
+    public MeetingParticipantsBar() {
+        this.meetingParticipantsBarController = new MeetingParticipantsBarController(this);
         this.participantTitle = new Label("Participants");
         this.topBar = new Pane();
         this.participantListArea = new Pane();
@@ -29,7 +30,11 @@ public class MeetingSideBar extends BorderPane {
         this.setTop(topBar);
 
         participantTitle.setText("Participants");
-        participantTitle.layoutYProperty().bind(topBar.heightProperty().subtract(participantTitle.heightProperty()).divide(2));
+        participantTitle.layoutYProperty().bind(topBar.
+                        heightProperty().
+                        subtract(participantTitle.heightProperty()).
+                        divide(2)
+        );
         participantTitle.setPadding(new Insets(10));
         participantTitle.getStyleClass().add("side-participant-tab-title");
         participantTitle.prefWidthProperty().bind(this.prefWidthProperty());
@@ -48,33 +53,50 @@ public class MeetingSideBar extends BorderPane {
 
         vbox.setSpacing(10);
         vbox.getStyleClass().add("participant-tab-scroll");
-        for(int i = 0; i < 40; i++) {
-            ParticipantComponent participant = new ParticipantComponent("Harun Eren Özkaya",scrollPane.widthProperty());
-            vbox.getChildren().add(participant);
-            if (i % 2 == 0) {
-                participant.raiseHand();
-            }
-        }
         scrollPane.setContent(vbox);
     }
 
     public void show() {
-        meetingSideBarController.show();
+        meetingParticipantsBarController.show();
     }
 
     public void hide() {
-        meetingSideBarController.hide();
+        meetingParticipantsBarController.hide();
     }
 
     public double getSideBarWidth() {
-        return meetingSideBarController.getSideBarWidth();
+        return meetingParticipantsBarController.getSideBarWidth();
     }
 
     public boolean isShown() {
-        return meetingSideBarController.isShown();
+        return meetingParticipantsBarController.isShown();
     }
 
-    public MeetingSideBarController getMeetingSideBarController() {
-        return meetingSideBarController;
+    public void setParticipants(Participant[] participants) {
+        meetingParticipantsBarController.setParticipants(participants);
+    }
+
+    public void addParticipant(Participant participant) {
+        meetingParticipantsBarController.addParticipant(participant);
+    }
+
+    public void removeParticipant(Participant participant) {
+        meetingParticipantsBarController.removeParticipant(participant);
+    }
+
+    public void changeParticipantRequestStatus(int participantId ,boolean status) {
+        meetingParticipantsBarController.changeParticipantRequestStatus(participantId,status);
+    }
+
+    public MeetingParticipantsBarController getMeetingSideBarController() {
+        return meetingParticipantsBarController;
+    }
+
+    public VBox getVbox() {
+        return vbox;
+    }
+
+    public ScrollPane getScrollPane() {
+        return scrollPane;
     }
 }

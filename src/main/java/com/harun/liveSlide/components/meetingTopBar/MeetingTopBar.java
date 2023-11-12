@@ -87,6 +87,10 @@ public class MeetingTopBar extends ToolBar {
         this.getItems().add(leaveButton);
     }
 
+    public void changeHandIcon(String path) {
+        requestControlButton.setGraphic(getButtonIcon(path, prefHeight));
+    }
+
     private ImageView getButtonIcon(String path , double prefHeight) {
         ImageView iconImage = new ImageView(new Image(String.valueOf(getClass().getResource(path))));
         iconImage.setFitWidth(prefHeight / 2);
@@ -100,5 +104,9 @@ public class MeetingTopBar extends ToolBar {
 
     public MainWindow getMainWindow() {
         return mainWindow;
+    }
+
+    public Button getRequestControlButton() {
+        return requestControlButton;
     }
 }

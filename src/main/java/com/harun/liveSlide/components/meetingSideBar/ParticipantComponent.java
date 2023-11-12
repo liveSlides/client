@@ -1,5 +1,6 @@
 package com.harun.liveSlide.components.meetingSideBar;
 
+import com.harun.liveSlide.model.Participant;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,17 +12,22 @@ import javafx.scene.layout.*;
 
 public class ParticipantComponent extends Pane {
     private final double COMPONENT_HEIGHT = 40;
-    private final String username;
+
+    private boolean isControlRequested = false;
+    private final MeetingParticipantsBarController meetingParticipantsBarController;
+    private final Participant participant;
     private final ImageView participantIcon;
     private final Label participantName;
-    private final Button hand;
+    private final Button requestControlButton;
     private final HBox hBox;
-    public ParticipantComponent(String username , ReadOnlyDoubleProperty widthProperty) {
-        this.username = username;
+
+    public ParticipantComponent(Participant participant , ReadOnlyDoubleProperty widthProperty , MeetingParticipantsBarController meetingParticipantsBarController) {
+        this.participant = participant;
+        this.meetingParticipantsBarController = meetingParticipantsBarController;
 
         participantIcon = new ImageView(getClass().getResource("/img/participant.png").toExternalForm());
-        participantName = new Label(username);
-        hand = new Button();
+        participantName = new Label(participant.getParticipantName());
+        requestControlButton = new Button();
         hBox = new HBox();
 
         this.getStyleClass().add("participant-component");
@@ -57,10 +63,11 @@ public class ParticipantComponent extends Pane {
         hBox.getChildren().add(spacer);
 
         //Raised Hand
-        hand.setGraphic(getButtonIcon("/img/raisedHand.png", COMPONENT_HEIGHT));
-        hand.getStyleClass().add("participant-component-hand-button");
-        lowerHand();
-        hBox.getChildren().add(hand);
+        requestControlButton.setGraphic(getButtonIcon("/img/raisedHand.png", COMPONENT_HEIGHT));
+        requestControlButton.getStyleClass().add("participant-component-hand-button");
+        requestControlButton.setOnAction((event) -> meetingParticipantsBarController.allowRequestControl(participant.getParticipantId()));
+        changeRequestStatus(false);
+        hBox.getChildren().add(requestControlButton);
     }
 
     private ImageView getButtonIcon(String path , double prefHeight) {
@@ -70,14 +77,20 @@ public class ParticipantComponent extends Pane {
         return iconImage;
     }
 
-    public void raiseHand() {
-        hand.setOpacity(1);
-        hand.setDisable(false);
+    public void changeRequestStatus(boolean status) {
+        isControlRequested = status;
+
+        if (isControlRequested) {
+            requestControlButton.setOpacity(1);
+            requestControlButton.setDisable(false);
+        }
+        else {
+            requestControlButton.setOpacity(0);
+            requestControlButton.setDisable(true);
+        }
     }
 
-    public void lowerHand() {
-        hand.setOpacity(0);
-        hand.setDisable(true);
+    public Participant getParticipant() {
+        return participant;
     }
-
 }
