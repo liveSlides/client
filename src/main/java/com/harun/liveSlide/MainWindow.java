@@ -3,6 +3,7 @@ package com.harun.liveSlide;
 import com.harun.liveSlide.components.meetingSideBar.MeetingParticipantsBar;
 import com.harun.liveSlide.components.meetingTopBar.MeetingTopBar;
 import com.harun.liveSlide.components.pdfViewer.PDFViewer;
+import com.harun.liveSlide.components.pdfViewer.PDFViewerObserver;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -15,6 +16,9 @@ public class MainWindow extends Pane {
     private MeetingParticipantsBar participantTab;
 
     public PDFViewer pdfViewer;
+    public PDFViewerObserver pdfViewerObserver;
+
+    public NetworkManager networkManager;
     public double sceneHeight;
 
     public MainWindow(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
@@ -23,6 +27,7 @@ public class MainWindow extends Pane {
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
 
+        //Top bar
         double topBarHeight = sceneHeight * 0.065;
         topSide = new MeetingTopBar(stage, this, topBarHeight , this.getPrefWidth());
         topSide.setPrefHeight(topBarHeight);
@@ -30,10 +35,19 @@ public class MainWindow extends Pane {
         topSide.setMinHeight(topBarHeight);
         mainGrid.setTop(topSide);
 
+        //Participant Tab
         participantTab = new MeetingParticipantsBar();
         participantTab.hide();
         mainGrid.setRight(participantTab);
 
+
+        //Network Manager
+        networkManager = new NetworkManager();
+
+        //PDF Viewer Observer
+        pdfViewerObserver = new PDFViewerObserver(networkManager);
+
+        //PDF Viewer
         pdfViewer = new PDFViewer(stage , this , sceneWidth,sceneHeight * 0.935);
         mainGrid.setCenter(pdfViewer);
 

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PDFViewer extends BorderPane {
+    private PDFViewerObserver pdfViewerObserver;
     private final PDFViewerZoomController pdfViewerZoomController;
     private final PDFViewerScrollController pdfViewerScrollController;
     private final PDFViewerRotateController pdfViewerRotateController;
@@ -51,6 +52,11 @@ public class PDFViewer extends BorderPane {
                 event.consume();
             }
         });
+    }
+
+    public PDFViewer(PDFViewerObserver pdfViewerObserver ,Stage stage , MainWindow mainWindow , double prefWidth, double prefHeight) {
+        this(stage,mainWindow,prefWidth,prefHeight);
+        this.pdfViewerObserver = pdfViewerObserver;
     }
 
     private void setupLayout(double prefWidth , double prefHeight){
