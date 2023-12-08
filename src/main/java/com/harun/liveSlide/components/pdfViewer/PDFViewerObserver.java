@@ -17,15 +17,15 @@ public class PDFViewerObserver {
     }
 
     public void pageChanged(int index) {
-
+        System.out.println(index + "ile sayfa değişti");
     }
 
     public void pageChangedGoBack() {
-
+        System.out.println("Bir önceki sayfaya gidildi");
     }
 
     public void pageChangedGoNext() {
-
+        System.out.println("Bir sonraki sayfaya gidildi");
     }
 
     public void zoomed(double zoomFactor) {

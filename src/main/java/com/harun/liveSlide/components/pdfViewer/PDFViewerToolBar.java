@@ -69,7 +69,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Back Button
         backButton = new Button();
-        backButton.setOnAction(pdfViewer.getPdfViewerNavigationController()::goBackPage);
+        backButton.setOnAction(e -> {pdfViewer.goBackPage();});
         backButton.setDisable(true);
         backButton.setGraphic(getButtonIcon("/img/back.png", prefHeight));
         backButton.setTooltip(new Tooltip("Go previous page"));
@@ -82,7 +82,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         // Next Button
         nextButton = new Button();
-        nextButton.setOnAction(pdfViewer.getPdfViewerNavigationController()::goNextPage);
+        nextButton.setOnAction(e -> {pdfViewer.goNextPage();});
         nextButton.setGraphic(getButtonIcon("/img/next.png", prefHeight));
         nextButton.setTooltip(new Tooltip("Go next page"));
         this.getItems().add(nextButton);

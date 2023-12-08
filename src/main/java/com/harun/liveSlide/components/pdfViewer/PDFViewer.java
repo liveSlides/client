@@ -117,14 +117,17 @@ public class PDFViewer extends BorderPane {
 
     public void goPage(int index) {
         pdfViewerNavigationController.goPage(index);
+        pdfViewerObserver.pageChanged(index);
     }
 
     public void goBackPage() {
         pdfViewerNavigationController.goBackPage();
+        pdfViewerObserver.pageChangedGoBack();
     }
 
     public void goNextPage() {
         pdfViewerNavigationController.goNextPage();
+        pdfViewerObserver.pageChangedGoNext();
     }
 
     public void zoom(double zoomFactor) {

@@ -48,7 +48,7 @@ public class MainWindow extends Pane {
         pdfViewerObserver = new PDFViewerObserver(networkManager);
 
         //PDF Viewer
-        pdfViewer = new PDFViewer(stage , this , sceneWidth,sceneHeight * 0.935);
+        pdfViewer = new PDFViewer(pdfViewerObserver ,stage , this , sceneWidth,sceneHeight * 0.935);
         mainGrid.setCenter(pdfViewer);
 
         this.sceneHeight = sceneHeight;
