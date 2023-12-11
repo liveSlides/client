@@ -28,28 +28,6 @@ public class PDFViewerFileController {
         this.pdfViewer = pdfViewer;
     }
 
-    public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
-        /*
-
-        if (pdfViewer.pdfPages != null) {
-            pdfViewer.pdfPages.clear();
-        }
-        else {
-            pdfViewer.pdfPages = new ArrayList<>();
-        }
-
-        for (int page = 0; page < bufferedImages.length; ++page) {
-            //PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bufferedImages[page]),pdfViewer.getPdfViewerDrawController());
-            //pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
-            //Group group = new Group(pdfPage);
-            //pdfViewer.pdfPages.add(group);
-        }
-
-        pdfViewer.toolBar.setPdfTitleText(FileNameExtractor.getFileNameFromPath(fileName));
-        pdfViewer.getPdfViewerNavigationController().setPageCount(bufferedImages.length);
-        pdfViewer.goPage(1);*/
-    }
-
     public void loadPDF(String path, int currentIndex , boolean initialization) {
         try {
 
@@ -126,7 +104,8 @@ public class PDFViewerFileController {
                 System.out.println("Dosya kapatılamadı!");
             }
         }
-        loadPDF(file.getAbsolutePath() , 1 , true);
+
+        pdfViewer.loadPDF(file.getAbsolutePath());
 
         //PDF Viewer initializing when file is uploaded
         pdfViewer.viewArea.setVvalue(0.5);

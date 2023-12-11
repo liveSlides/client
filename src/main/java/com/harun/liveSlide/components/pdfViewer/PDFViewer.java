@@ -208,14 +208,11 @@ public class PDFViewer extends BorderPane {
 
     public void loadPDF(String path) {
         pdfViewerFileController.loadPDF(path , 1 , true);
+        pdfViewerObserver.loadedPDF(path,1);
     }
 
-    public void loadPDF(String path , int currentIndex) throws IOException {
-        pdfViewerFileController.loadPDF(path , currentIndex , false);
-    }
-
-    public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
-        pdfViewerFileController.loadPDF(bufferedImages , fileName);
+    public void loadPDF(String path , int index) throws IOException {
+        pdfViewerFileController.loadPDF(path , index , false);
     }
 
     public void reloadGraphicsContext(){

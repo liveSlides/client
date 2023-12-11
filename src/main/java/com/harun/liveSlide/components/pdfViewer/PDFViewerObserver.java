@@ -15,7 +15,7 @@ public class PDFViewerObserver {
     }
 
     public void pageChanged(int index) {
-        System.out.println(index + "ile sayfa değişti");
+        System.out.println("Page changed : " + index);
     }
 
     public void pageChangedGoBack() {
@@ -70,6 +70,7 @@ public class PDFViewerObserver {
         System.out.println("Pointer x : " + x + " y : " + y);
     }
 
-    public void loadedPDF(String path) {
+    public void loadedPDF(String path ,int index) {
+        System.out.println("File loaded at : " + path + " at : " + index);
     }
 }
