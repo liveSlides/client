@@ -17,10 +17,13 @@ public class PDFViewerToolBar extends ToolBar {
     private Label pageIndicator;
     private Button backButton;
     private Button nextButton;
+    private SplitPane divider1;
     private Button zoomOutButton;
     private Button zoomInButton;
     private Label zoomRateLabel;
+    private SplitPane divider2;
     private Button rotateButton;
+    private SplitPane divider3;
     private Button cursorButton;
     private Button pointerButton;
     private Button drawButton;
@@ -88,7 +91,7 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(nextButton);
 
         //Divider 1
-        SplitPane divider1 = new SplitPane();
+        divider1 = new SplitPane();
         this.getItems().add(divider1);
 
         //Zoom Out Button
@@ -110,7 +113,7 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(zoomInButton);
 
         //Divider 2
-        SplitPane divider2 = new SplitPane();
+        divider2 = new SplitPane();
         this.getItems().add(divider2);
 
         //Rotate Button
@@ -121,7 +124,7 @@ public class PDFViewerToolBar extends ToolBar {
         this.getItems().add(rotateButton);
 
         //Divider 3
-        SplitPane divider3 = new SplitPane();
+        divider3 = new SplitPane();
         this.getItems().add(divider3);
 
         //Cursor Button
@@ -232,6 +235,38 @@ public class PDFViewerToolBar extends ToolBar {
         downloadButton = new Button();
         downloadButton.setGraphic(getButtonIcon("/img/download.png", prefHeight));
         this.getItems().add(downloadButton);*/
+    }
+
+    public void setToolsVisible(boolean visibility) {
+        pdfTitle.setVisible(visibility);
+        pdfTitle.setVisible(visibility);
+        changePdfButton.setVisible(visibility);
+        pageIndicator.setVisible(visibility);
+        backButton.setVisible(visibility);
+        nextButton.setVisible(visibility);
+        zoomOutButton.setVisible(visibility);
+        zoomInButton.setVisible(visibility);
+        zoomRateLabel.setVisible(visibility);
+        rotateButton.setVisible(visibility);
+        cursorButton.setVisible(visibility);
+        pointerButton.setVisible(visibility);
+        drawButton.setVisible(visibility);
+        eraserButton.setVisible(visibility);
+        sizeDrawSmallButton.setVisible(visibility);
+        sizeDrawMediumButton.setVisible(visibility);
+        sizeDrawBigButton.setVisible(visibility);
+        sizeEraserSmallButton.setVisible(visibility);
+        sizeEraserMediumButton.setVisible(visibility);
+        sizeEraserBigButton.setVisible(visibility);
+        colorBlackButton.setVisible(visibility);
+        colorRedButton.setVisible(visibility);
+        colorBlueButton.setVisible(visibility);
+        divider4.setVisible(visibility);
+        divider5.setVisible(visibility);
+        rightSpacer.setVisible(visibility);
+        divider1.setVisible(visibility);
+        divider2.setVisible(visibility);
+        divider3.setVisible(visibility);
     }
 
     public void setPdfTitleText(String text) {

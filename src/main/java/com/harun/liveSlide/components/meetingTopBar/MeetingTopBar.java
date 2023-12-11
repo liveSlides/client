@@ -98,6 +98,10 @@ public class MeetingTopBar extends ToolBar {
         return iconImage;
     }
 
+    public void setVisibleControlBackButton(boolean visibility) {
+        takeControlButton.setVisible(visibility);
+    }
+
     public Stage getStage() {
         return stage;
     }

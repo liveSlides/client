@@ -215,6 +215,10 @@ public class PDFViewer extends BorderPane {
         pdfViewerFileController.loadPDF(path , index , false);
     }
 
+    public void setToolsVisible(boolean visibility) {
+        toolBar.setToolsVisible(visibility);
+    }
+
     public void reloadGraphicsContext(){
         pdfViewerDrawController.reloadGraphicsContext();
     }
@@ -234,12 +238,6 @@ public class PDFViewer extends BorderPane {
         return pdfViewerFileController;
     }
 
-    public PDFViewerZoomController getPdfViewerZoomController() {
-        return pdfViewerZoomController;
-    }
-    public PDFViewerRotateController getPdfViewerRotateController() {
-        return pdfViewerRotateController;
-    }
     public PDFViewerToolController getPdfViewerToolController() {
         return pdfViewerToolController;
     }

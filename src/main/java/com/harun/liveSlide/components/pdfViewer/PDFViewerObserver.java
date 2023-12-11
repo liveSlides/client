@@ -1,16 +1,17 @@
 package com.harun.liveSlide.components.pdfViewer;
 
-import com.harun.liveSlide.NetworkManager;
+import com.harun.liveSlide.network.INetworkSenderManager;
+import com.harun.liveSlide.network.NetworkManager;
 import com.harun.liveSlide.model.MouseCoordinate;
 
 public class PDFViewerObserver {
-    private NetworkManager networkManager;
+    private INetworkSenderManager networkManager;
 
     public PDFViewerObserver() {
 
     }
 
-    public PDFViewerObserver(NetworkManager networkManager) {
+    public PDFViewerObserver(INetworkSenderManager networkManager) {
         this.networkManager = networkManager;
     }
 
