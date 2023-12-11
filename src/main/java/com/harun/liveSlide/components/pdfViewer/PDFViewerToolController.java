@@ -1,17 +1,13 @@
 package com.harun.liveSlide.components.pdfViewer;
 
 import javafx.event.ActionEvent;
-import javafx.scene.Group;
-import javafx.scene.paint.Color;
-
-import java.util.Objects;
 
 public class PDFViewerToolController {
     private final PDFViewer pdfViewer;
-    private PDFTool currentPdfTool = PDFTool.CURSOR;
-    private int currentDrawSize = 0;
-    private int currentEraserSize = 0;
-    private String currentDrawColor = "red";
+    private PDFTool currentPdfTool;
+    private PenEraserSize currentDrawSize;
+    private PenEraserSize currentEraserSize;
+    private PenColor currentDrawColor;
     private boolean isFullScreen = false;
 
     public PDFViewerToolController(PDFViewer pdfViewer) {
@@ -54,100 +50,67 @@ public class PDFViewerToolController {
         }
     }
 
-    public void setCurrentDrawSize(int size) {
-        if (currentDrawSize != size) {
-            currentDrawSize = size;
+    public void setCurrentDrawSize(PenEraserSize size) {
+        if (size == currentDrawSize)
+            return;
 
-            switch (currentDrawSize) {
-                case 1 :
-                    pdfViewer.toolBar.drawSmallSizeSelected();
-                    break;
-                case 2 :
-                    pdfViewer.toolBar.drawMediumSizeSelected();
-                    break;
-                case 3:
-                    pdfViewer.toolBar.drawBigSizeSelected();
-                    break;
-            }
+        pdfViewer.getPdfViewerDrawController().setPenSize(PenEraserSizeConverter.convertSize(size));
 
-            pdfViewer.getPdfViewerDrawController().setPenSize(size);
+        switch (size) {
+            case SMALL :
+                pdfViewer.toolBar.drawSmallSizeSelected();
+                break;
+            case MEDIUM:
+                pdfViewer.toolBar.drawMediumSizeSelected();
+                break;
+            case BIG:
+                pdfViewer.toolBar.drawBigSizeSelected();
+                break;
         }
+
+        currentDrawSize = size;
     }
 
-    public void setCurrentEraserSize(int size) {
-        if (currentEraserSize != size) {
-            currentEraserSize = size;
+    public void setCurrentEraserSize(PenEraserSize size) {
+        if (size == currentEraserSize)
+            return;
 
-            switch (currentEraserSize) {
-                case 1 :
-                    pdfViewer.toolBar.eraserSmallSizeSelected();
-                    break;
-                case 2 :
-                    pdfViewer.toolBar.eraserMediumSizeSelected();
-                    break;
-                case 3:
-                    pdfViewer.toolBar.eraserBigSizeSelected();
-                    break;
-            }
+        pdfViewer.getPdfViewerDrawController().setEraserSize(PenEraserSizeConverter.convertSize(size) * 30);
 
-            pdfViewer.getPdfViewerDrawController().setEraserSize(size * 30);
+        switch (size) {
+            case SMALL :
+                pdfViewer.toolBar.eraserSmallSizeSelected();
+                break;
+            case MEDIUM :
+                pdfViewer.toolBar.eraserMediumSizeSelected();
+                break;
+            case BIG:
+                pdfViewer.toolBar.eraserBigSizeSelected();
+                break;
         }
+
+        currentEraserSize = size;
     }
 
-    public void setCurrentDrawColor(String color) {
-        if (!currentDrawColor.equals(color)) {
-            currentDrawColor = color;
+    public void setCurrentDrawColor(PenColor color) {
+        if (currentDrawColor == color)
+            return;
 
-            if ("black".equals(currentDrawColor)) {
-                pdfViewer.toolBar.drawBlackSelected();
-                pdfViewer.getPdfViewerDrawController().setPenColor(Color.BLACK);
-            }
-            else if ("red".equals(currentDrawColor)) {
-                pdfViewer.toolBar.drawRedSelected();
-                pdfViewer.getPdfViewerDrawController().setPenColor(Color.RED);
-            }
-            else if ("blue".equals(currentDrawColor)) {
-                pdfViewer.toolBar.drawBlueSelected();
-                pdfViewer.getPdfViewerDrawController().setPenColor(Color.BLUE);
-            }
+        pdfViewer.getPdfViewerDrawController().setPenColor(PenColorConverter.convertColor(color));
+
+        if (color == PenColor.BLACK) {
+            pdfViewer.toolBar.drawBlackSelected();
         }
+        else if (color == PenColor.RED) {
+            pdfViewer.toolBar.drawRedSelected();
+        }
+        else if (color == PenColor.BLUE) {
+            pdfViewer.toolBar.drawBlueSelected();
+        }
+
+        currentDrawColor = color;
     }
 
-    public void setColorBlack(ActionEvent actionEvent) {
-        setCurrentDrawColor("black");
-    }
-
-    public void setColorRed(ActionEvent actionEvent) {
-        setCurrentDrawColor("red");
-    }
-
-    public void setColorBlue(ActionEvent actionEvent) {
-        setCurrentDrawColor("blue");
-    }
-
-    public void setDrawSizeSmall(ActionEvent actionEvent) {
-        setCurrentDrawSize(1);
-    }
-
-    public void setDrawSizeMedium(ActionEvent actionEvent) {
-        setCurrentDrawSize(2);
-    }
-
-    public void setDrawSizeBig(ActionEvent actionEvent) {
-        setCurrentDrawSize(3);
-    }
-
-    public void setEraserSizeSmall(ActionEvent actionEvent) {
-        setCurrentEraserSize(1);
-    }
-
-    public void setEraserSizeMedium(ActionEvent actionEvent) {
-        setCurrentEraserSize(2);
-    }
-
-    public void setEraserSizeBig(ActionEvent actionEvent) {
-        setCurrentEraserSize(3);
-    }
 
     public void showFullScreen(ActionEvent actionEvent) {
         setFullScreen(!isFullScreen);

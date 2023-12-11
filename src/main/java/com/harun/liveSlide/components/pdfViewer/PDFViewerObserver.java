@@ -2,8 +2,6 @@ package com.harun.liveSlide.components.pdfViewer;
 
 import com.harun.liveSlide.NetworkManager;
 import com.harun.liveSlide.model.MouseCoordinate;
-import javafx.scene.paint.Color;
-
 
 public class PDFViewerObserver {
     private NetworkManager networkManager;
@@ -52,11 +50,26 @@ public class PDFViewerObserver {
         System.out.println("Canvas Dragged x :" + mouseCoordinate.x + " y : " + mouseCoordinate.y);
     }
 
-    public void pointed(double x , double y) {
+    public void activeToolChanged(PDFTool pdfTool) {
+        System.out.println("Active tool changed : " + pdfTool);
+    }
 
+    public void penSizeChanged(PenEraserSize size) {
+        System.out.println("Pen size changed : " + size);
+    }
+
+    public void penColorChanged(PenColor penColor) {
+        System.out.println("Pen color changed : " + penColor);
+    }
+
+    public void eraserSizeChanged(PenEraserSize size) {
+        System.out.println("Eraser size changed : " + size);
+    }
+
+    public void pointed(double x , double y) {
+        System.out.println("Pointer x : " + x + " y : " + y);
     }
 
     public void loadedPDF(String path) {
     }
-
 }

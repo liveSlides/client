@@ -163,7 +163,10 @@ public class PDFViewer extends BorderPane {
     }
 
     public void point(double x , double y) {
-        pdfViewerPointerController.point(x ,y);
+        if (pdfViewerToolController.getCurrentPdfTool() == PDFTool.POINTER) {
+            pdfViewerPointerController.point(x ,y);
+            pdfViewerObserver.pointed(x,y);
+        }
     }
 
     public void showFullScreen(boolean isShowFullScreen) {
@@ -183,20 +186,24 @@ public class PDFViewer extends BorderPane {
         }
     }
 
-    public void changeActiveToolCursor(){
-        pdfViewerToolController.setCurrentPdfTool(PDFTool.CURSOR);
+    public void changeActiveTool(PDFTool tool) {
+        pdfViewerToolController.setCurrentPdfTool(tool);
+        pdfViewerObserver.activeToolChanged(tool);
     }
 
-    public void changeActiveToolPointer(){
-        pdfViewerToolController.setCurrentPdfTool(PDFTool.POINTER);
+    public void changeActivePenSize(PenEraserSize size) {
+        pdfViewerToolController.setCurrentDrawSize(size);
+        pdfViewerObserver.penSizeChanged(size);
     }
 
-    public void changeActiveToolDraw(){
-        pdfViewerToolController.setCurrentPdfTool(PDFTool.DRAW);
+    public void changeActivePenColor(PenColor penColor) {
+        pdfViewerToolController.setCurrentDrawColor(penColor);
+        pdfViewerObserver.penColorChanged(penColor);
     }
 
-    public void changeActiveToolDrawEraser(){
-        pdfViewerToolController.setCurrentPdfTool(PDFTool.ERASER);
+    public void changeActiveEraserSize(PenEraserSize size) {
+        pdfViewerToolController.setCurrentEraserSize(size);
+        pdfViewerObserver.eraserSizeChanged(size);
     }
 
     public void loadPDF(String path) {

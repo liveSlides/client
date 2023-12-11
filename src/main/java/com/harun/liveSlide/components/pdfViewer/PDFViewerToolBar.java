@@ -126,28 +126,28 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Cursor Button
         cursorButton = new Button();
-        cursorButton.setOnAction(e -> {pdfViewer.changeActiveToolCursor();});
+        cursorButton.setOnAction(e -> {pdfViewer.changeActiveTool(PDFTool.CURSOR);});
         cursorButton.setGraphic(getButtonIcon("/img/cursor.png", prefHeight));
         cursorButton.setTooltip(new Tooltip("Pan"));
         this.getItems().add(cursorButton);
 
         //Pointer Button
         pointerButton = new Button();
-        pointerButton.setOnAction(e -> {pdfViewer.changeActiveToolPointer();});
+        pointerButton.setOnAction(e -> {pdfViewer.changeActiveTool(PDFTool.POINTER);});
         pointerButton.setGraphic(getButtonIcon("/img/pointer.png", prefHeight));
         pointerButton.setTooltip(new Tooltip("Laser Pointer"));
         this.getItems().add(pointerButton);
 
         //Draw Button
         drawButton = new Button();
-        drawButton.setOnAction(e -> {pdfViewer.changeActiveToolDraw();});
+        drawButton.setOnAction(e -> {pdfViewer.changeActiveTool(PDFTool.DRAW);});
         drawButton.setGraphic(getButtonIcon("/img/pen.png", prefHeight));
         drawButton.setTooltip(new Tooltip("Draw"));
         this.getItems().add(drawButton);
 
         //Eraser Button
         eraserButton = new Button();
-        eraserButton.setOnAction(e -> {pdfViewer.changeActiveToolDrawEraser();});
+        eraserButton.setOnAction(e -> {pdfViewer.changeActiveTool(PDFTool.ERASER);});
         eraserButton.setGraphic(getButtonIcon("/img/eraser.png", prefHeight));
         eraserButton.setTooltip(new Tooltip("Erase"));
         this.getItems().add(eraserButton);
@@ -157,37 +157,37 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Size Draw Small Button
         sizeDrawSmallButton = new Button();
-        sizeDrawSmallButton.setOnAction(pdfViewer.getPdfViewerToolController()::setDrawSizeSmall);
+        sizeDrawSmallButton.setOnAction(e -> {pdfViewer.changeActivePenSize(PenEraserSize.SMALL);});
         sizeDrawSmallButton.setGraphic(getButtonIcon("/img/smallDot.png", prefHeight / 2.5));
         sizeDrawSmallButton.setTooltip(new Tooltip("Small"));
 
         //Size Draw Medium Button
         sizeDrawMediumButton = new Button();
-        sizeDrawMediumButton.setOnAction(pdfViewer.getPdfViewerToolController()::setDrawSizeMedium);
+        sizeDrawMediumButton.setOnAction(e -> {pdfViewer.changeActivePenSize(PenEraserSize.MEDIUM);});
         sizeDrawMediumButton.setGraphic(getButtonIcon("/img/mediumDot.png", prefHeight / 1.5));
         sizeDrawMediumButton.setTooltip(new Tooltip("Medium"));
 
         //Size Draw Big Button
         sizeDrawBigButton = new Button();
-        sizeDrawBigButton.setOnAction(pdfViewer.getPdfViewerToolController()::setDrawSizeBig);
+        sizeDrawBigButton.setOnAction(e -> {pdfViewer.changeActivePenSize(PenEraserSize.BIG);});
         sizeDrawBigButton.setGraphic(getButtonIcon("/img/bigDot.png", prefHeight));
         sizeDrawBigButton.setTooltip(new Tooltip("Big"));
 
         //Size Eraser Small Button
         sizeEraserSmallButton = new Button();
-        sizeEraserSmallButton.setOnAction(pdfViewer.getPdfViewerToolController()::setEraserSizeSmall);
+        sizeEraserSmallButton.setOnAction(e -> {pdfViewer.changeActiveEraserSize(PenEraserSize.SMALL);});
         sizeEraserSmallButton.setGraphic(getButtonIcon("/img/smallDot.png", prefHeight / 2.5));
         sizeEraserSmallButton.setTooltip(new Tooltip("Small"));
 
         //Size Eraser Medium Button
         sizeEraserMediumButton = new Button();
-        sizeEraserMediumButton.setOnAction(pdfViewer.getPdfViewerToolController()::setEraserSizeMedium);
+        sizeEraserMediumButton.setOnAction(e -> {pdfViewer.changeActiveEraserSize(PenEraserSize.MEDIUM);});
         sizeEraserMediumButton.setGraphic(getButtonIcon("/img/mediumDot.png", prefHeight / 1.5));
         sizeEraserMediumButton.setTooltip(new Tooltip("Medium"));
 
         //Size Eraser Big Button
         sizeEraserBigButton = new Button();
-        sizeEraserBigButton.setOnAction(pdfViewer.getPdfViewerToolController()::setEraserSizeBig);
+        sizeEraserBigButton.setOnAction(e -> {pdfViewer.changeActiveEraserSize(PenEraserSize.BIG);});
         sizeEraserBigButton.setGraphic(getButtonIcon("/img/bigDot.png", prefHeight));
         sizeEraserBigButton.setTooltip(new Tooltip("Big"));
 
@@ -196,19 +196,19 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Color Black Button
         colorBlackButton = new Button();
-        colorBlackButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorBlack);
+        colorBlackButton.setOnAction(e -> {pdfViewer.changeActivePenColor(PenColor.BLACK);});
         colorBlackButton.setGraphic(getButtonIcon("/img/drawBlack.png", prefHeight));
         colorBlackButton.setTooltip(new Tooltip("Black"));
 
         //Color Red Button
         colorRedButton = new Button();
-        colorRedButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorRed);
+        colorRedButton.setOnAction(e -> {pdfViewer.changeActivePenColor(PenColor.RED);});
         colorRedButton.setGraphic(getButtonIcon("/img/drawRed.png", prefHeight));
         colorRedButton.setTooltip(new Tooltip("Red"));
 
         //Color Blue Button
         colorBlueButton = new Button();
-        colorBlueButton.setOnAction(pdfViewer.getPdfViewerToolController()::setColorBlue);
+        colorBlueButton.setOnAction(e -> {pdfViewer.changeActivePenColor(PenColor.BLUE);});
         colorBlueButton.setGraphic(getButtonIcon("/img/drawBlue.png", prefHeight));
         colorBlueButton.setTooltip(new Tooltip("Blue"));
 
