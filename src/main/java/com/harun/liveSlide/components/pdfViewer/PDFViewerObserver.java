@@ -29,7 +29,7 @@ public class PDFViewerObserver {
     }
 
     public void zoomed(double zoomFactor) {
-
+        System.out.println("Zoom : " + zoomFactor);
     }
 
     public void scrolledVerticallyTo(double vValue) {

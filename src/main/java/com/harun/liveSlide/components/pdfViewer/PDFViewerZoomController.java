@@ -57,14 +57,6 @@ public class PDFViewerZoomController {
     }
 
 
-    public void zoomOut(ActionEvent actionEvent) {
-        zoom(0);
-    }
-
-    public void zoomIn(ActionEvent actionEvent) {
-        zoom(2);
-    }
-
     /* For scrollable multi-view */
     /*
     private void zoomEachPage(VBox vbox , double zoomRate) {

@@ -93,7 +93,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Zoom Out Button
         zoomOutButton = new Button();
-        zoomOutButton.setOnAction(pdfViewer.getPdfViewerZoomController()::zoomOut);
+        zoomOutButton.setOnAction(e -> {pdfViewer.zoom(0);});
         zoomOutButton.setGraphic(getButtonIcon("/img/zoom-out.png", prefHeight));
         zoomOutButton.setTooltip(new Tooltip("Zoom Out"));
         this.getItems().add(zoomOutButton);
@@ -104,7 +104,7 @@ public class PDFViewerToolBar extends ToolBar {
 
         //Zoom In Button
         zoomInButton = new Button();
-        zoomInButton.setOnAction(pdfViewer.getPdfViewerZoomController()::zoomIn);
+        zoomInButton.setOnAction(e -> {pdfViewer.zoom(2);});
         zoomInButton.setGraphic(getButtonIcon("/img/zoom-in.png", prefHeight));
         zoomInButton.setTooltip(new Tooltip("Zoom In"));
         this.getItems().add(zoomInButton);

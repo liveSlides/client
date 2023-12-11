@@ -72,7 +72,7 @@ public class PDFViewer extends BorderPane {
         viewArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         viewArea.setOnZoom((ZoomEvent event) -> {
             double zoomFactor = event.getZoomFactor();
-            pdfViewerZoomController.zoom(zoomFactor);
+            zoom(zoomFactor > 1 ? 2 : 0);
             event.consume();
         });
         viewArea.setOnKeyPressed(event -> {
@@ -132,6 +132,7 @@ public class PDFViewer extends BorderPane {
 
     public void zoom(double zoomFactor) {
         pdfViewerZoomController.zoom(zoomFactor);
+        pdfViewerObserver.zoomed(zoomFactor);
     }
 
     public void scrollVerticallyTo(double vValue) {
