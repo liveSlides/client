@@ -164,18 +164,6 @@ public class PDFViewer extends BorderPane {
         pdfViewerPointerController.point(x ,y);
     }
 
-    public void loadPDF(String path) {
-        pdfViewerFileController.loadPDF(path , 1 , true);
-    }
-
-    public void loadPDF(String path , int currentIndex) throws IOException {
-        pdfViewerFileController.loadPDF(path , currentIndex , false);
-    }
-
-    public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
-        pdfViewerFileController.loadPDF(bufferedImages , fileName);
-    }
-
     public void showFullScreen(boolean isShowFullScreen) {
 
         stage.setFullScreen(isShowFullScreen);
@@ -191,6 +179,34 @@ public class PDFViewer extends BorderPane {
             mainWindow.topSide.setMaxHeight(mainWindow.sceneHeight * 0.065);
             mainWindow.pdfViewer.setPrefHeight(mainWindow.sceneHeight * 0.935);
         }
+    }
+
+    public void changeActiveToolCursor(){
+        pdfViewerToolController.setCurrentPdfTool(PDFTool.CURSOR);
+    }
+
+    public void changeActiveToolPointer(){
+        pdfViewerToolController.setCurrentPdfTool(PDFTool.POINTER);
+    }
+
+    public void changeActiveToolDraw(){
+        pdfViewerToolController.setCurrentPdfTool(PDFTool.DRAW);
+    }
+
+    public void changeActiveToolDrawEraser(){
+        pdfViewerToolController.setCurrentPdfTool(PDFTool.ERASER);
+    }
+
+    public void loadPDF(String path) {
+        pdfViewerFileController.loadPDF(path , 1 , true);
+    }
+
+    public void loadPDF(String path , int currentIndex) throws IOException {
+        pdfViewerFileController.loadPDF(path , currentIndex , false);
+    }
+
+    public void loadPDF(BufferedImage[] bufferedImages , String fileName) {
+        pdfViewerFileController.loadPDF(bufferedImages , fileName);
     }
 
     public void reloadGraphicsContext(){
