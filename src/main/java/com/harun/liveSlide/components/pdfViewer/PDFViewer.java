@@ -87,6 +87,8 @@ public class PDFViewer extends BorderPane {
                     break;
             }
         });
+        viewArea.vvalueProperty().addListener((observable, oldValue, newValue) -> {pdfViewerObserver.scrolledVerticallyTo((Double) newValue);});
+        viewArea.hvalueProperty().addListener((observable, oldValue, newValue) -> {pdfViewerObserver.scrolledHorizontallyTo((Double) newValue);});
 
         this.setCenter(viewArea);
         
@@ -137,10 +139,12 @@ public class PDFViewer extends BorderPane {
 
     public void scrollVerticallyTo(double vValue) {
         pdfViewerScrollController.scrollVerticallyTo(vValue);
+        pdfViewerObserver.scrolledVerticallyTo(vValue);
     }
 
     public void scrollHorizontallyTo(double hValue) {
         pdfViewerScrollController.scrollHorizontallyTo(hValue);
+        pdfViewerObserver.scrolledHorizontallyTo(hValue);
     }
 
     public void rotate() {
