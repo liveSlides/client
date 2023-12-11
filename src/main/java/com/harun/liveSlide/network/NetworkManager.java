@@ -1,6 +1,6 @@
 package com.harun.liveSlide.network;
 
-import com.harun.liveSlide.AuthLayoutController;
+import com.harun.liveSlide.screens.mainScreen.AuthLayoutController;
 import com.harun.liveSlide.components.pdfViewer.PDFViewer;
 
 public class NetworkManager implements INetworkSenderManager , INetworkReceiverManager {

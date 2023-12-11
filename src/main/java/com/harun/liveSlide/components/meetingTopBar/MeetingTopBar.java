@@ -1,16 +1,14 @@
 package com.harun.liveSlide.components.meetingTopBar;
 
-import com.harun.liveSlide.MainWindow;
+import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.components.meetingTopBar.meetingTimer.MeetingTimer;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.time.LocalTime;
@@ -18,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 
 public class MeetingTopBar extends ToolBar {
     private final Stage stage;
-    private final MainWindow mainWindow;
+    private final MainScreen mainScreen;
     private final double prefHeight;
     private final MeetingTopBarController controller;
     private MeetingTimer meetingTimer;
@@ -27,10 +25,10 @@ public class MeetingTopBar extends ToolBar {
     private Button requestControlButton;
     private Button participantButton;
 
-    public MeetingTopBar(Stage stage , MainWindow mainWindow ,double prefHeight , double prefWidth) {
+    public MeetingTopBar(Stage stage , MainScreen mainScreen, double prefHeight , double prefWidth) {
         controller = new MeetingTopBarController(this);
         this.stage = stage;
-        this.mainWindow = mainWindow;
+        this.mainScreen = mainScreen;
         this.prefHeight = prefHeight;
         this.setPrefWidth(prefWidth);
         this.getStyleClass().add("meeting-top-bar");
@@ -106,8 +104,8 @@ public class MeetingTopBar extends ToolBar {
         return stage;
     }
 
-    public MainWindow getMainWindow() {
-        return mainWindow;
+    public MainScreen getMainWindow() {
+        return mainScreen;
     }
 
     public Button getRequestControlButton() {

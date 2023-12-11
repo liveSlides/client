@@ -1,4 +1,4 @@
-package com.harun.liveSlide;
+package com.harun.liveSlide.screens.mainScreen;
 
 import com.harun.liveSlide.components.meetingSideBar.MeetingParticipantsBar;
 import com.harun.liveSlide.components.meetingTopBar.MeetingTopBar;
@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainWindow extends Pane {
+public class MainScreen extends Pane {
 
     public MeetingTopBar topSide;
     private MeetingParticipantsBar participantTab;
@@ -23,7 +23,7 @@ public class MainWindow extends Pane {
     public AuthLayoutController authLayoutController;
     public double sceneHeight;
 
-    public MainWindow(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
+    public MainScreen(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
         this.getStyleClass().add("main-window");
 
         BorderPane mainGrid = new BorderPane();

@@ -148,3 +148,32 @@
 .participant-component-hand-button:hover {
     -fx-cursor: hand;
 }
+
+#login-screen {
+    -fx-background-color: #262627;
+
+}
+
+#login-screen .label {
+    -fx-text-fill: white;
+    -fx-font-size : 30pt;
+    -fx-font-family:"Source Code Pro"
+}
+
+#login-screen .button {
+    -fx-background-color: rgb(83,86,89);
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+    -fx-text-fill: white;
+}
+
+#login-screen .button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: rgb(93,96,99);
+}
+
+#login-screen .text-field {
+    -fx-focus-color: rgb(83,86,89);
+}
+
+

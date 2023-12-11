@@ -1,16 +1,13 @@
 package com.harun.liveSlide.components.pdfViewer;
 
-import com.harun.liveSlide.MainWindow;
+import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.model.MouseCoordinate;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -29,9 +26,9 @@ public class PDFViewer extends BorderPane {
     public ArrayList<PDFPageContainer> pdfPages;
     public String currentFilePath;
     private final Stage stage;
-    private final MainWindow mainWindow;
+    private final MainScreen mainScreen;
 
-    public PDFViewer(Stage stage , MainWindow mainWindow , double prefWidth, double prefHeight) {
+    public PDFViewer(Stage stage , MainScreen mainScreen, double prefWidth, double prefHeight) {
         this.setId("pdf-viewer");
         this.pdfViewerZoomController = new PDFViewerZoomController(this);
         this.pdfViewerScrollController = new PDFViewerScrollController();
@@ -42,7 +39,7 @@ public class PDFViewer extends BorderPane {
         this.pdfViewerFileController = new PDFViewerFileController(this);
         this.pdfViewerToolController = new PDFViewerToolController(this);
         this.stage = stage;
-        this.mainWindow = mainWindow;
+        this.mainScreen = mainScreen;
         setupLayout(prefWidth,prefHeight);
 
         // If esc is pressed then exit fullscreen with our function
@@ -54,8 +51,8 @@ public class PDFViewer extends BorderPane {
         });
     }
 
-    public PDFViewer(PDFViewerObserver pdfViewerObserver ,Stage stage , MainWindow mainWindow , double prefWidth, double prefHeight) {
-        this(stage,mainWindow,prefWidth,prefHeight);
+    public PDFViewer(PDFViewerObserver pdfViewerObserver , Stage stage , MainScreen mainScreen, double prefWidth, double prefHeight) {
+        this(stage, mainScreen,prefWidth,prefHeight);
         this.pdfViewerObserver = pdfViewerObserver;
     }
 
@@ -173,16 +170,16 @@ public class PDFViewer extends BorderPane {
 
         stage.setFullScreen(isShowFullScreen);
         if (isShowFullScreen) {
-            mainWindow.topSide.setPrefHeight(0);
-            mainWindow.topSide.setMinHeight(0);
-            mainWindow.topSide.setMaxHeight(0);
-            mainWindow.pdfViewer.setPrefHeight(mainWindow.sceneHeight * 1.052);
+            mainScreen.topSide.setPrefHeight(0);
+            mainScreen.topSide.setMinHeight(0);
+            mainScreen.topSide.setMaxHeight(0);
+            mainScreen.pdfViewer.setPrefHeight(mainScreen.sceneHeight * 1.052);
         }
         else {
-            mainWindow.topSide.setPrefHeight(mainWindow.sceneHeight * 0.065);
-            mainWindow.topSide.setMinHeight(mainWindow.sceneHeight * 0.065);
-            mainWindow.topSide.setMaxHeight(mainWindow.sceneHeight * 0.065);
-            mainWindow.pdfViewer.setPrefHeight(mainWindow.sceneHeight * 0.935);
+            mainScreen.topSide.setPrefHeight(mainScreen.sceneHeight * 0.065);
+            mainScreen.topSide.setMinHeight(mainScreen.sceneHeight * 0.065);
+            mainScreen.topSide.setMaxHeight(mainScreen.sceneHeight * 0.065);
+            mainScreen.pdfViewer.setPrefHeight(mainScreen.sceneHeight * 0.935);
         }
     }
 

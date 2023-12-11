@@ -15,4 +15,6 @@ module com.example.demo {
     opens com.harun.liveSlide.network to javafx.fxml;
     exports com.harun.liveSlide.enums;
     opens com.harun.liveSlide.enums to javafx.fxml;
+    exports com.harun.liveSlide.screens.mainScreen;
+    opens com.harun.liveSlide.screens.mainScreen to javafx.fxml;
 }

@@ -1,14 +1,14 @@
-package com.harun.liveSlide;
+package com.harun.liveSlide.screens.mainScreen;
 
 import com.harun.liveSlide.enums.UserType;
 
 public class AuthLayoutController {
     private UserType userType;
-    private final MainWindow mainWindow;
+    private final MainScreen mainScreen;
 
-    public AuthLayoutController(UserType userType , MainWindow mainWindow) {
+    public AuthLayoutController(UserType userType , MainScreen mainScreen) {
         this.userType = userType;
-        this.mainWindow = mainWindow;
+        this.mainScreen = mainScreen;
         updateLayoutAccordingToUserType();
     }
 
@@ -16,16 +16,16 @@ public class AuthLayoutController {
         switch (userType) {
             case HOST_PRESENTER:
             case PARTICIPANT_PRESENTER:
-                mainWindow.pdfViewer.setToolsVisible(true);
-                mainWindow.topSide.setVisibleControlBackButton(false);
+                mainScreen.pdfViewer.setToolsVisible(true);
+                mainScreen.topSide.setVisibleControlBackButton(false);
                 break;
             case HOST_SPECTATOR:
-                mainWindow.pdfViewer.setToolsVisible(false);
-                mainWindow.topSide.setVisibleControlBackButton(true);
+                mainScreen.pdfViewer.setToolsVisible(false);
+                mainScreen.topSide.setVisibleControlBackButton(true);
                 break;
             case PARTICIPANT_SPECTATOR:
-                mainWindow.pdfViewer.setToolsVisible(false);
-                mainWindow.topSide.setVisibleControlBackButton(false);
+                mainScreen.pdfViewer.setToolsVisible(false);
+                mainScreen.topSide.setVisibleControlBackButton(false);
                 break;
         }
     }
