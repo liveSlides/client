@@ -44,12 +44,12 @@ public class PDFViewerObserver {
         System.out.println("Rotated");
     }
 
-    public void drawed(MouseCoordinate[] mouseCoordinates, Color color, double size) {
-
+    public void canvasPressed(MouseCoordinate mouseCoordinate) {
+        System.out.println("Canvas Pressed x :" + mouseCoordinate.x + " y : " + mouseCoordinate.y);
     }
 
-    public void erased(MouseCoordinate[] mouseCoordinates, double size) {
-
+    public void canvasDragged(MouseCoordinate mouseCoordinate) {
+        System.out.println("Canvas Dragged x :" + mouseCoordinate.x + " y : " + mouseCoordinate.y);
     }
 
     public void pointed(double x , double y) {

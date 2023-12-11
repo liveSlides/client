@@ -15,72 +15,33 @@ public class PDFViewerDrawController {
     private PDFViewer pdfViewer;
     private ScrollPane viewArea;
     private GraphicsContext gc;
-    private ArrayList<MouseCoordinate> drawingCoordinates;
-    private ArrayList<MouseCoordinate> erasingCoordinates;
     private Paint prefferedPenColor = Color.BLACK;
     private double prefferedPenSize = 1;
     private double prefferedEraserSize = 1;
 
     public PDFViewerDrawController(PDFViewer pdfViewer){
         this.pdfViewer = pdfViewer;
-        drawingCoordinates = new ArrayList<>();
-        erasingCoordinates = new ArrayList<>();
     }
 
-    private void onMousePressed(double x , double y , Paint color , double size) {
-        // Start drawing when the mouse button is pressed
-        gc.beginPath();
-        gc.moveTo(x, y);
-        gc.setStroke(color);
-        gc.setLineWidth(size);
-        drawingCoordinates.add(new MouseCoordinate(x,y));
-    }
-
-    private void onMouseDragged(double x , double y) {
+    public void onMousePressed(double x , double y) {
         if (pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.DRAW) {
-            gc.lineTo(x, y);
-            gc.stroke();
-            drawingCoordinates.add(new MouseCoordinate(x,y));
+            gc.setStroke(prefferedPenColor);
+            gc.setLineWidth(prefferedPenSize);
+            gc.beginPath();
+            gc.moveTo(x, y);
         }
         else if(pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.ERASER) {
             gc.clearRect(x,y,prefferedEraserSize,prefferedEraserSize);
-            erasingCoordinates.add(new MouseCoordinate(x,y));
         }
     }
 
-    private void onMouseExited() {
-        drawingCoordinates.clear();
-        erasingCoordinates.clear();
-    }
-
-    public void onMousePressed(MouseEvent event) {
-        onMousePressed(event.getX(), event.getY() , prefferedPenColor , prefferedPenSize);
-    }
-
-    public void onMouseDragged(MouseEvent event) {
-        onMouseDragged(event.getX(), event.getY());
-    }
-
-    public void onMouseExited(MouseEvent event) {
-        onMouseExited();
-    }
-
-    public void draw(MouseCoordinate[] mouseCoordinates, Color color, double size) {
-        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.DRAW);
-        pdfViewer.getPdfViewerToolController().setCurrentDrawSize((int) size);
-        // TODO control color.toString()
-        pdfViewer.getPdfViewerToolController().setCurrentDrawColor(color.toString());
-        onMousePressed(mouseCoordinates[0].x , mouseCoordinates[0].y , prefferedPenColor , prefferedPenSize);
-        for (MouseCoordinate draw : mouseCoordinates) {
-            onMouseDragged(draw.x , draw.y);
+    public void onMouseDragged(double x , double y) {
+        if (pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.DRAW) {
+            gc.lineTo(x, y);
+            gc.stroke();
         }
-    }
-
-    public void erase(MouseCoordinate[] mouseCoordinates, double size) {
-        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.ERASER);
-        pdfViewer.getPdfViewerToolController().setCurrentEraserSize((int) size);
-        for (MouseCoordinate erase : mouseCoordinates) {
-            onMouseDragged(erase.x , erase.y);
+        else if(pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.ERASER) {
+            gc.clearRect(x,y,prefferedEraserSize,prefferedEraserSize);
         }
     }
 

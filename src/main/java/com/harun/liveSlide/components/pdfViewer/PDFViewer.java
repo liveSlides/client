@@ -152,12 +152,14 @@ public class PDFViewer extends BorderPane {
         pdfViewerObserver.rotated();
     }
 
-    public void draw(MouseCoordinate[] mouseCoordinates, Color color, double size) {
-        pdfViewerDrawController.draw(mouseCoordinates,color,size);
+    public void canvasPressed(MouseCoordinate mouseCoordinate) {
+        pdfViewerDrawController.onMousePressed(mouseCoordinate.x,mouseCoordinate.y);
+        pdfViewerObserver.canvasPressed(mouseCoordinate);
     }
 
-    public void erase(MouseCoordinate[] mouseCoordinates, double size) {
-        pdfViewerDrawController.erase(mouseCoordinates,size);
+    public void canvasDragged(MouseCoordinate mouseCoordinate) {
+        pdfViewerDrawController.onMouseDragged(mouseCoordinate.x,mouseCoordinate.y);
+        pdfViewerObserver.canvasDragged(mouseCoordinate);
     }
 
     public void point(double x , double y) {

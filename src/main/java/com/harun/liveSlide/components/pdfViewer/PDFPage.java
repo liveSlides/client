@@ -1,5 +1,6 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.model.MouseCoordinate;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -11,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class PDFPage extends StackPane {
+    public PDFViewer pdfViewer;
     public PDFViewerDrawController pdfViewerDrawController;
     public PDFViewerPointerController pdfViewerPointerController;
     public ImageView image;
@@ -21,8 +23,9 @@ public class PDFPage extends StackPane {
         this.canvas = null;
     }
 
-    public PDFPage(ImageView image , Canvas canvas , PDFViewerDrawController pdfViewerDrawController , PDFViewerPointerController pdfViewerPointerController) {
+    public PDFPage(PDFViewer pdfViewer ,ImageView image , Canvas canvas , PDFViewerDrawController pdfViewerDrawController , PDFViewerPointerController pdfViewerPointerController) {
         if (image != null && pdfViewerDrawController != null) {
+            this.pdfViewer = pdfViewer;
             this.image = image;
             this.canvas = canvas;
             canvas.setWidth(image.getFitWidth());
@@ -46,8 +49,11 @@ public class PDFPage extends StackPane {
         setMargin(image,new Insets(15));
         this.getChildren().add(image);
         this.getChildren().add(canvas);
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, pdfViewerDrawController::onMousePressed);
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, pdfViewerDrawController::onMouseDragged);
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, pdfViewerDrawController::onMouseExited);
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+            pdfViewer.canvasPressed(new MouseCoordinate(event.getX(),event.getY()));
+        });
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
+            pdfViewer.canvasDragged(new MouseCoordinate(event.getX(),event.getY()));
+        });
     }
 }

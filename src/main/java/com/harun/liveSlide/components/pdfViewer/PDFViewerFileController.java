@@ -98,7 +98,7 @@ public class PDFViewerFileController {
                 BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
 
                 //Create PDF Page
-                PDFPage pdfPage = new PDFPage(BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController(),pdfViewer.getPdfViewerPointerController());
+                PDFPage pdfPage = new PDFPage(pdfViewer,BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController(),pdfViewer.getPdfViewerPointerController());
                 pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
                 pdfPage.setMinHeight(pdfViewer.viewArea.getViewportBounds().getWidth());
 
