@@ -41,7 +41,7 @@ public class PDFViewerObserver {
     }
 
     public void rotated() {
-
+        System.out.println("Rotated");
     }
 
     public void drawed(MouseCoordinate[] mouseCoordinates, Color color, double size) {

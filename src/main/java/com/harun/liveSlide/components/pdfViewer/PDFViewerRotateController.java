@@ -29,7 +29,4 @@ public class PDFViewerRotateController {
         this.viewArea = viewArea;
     }
 
-    public void rotate(ActionEvent actionEvent) {
-        rotate();
-    }
 }

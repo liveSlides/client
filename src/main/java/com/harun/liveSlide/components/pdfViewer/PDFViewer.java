@@ -149,6 +149,7 @@ public class PDFViewer extends BorderPane {
 
     public void rotate() {
         pdfViewerRotateController.rotate();
+        pdfViewerObserver.rotated();
     }
 
     public void draw(MouseCoordinate[] mouseCoordinates, Color color, double size) {
