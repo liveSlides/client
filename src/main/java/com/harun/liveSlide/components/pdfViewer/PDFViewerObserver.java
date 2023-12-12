@@ -1,7 +1,6 @@
 package com.harun.liveSlide.components.pdfViewer;
 
 import com.harun.liveSlide.network.INetworkSenderManager;
-import com.harun.liveSlide.network.NetworkManager;
 import com.harun.liveSlide.model.MouseCoordinate;
 
 public class PDFViewerObserver {

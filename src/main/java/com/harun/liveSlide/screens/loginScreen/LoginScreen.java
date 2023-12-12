@@ -1,16 +1,12 @@
 package com.harun.liveSlide.screens.loginScreen;
 
-import javafx.event.EventType;
+import com.harun.liveSlide.network.NetworkLoginManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import org.controlsfx.control.PopOver;
 
 public class LoginScreen extends Pane {
     private final VBox mainVbox;
@@ -22,8 +18,11 @@ public class LoginScreen extends Pane {
     private final TextField nameTextField2;
     private final Button hostMeetingButton;
 
+    private final NetworkLoginManager networkLoginManager;
+
     public LoginScreen(double sceneWidth , double sceneHeight) {
         this.setId("login-screen");
+        this.networkLoginManager = new NetworkLoginManager(this);
 
         // Main VBox
         mainVbox = new VBox();
@@ -73,7 +72,7 @@ public class LoginScreen extends Pane {
         joinMeeetingButton.setPrefWidth(mainVbox.getPrefWidth() / 4);
         joinMeeetingButton.setPrefHeight(30);
         joinMeeetingButton.setOnAction(event -> {
-
+            networkLoginManager.join(meetingIdTextField.getText(),nameTextField.getText());
         });
         mainVbox.getChildren().add(joinMeeetingButton);
 
@@ -99,8 +98,10 @@ public class LoginScreen extends Pane {
         hostMeetingButton = new Button("Host Meeting");
         hostMeetingButton.setPrefWidth(mainVbox.getPrefWidth() / 4);
         hostMeetingButton.setPrefHeight(30);
+        hostMeetingButton.setOnAction(event -> {
+            networkLoginManager.host(nameTextField2.getText());
+        });
         mainVbox.getChildren().add(hostMeetingButton);
-
     }
 
     public void setResponsiveWidth(double width) {

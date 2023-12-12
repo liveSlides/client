@@ -1,0 +1,94 @@
+package com.harun.liveSlide.network;
+
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.*;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+public class StompClient {
+    private static final String URL = "ws://localhost:8080/liveSlideSocket";
+    private static WebSocketStompClient stompClient;
+    private static StompSession stompSession;
+    private static Map<String, Class<?>> topicTypeMap = new HashMap<>();
+    private static Map<String, Consumer<?>> topicHandlerMap = new HashMap<>();
+
+    private StompClient() {
+    }
+
+    public static void initialize() {
+        stompClient = new WebSocketStompClient(new StandardWebSocketClient());
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+    }
+
+    public static void connect() {
+        stompClient.connect(URL, new StompSessionHandlerAdapter() {
+            @Override
+            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+                System.out.println("Connected to STOMP WebSocket server");
+                stompSession = session;
+
+                // Subscribe to each topic in the map
+                topicTypeMap.forEach((destination, payloadTypeClass) -> {
+                    @SuppressWarnings("unchecked")
+                    Consumer<Object> handler = (Consumer<Object>) topicHandlerMap.get(destination);
+
+                    // Explicit cast of the payload type
+                    Class<?> payloadType = (Class<?>) payloadTypeClass;
+
+                    // Use a raw type handler and cast it inside the subscribe method
+                    subscribeRaw(destination, payloadType, handler);
+                });
+            }
+
+            @Override
+            public void handleTransportError(StompSession session, Throwable exception) {
+                System.out.println("Transport Error: " + exception.getMessage());
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void subscribeRaw(String destination, Class<?> payloadType, Consumer<Object> handler) {
+        if (stompSession != null && stompSession.isConnected()) {
+            stompSession.subscribe(destination, new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return payloadType;
+                }
+
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    handler.accept(payload);
+                }
+            });
+            System.out.println("Subscribed to " + destination);
+        } else {
+            // Store subscription request to process after connection
+            topicTypeMap.put(destination, payloadType);
+            topicHandlerMap.put(destination, handler);
+        }
+    }
+
+    public static <T> void sendMessage(String destination, T message) {
+        if (stompSession != null && stompSession.isConnected()) {
+            stompSession.send(destination, message);
+            System.out.println("Message sent to " + destination + ": " + message);
+        } else {
+            System.out.println("Stomp session is not connected.");
+        }
+    }
+
+    public static void disconnect() {
+        if (stompSession != null && stompSession.isConnected()) {
+            stompSession.disconnect();
+        }
+        if (stompClient != null) {
+            stompClient.stop();
+        }
+    }
+}
