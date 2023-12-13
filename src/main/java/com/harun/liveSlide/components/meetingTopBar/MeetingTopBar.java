@@ -1,5 +1,6 @@
 package com.harun.liveSlide.components.meetingTopBar;
 
+import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.components.meetingTopBar.meetingTimer.MeetingTimer;
 import javafx.geometry.Insets;
@@ -11,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -40,7 +42,7 @@ public class MeetingTopBar extends ToolBar {
         //Meeting Timer
         meetingTimer = new MeetingTimer();
         this.getItems().add(meetingTimer);
-        meetingTimer.startTimer(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        meetingTimer.startTimer(LocalDateTime.parse(GlobalVariables.SESSION_CREATION_TIME).format(DateTimeFormatter.ofPattern("HH:mm:ss")));
 
         //Left Spacer
         Pane spacer = new Pane();

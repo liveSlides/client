@@ -13,6 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 
+import java.time.LocalDateTime;
+
 
 public class LoginScreen extends Pane {
     private final VBox mainVbox;
@@ -128,7 +130,10 @@ public class LoginScreen extends Pane {
 
     }
 
-    public void showMainScreen(String sessionID , SessionInitializeType sessionInitializeType) {
+    public void showMainScreen(String sessionID , String sessionCreationTime , SessionInitializeType sessionInitializeType) {
+        if (GlobalVariables.SESSION_ID != null || GlobalVariables.userType != null)
+            return;
+
         switch (sessionInitializeType) {
             case HOST:
                 GlobalVariables.userType = UserType.HOST_PRESENTER;
@@ -138,7 +143,7 @@ public class LoginScreen extends Pane {
                 break;
         }
         GlobalVariables.SESSION_ID = sessionID;
+        GlobalVariables.SESSION_CREATION_TIME = sessionCreationTime;
         liveSlideManager.showMainScreen();
-        networkLoginManager.unsubscribeFromLogin();
     }
 }

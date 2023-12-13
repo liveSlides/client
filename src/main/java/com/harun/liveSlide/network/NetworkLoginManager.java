@@ -1,5 +1,6 @@
 package com.harun.liveSlide.network;
 
+import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.*;
 import com.harun.liveSlide.screens.loginScreen.LoginScreen;
 
@@ -21,13 +22,13 @@ public class NetworkLoginManager{
 
     public void host(String hostName) {
         UUID id = UUID.randomUUID();
-        SessionCreationRequest info = new SessionCreationRequest(id.toString(),hostName);
-        StompClient.sendMessage("/app/startSession",info);
+        SessionCreationRequest req = new SessionCreationRequest(GlobalVariables.USER_ID,id.toString(),hostName);
+        StompClient.sendMessage("/app/startSession",req);
     }
 
     public void join(String sessionID , String participantName) {
-        SessionJoinRequest info = new SessionJoinRequest(sessionID,participantName);
-        StompClient.sendMessage("/app/joinSession",info);
+        SessionJoinRequest req = new SessionJoinRequest(GlobalVariables.USER_ID,sessionID,participantName);
+        StompClient.sendMessage("/app/joinSession",req);
     }
 
     public void unsubscribeFromLogin() {
@@ -35,14 +36,12 @@ public class NetworkLoginManager{
     }
 
     public void handleResponse(SessionInitialResponse sessionInitialResponse) {
-        System.out.println(sessionInitialResponse.getType());
-        System.out.println(sessionInitialResponse.getSessionID());
-        System.out.println(sessionInitialResponse.getStatus());
+        System.out.println(sessionInitialResponse);
 
         if (    sessionInitialResponse.getType() == SessionInitializeType.HOST &&
                 sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS
         ) {
-            loginScreen.showMainScreen(sessionInitialResponse.getSessionID(),sessionInitialResponse.getType());
+            loginScreen.showMainScreen(sessionInitialResponse.getSessionID(), sessionInitialResponse.getCreationTime() ,sessionInitialResponse.getType());
         }
         else if (sessionInitialResponse.getType() == SessionInitializeType.HOST &&
                 sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {
@@ -50,7 +49,7 @@ public class NetworkLoginManager{
         }
         else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
                 sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS) {
-            loginScreen.showMainScreen(sessionInitialResponse.getSessionID(),sessionInitialResponse.getType());
+            loginScreen.showMainScreen(sessionInitialResponse.getSessionID(), sessionInitialResponse.getCreationTime() ,sessionInitialResponse.getType());
         }
         else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
                 sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {

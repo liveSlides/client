@@ -1,6 +1,9 @@
 package com.harun.liveSlide.model.network;
 
+import com.harun.liveSlide.global.GlobalVariables;
+
 public class SessionCreationRequest {
+    private String userID = GlobalVariables.USER_ID;
     private String sessionID;
     private String hostName;
 
@@ -8,7 +11,8 @@ public class SessionCreationRequest {
 
     }
 
-    public SessionCreationRequest(String sessionID, String hostName) {
+    public SessionCreationRequest(String userID , String sessionID, String hostName) {
+        this.userID = userID;
         this.sessionID = sessionID;
         this.hostName = hostName;
     }
@@ -27,5 +31,22 @@ public class SessionCreationRequest {
 
     public void setHostName(String hostName) {
         this.hostName = hostName;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    @Override
+    public String toString() {
+        return "SessionCreationRequest{" +
+                "userID='" + userID + '\'' +
+                ", sessionID='" + sessionID + '\'' +
+                ", hostName='" + hostName + '\'' +
+                '}';
     }
 }

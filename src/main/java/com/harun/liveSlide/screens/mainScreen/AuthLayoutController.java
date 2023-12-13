@@ -12,7 +12,7 @@ public class AuthLayoutController {
     }
 
     public void updateLayoutAccordingToUserType() {
-        System.out.println("Layout set : " + GlobalVariables.userType);
+
         switch (GlobalVariables.userType) {
             case HOST_PRESENTER:
             case PARTICIPANT_PRESENTER:
