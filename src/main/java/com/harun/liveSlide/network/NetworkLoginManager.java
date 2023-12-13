@@ -42,6 +42,7 @@ public class NetworkLoginManager{
                 sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS
         ) {
             loginScreen.showMainScreen(sessionInitialResponse.getSessionID(), sessionInitialResponse.getCreationTime() ,sessionInitialResponse.getType());
+            loginScreen.showSessionIDInformationScreen(sessionInitialResponse.getSessionID());
         }
         else if (sessionInitialResponse.getType() == SessionInitializeType.HOST &&
                 sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {

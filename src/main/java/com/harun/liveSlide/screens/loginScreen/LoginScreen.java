@@ -3,18 +3,17 @@ package com.harun.liveSlide.screens.loginScreen;
 import com.harun.liveSlide.LiveSlideManager;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
-import com.harun.liveSlide.model.network.SessionInitialResponse;
 import com.harun.liveSlide.model.network.SessionInitializeType;
 import com.harun.liveSlide.network.NetworkLoginManager;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-
-import java.time.LocalDateTime;
+import javafx.stage.Stage;
 
 
 public class LoginScreen extends Pane {
@@ -141,6 +140,42 @@ public class LoginScreen extends Pane {
     public void showJoinError(String message) {
         Platform.runLater(() -> {
             errorLabel.setText(message);
+        });
+    }
+    public void showSessionIDInformationScreen(String sessionID) {
+        double sceneWidth = 400;
+        double sceneHeight = 200;
+
+        Platform.runLater(() -> {
+            Pane pane = new Pane();
+            pane.setPrefWidth(sceneWidth);
+            pane.setPrefHeight(sceneHeight);
+            pane.setId("sessionIDAlert");
+
+            VBox vbox = new VBox();
+            vbox.setPrefHeight(pane.getPrefHeight());
+            vbox.setPrefWidth(pane.getPrefWidth());
+            vbox.setAlignment(Pos.CENTER);
+            pane.getChildren().add(vbox);
+
+            Label label = new Label("Meeting ID");
+            label.setAlignment(Pos.CENTER);
+            vbox.getChildren().add(label);
+
+            TextField sessionIDField = new TextField(sessionID);
+            sessionIDField.setEditable(false);
+            sessionIDField.setBorder(Border.EMPTY);
+            sessionIDField.setAlignment(Pos.CENTER);
+            vbox.getChildren().add(sessionIDField);
+
+            Stage sessionIDStage = new Stage();
+            sessionIDStage.setMaxHeight(sceneHeight);
+            sessionIDStage.setMaxWidth(sceneWidth);
+            Scene scene = new Scene(pane,sceneWidth,sceneHeight);
+            scene.getStylesheets().add("style.css");
+
+            sessionIDStage.setScene(scene);
+            sessionIDStage.show();
         });
     }
 

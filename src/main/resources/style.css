@@ -182,4 +182,18 @@
     -fx-focus-color: rgb(83,86,89);
 }
 
+#sessionIDAlert {
+    -fx-background-color: rgb(51,54,57);
+}
+
+#sessionIDAlert .label {
+    -fx-text-fill: white;
+    -fx-font-size : 12pt;
+}
+
+#sessionIDAlert .text-field {
+    -fx-text-fill: white;
+    -fx-background-color: rgb(51,54,57);
+    -fx-focus-color: rgb(51,54,57);
+}
 
