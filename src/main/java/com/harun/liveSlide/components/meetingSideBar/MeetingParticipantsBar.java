@@ -84,7 +84,7 @@ public class MeetingParticipantsBar extends BorderPane {
         meetingParticipantsBarController.removeParticipant(participant);
     }
 
-    public void changeParticipantRequestStatus(int participantId ,boolean status) {
+    public void changeParticipantRequestStatus(String participantId ,boolean status) {
         meetingParticipantsBarController.changeParticipantRequestStatus(participantId,status);
     }
 

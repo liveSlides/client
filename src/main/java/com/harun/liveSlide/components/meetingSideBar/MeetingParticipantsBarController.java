@@ -52,21 +52,21 @@ public class MeetingParticipantsBarController {
                 .stream()
                 .filter(element -> element instanceof  ParticipantComponent)
                 .map(element -> (ParticipantComponent) element)
-                .filter(participantComponent -> participantComponent.getParticipant().getParticipantId() == participant.getParticipantId())
+                .filter(participantComponent -> participantComponent.getParticipant().getUserID().equals(participant.getUserID()) )
                 .forEach(participantComponent -> {vBox.getChildren().remove(participantComponent);});
     }
 
-    public void changeParticipantRequestStatus(int participantId, boolean status) {
+    public void changeParticipantRequestStatus(String participantId, boolean status) {
         VBox vBox = meetingParticipantsBar.getVbox();
         vBox.getChildren()
                 .stream()
                 .filter(element -> element instanceof ParticipantComponent)
                 .map(element -> (ParticipantComponent) element)
-                .filter(participantComponent -> participantComponent.getParticipant().getParticipantId() == participantId)
+                .filter(participantComponent -> participantComponent.getParticipant().getUserID().equals(participantId))
                 .forEach(participantComponent -> participantComponent.changeRequestStatus(status));
     }
 
-    public void allowRequestControl(int participationId) {
+    public void allowRequestControl(String participationId) {
     }
 
 }

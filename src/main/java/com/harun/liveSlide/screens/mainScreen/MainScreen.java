@@ -5,6 +5,8 @@ import com.harun.liveSlide.components.meetingSideBar.MeetingParticipantsBar;
 import com.harun.liveSlide.components.meetingTopBar.MeetingTopBar;
 import com.harun.liveSlide.components.pdfViewer.PDFViewer;
 import com.harun.liveSlide.components.pdfViewer.PDFViewerObserver;
+import com.harun.liveSlide.network.NetworkLoginManager;
+import com.harun.liveSlide.network.NetworkMainManager;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -18,10 +20,12 @@ public class MainScreen extends Pane {
     public PDFViewer pdfViewer;
     public PDFViewerObserver pdfViewerObserver;
     public AuthLayoutController authLayoutController;
+    private final NetworkMainManager networkMainManager;
     public double sceneHeight;
 
     public MainScreen(LiveSlideManager liveSlideManager , Stage stage , double sceneWidth , double sceneHeight) {
         this.liveSlideManager = liveSlideManager;
+        this.networkMainManager = new NetworkMainManager(this);
 
         this.getStyleClass().add("main-window");
 
@@ -81,6 +85,7 @@ public class MainScreen extends Pane {
     private void showParticipantsTab() {
         participantTab.show();
         pdfViewer.setPrefWidth(pdfViewer.getPrefWidth() - participantTab.getSideBarWidth());
+        networkMainManager.getParticipants();
     }
 
     public MeetingTopBar getTopSide() {

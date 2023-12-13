@@ -1,19 +1,44 @@
 package com.harun.liveSlide.model;
 
+import com.harun.liveSlide.enums.UserType;
+
 public class Participant {
-    private final int participantId;
-    private final String participantName;
+    private String userID;
+    private String name;
+    private UserType userType;
 
-    public Participant(int participantId, String participantName) {
-        this.participantId = participantId;
-        this.participantName = participantName;
+    public Participant() {
+
     }
 
-    public int getParticipantId() {
-        return participantId;
+    public Participant(String userID, String name, UserType userType) {
+        this.userID = userID;
+        this.name = name;
+        this.userType = userType;
     }
 
-    public String getParticipantName() {
-        return participantName;
+    // Getter and Setter methods
+    public String getUserID() {
+        return userID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

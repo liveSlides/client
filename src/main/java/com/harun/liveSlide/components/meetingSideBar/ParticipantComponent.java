@@ -26,7 +26,7 @@ public class ParticipantComponent extends Pane {
         this.meetingParticipantsBarController = meetingParticipantsBarController;
 
         participantIcon = new ImageView(getClass().getResource("/img/participant.png").toExternalForm());
-        participantName = new Label(participant.getParticipantName());
+        participantName = new Label(participant.getName());
         requestControlButton = new Button();
         hBox = new HBox();
 
@@ -65,7 +65,7 @@ public class ParticipantComponent extends Pane {
         //Raised Hand
         requestControlButton.setGraphic(getButtonIcon("/img/raisedHand.png", COMPONENT_HEIGHT));
         requestControlButton.getStyleClass().add("participant-component-hand-button");
-        requestControlButton.setOnAction((event) -> meetingParticipantsBarController.allowRequestControl(participant.getParticipantId()));
+        requestControlButton.setOnAction((event) -> meetingParticipantsBarController.allowRequestControl(participant.getUserID()));
         changeRequestStatus(false);
         hBox.getChildren().add(requestControlButton);
     }
