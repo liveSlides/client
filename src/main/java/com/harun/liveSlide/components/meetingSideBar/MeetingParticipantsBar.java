@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 
+import java.util.Set;
+
 public class MeetingParticipantsBar extends BorderPane {
     private final MeetingParticipantsBarController meetingParticipantsBarController;
     private final Pane topBar;
@@ -72,7 +74,7 @@ public class MeetingParticipantsBar extends BorderPane {
         return meetingParticipantsBarController.isShown();
     }
 
-    public void setParticipants(Participant[] participants) {
+    public void setParticipants(Set<Participant> participants) {
         meetingParticipantsBarController.setParticipants(participants);
     }
 

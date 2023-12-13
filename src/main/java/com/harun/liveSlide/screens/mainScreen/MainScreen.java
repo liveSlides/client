@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 public class MainScreen extends Pane {
     private final LiveSlideManager liveSlideManager;
     public MeetingTopBar topSide;
-    private final MeetingParticipantsBar participantTab;
+    public final MeetingParticipantsBar participantTab;
 
     public PDFViewer pdfViewer;
     public PDFViewerObserver pdfViewerObserver;

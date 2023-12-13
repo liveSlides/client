@@ -35,7 +35,7 @@ public class NetworkLoginManager{
         StompClient.unsubscribe("/topic/sessionStatus");
     }
 
-    public void handleResponse(SessionInitialResponse sessionInitialResponse) {
+    private void handleResponse(SessionInitialResponse sessionInitialResponse) {
         System.out.println(sessionInitialResponse);
 
         if (    sessionInitialResponse.getType() == SessionInitializeType.HOST &&

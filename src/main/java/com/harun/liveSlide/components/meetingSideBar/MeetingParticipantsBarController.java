@@ -4,6 +4,8 @@ import com.harun.liveSlide.model.Participant;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 
+import java.util.Set;
+
 public class MeetingParticipantsBarController {
     private double sideBarWidth = 325;
     private boolean isShown = false;
@@ -33,7 +35,7 @@ public class MeetingParticipantsBarController {
         isShown = false;
     }
 
-    public void setParticipants(Participant[] participants) {
+    public void setParticipants(Set<Participant> participants) {
         VBox vBox = meetingParticipantsBar.getVbox();
         vBox.getChildren().clear();
         for (Participant p : participants) {
