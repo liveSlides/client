@@ -1,4 +1,4 @@
-package com.harun.liveSlide.model.network;
+package com.harun.liveSlide.model.network.participantList;
 
 import com.harun.liveSlide.model.Participant;
 

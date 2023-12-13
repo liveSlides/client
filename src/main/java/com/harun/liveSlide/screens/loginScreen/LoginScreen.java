@@ -3,7 +3,7 @@ package com.harun.liveSlide.screens.loginScreen;
 import com.harun.liveSlide.LiveSlideManager;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
-import com.harun.liveSlide.model.network.SessionInitializeType;
+import com.harun.liveSlide.model.network.login.SessionInitializeType;
 import com.harun.liveSlide.network.NetworkLoginManager;
 import javafx.application.Platform;
 import javafx.geometry.Insets;

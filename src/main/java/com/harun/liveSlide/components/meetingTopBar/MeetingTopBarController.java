@@ -11,10 +11,6 @@ public class MeetingTopBarController {
         this.meetingTopBar = meetingTopBar;
     }
 
-    public void leave() {
-        meetingTopBar.getStage().close();
-    }
-
     public void takeControlBack() {
 
     }
@@ -32,10 +28,6 @@ public class MeetingTopBarController {
 
     public void showHideParticipants() {
         meetingTopBar.getMainWindow().showHideParticipantsTab();
-    }
-
-    public void leave(ActionEvent actionEvent) {
-        leave();
     }
 
     public void takeControlBack(ActionEvent actionEvent) {

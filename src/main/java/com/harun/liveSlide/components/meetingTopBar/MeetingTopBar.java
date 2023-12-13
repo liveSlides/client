@@ -83,7 +83,7 @@ public class MeetingTopBar extends ToolBar {
         leaveButton = new Button("Leave");
         leaveButton.getStyleClass().add("leave-button");
         leaveButton.setPadding(new Insets(11,40,11,40));
-        leaveButton.setOnAction(controller::leave);
+        leaveButton.setOnAction(event -> {mainScreen.networkMainManager.disconnect();});
         this.getItems().add(leaveButton);
     }
 

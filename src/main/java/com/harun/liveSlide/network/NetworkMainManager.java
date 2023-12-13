@@ -1,10 +1,11 @@
 package com.harun.liveSlide.network;
 
 import com.harun.liveSlide.global.GlobalVariables;
-import com.harun.liveSlide.model.network.SessionInitialResponse;
-import com.harun.liveSlide.model.network.SessionParticipantsRequest;
-import com.harun.liveSlide.model.network.SessionParticipantsResponse;
-import com.harun.liveSlide.screens.loginScreen.LoginScreen;
+import com.harun.liveSlide.model.network.ResponseStatus;
+import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
+import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
+import com.harun.liveSlide.model.network.participantList.SessionParticipantsRequest;
+import com.harun.liveSlide.model.network.participantList.SessionParticipantsResponse;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
 
@@ -21,6 +22,14 @@ public class NetworkMainManager {
                 SessionParticipantsResponse.class, response -> {
                     handleGetParticipantResponse(((SessionParticipantsResponse) response));
         });
+
+        StompClient.subscribeRaw(
+                "/topic/disconnect/"
+                        + GlobalVariables.SESSION_ID
+                        + "/" + GlobalVariables.USER_ID,
+                DisconnectResponse.class, response -> {
+                    handleDisconnectResponse(((DisconnectResponse) response));
+                });
     }
 
     public void getParticipants() {
@@ -28,9 +37,22 @@ public class NetworkMainManager {
         StompClient.sendMessage("/app/getParticipants",req);
     }
 
+    public void disconnect() {
+        DisconnectRequest req = new DisconnectRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
+        StompClient.sendMessage("/app/disconnect",req);
+    }
+
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
             mainScreen.participantTab.setParticipants(response.getParticipants());
+        });
+    }
+
+    private void handleDisconnectResponse(DisconnectResponse response) {
+        Platform.runLater(() -> {
+            if (response.status == ResponseStatus.SUCCESS) {
+                Platform.exit();
+            }
         });
     }
 }

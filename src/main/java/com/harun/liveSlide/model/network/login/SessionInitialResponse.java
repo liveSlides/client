@@ -1,6 +1,6 @@
-package com.harun.liveSlide.model.network;
+package com.harun.liveSlide.model.network.login;
 
-import java.time.LocalDateTime;
+import com.harun.liveSlide.model.network.ResponseStatus;
 
 public class SessionInitialResponse {
     private String sessionID;

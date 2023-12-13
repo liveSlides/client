@@ -24,4 +24,6 @@ module com.example.demo {
     opens com.harun.liveSlide.screens.mainScreen to javafx.fxml;
     opens com.harun.liveSlide.model to com.fasterxml.jackson.databind;
     opens com.harun.liveSlide.model.network to com.fasterxml.jackson.databind;
+    opens com.harun.liveSlide.model.network.login to com.fasterxml.jackson.databind;
+    opens com.harun.liveSlide.model.network.participantList to com.fasterxml.jackson.databind;
 }

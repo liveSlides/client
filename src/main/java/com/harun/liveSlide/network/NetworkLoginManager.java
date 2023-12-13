@@ -2,6 +2,10 @@ package com.harun.liveSlide.network;
 
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.*;
+import com.harun.liveSlide.model.network.login.SessionCreationRequest;
+import com.harun.liveSlide.model.network.login.SessionInitialResponse;
+import com.harun.liveSlide.model.network.login.SessionInitializeType;
+import com.harun.liveSlide.model.network.login.SessionJoinRequest;
 import com.harun.liveSlide.screens.loginScreen.LoginScreen;
 
 import java.util.UUID;

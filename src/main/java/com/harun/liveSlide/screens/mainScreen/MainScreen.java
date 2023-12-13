@@ -20,7 +20,7 @@ public class MainScreen extends Pane {
     public PDFViewer pdfViewer;
     public PDFViewerObserver pdfViewerObserver;
     public AuthLayoutController authLayoutController;
-    private final NetworkMainManager networkMainManager;
+    public final NetworkMainManager networkMainManager;
     public double sceneHeight;
 
     public MainScreen(LiveSlideManager liveSlideManager , Stage stage , double sceneWidth , double sceneHeight) {
@@ -31,6 +31,8 @@ public class MainScreen extends Pane {
 
         BorderPane mainGrid = new BorderPane();
         this.getChildren().add(mainGrid);
+
+        stage.setOnCloseRequest(event -> {networkMainManager.disconnect();});
 
         //Top bar
         double topBarHeight = sceneHeight * 0.065;
