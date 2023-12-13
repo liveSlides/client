@@ -4,6 +4,7 @@ import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.messaging.simp.stomp.StompSession.Subscription;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class StompClient {
     private static StompSession stompSession;
     private static Map<String, Class<?>> topicTypeMap = new HashMap<>();
     private static Map<String, Consumer<?>> topicHandlerMap = new HashMap<>();
+    private static Map<String, Subscription> activeSubscriptions = new HashMap<>();
 
     private StompClient() {
     }
@@ -55,7 +57,7 @@ public class StompClient {
     @SuppressWarnings("unchecked")
     public static void subscribeRaw(String destination, Class<?> payloadType, Consumer<Object> handler) {
         if (stompSession != null && stompSession.isConnected()) {
-            stompSession.subscribe(destination, new StompFrameHandler() {
+            Subscription subscription = stompSession.subscribe(destination, new StompFrameHandler() {
                 @Override
                 public Type getPayloadType(StompHeaders headers) {
                     return payloadType;
@@ -67,10 +69,22 @@ public class StompClient {
                 }
             });
             System.out.println("Subscribed to " + destination);
+            activeSubscriptions.put(destination, subscription);
         } else {
             // Store subscription request to process after connection
             topicTypeMap.put(destination, payloadType);
             topicHandlerMap.put(destination, handler);
+        }
+    }
+
+    public static void unsubscribe(String destination) {
+        Subscription subscription = activeSubscriptions.get(destination);
+        if (subscription != null) {
+            subscription.unsubscribe();
+            System.out.println("Unsubscribed from " + destination);
+            activeSubscriptions.remove(destination);
+        } else {
+            System.out.println("No active subscription for " + destination);
         }
     }
 
@@ -91,4 +105,6 @@ public class StompClient {
             stompClient.stop();
         }
     }
+
+
 }

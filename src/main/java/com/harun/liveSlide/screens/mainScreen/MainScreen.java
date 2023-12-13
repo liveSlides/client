@@ -1,27 +1,28 @@
 package com.harun.liveSlide.screens.mainScreen;
 
+import com.harun.liveSlide.LiveSlideManager;
 import com.harun.liveSlide.components.meetingSideBar.MeetingParticipantsBar;
 import com.harun.liveSlide.components.meetingTopBar.MeetingTopBar;
 import com.harun.liveSlide.components.pdfViewer.PDFViewer;
 import com.harun.liveSlide.components.pdfViewer.PDFViewerObserver;
-import com.harun.liveSlide.enums.UserType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 
 public class MainScreen extends Pane {
-
+    private final LiveSlideManager liveSlideManager;
     public MeetingTopBar topSide;
-    private MeetingParticipantsBar participantTab;
+    private final MeetingParticipantsBar participantTab;
 
     public PDFViewer pdfViewer;
     public PDFViewerObserver pdfViewerObserver;
     public AuthLayoutController authLayoutController;
     public double sceneHeight;
 
-    public MainScreen(Stage stage , double sceneWidth , double sceneHeight) throws IOException {
+    public MainScreen(LiveSlideManager liveSlideManager , Stage stage , double sceneWidth , double sceneHeight) {
+        this.liveSlideManager = liveSlideManager;
+
         this.getStyleClass().add("main-window");
 
         BorderPane mainGrid = new BorderPane();
@@ -40,17 +41,17 @@ public class MainScreen extends Pane {
         participantTab.hide();
         mainGrid.setRight(participantTab);
 
+        //PDF Viewer Observer
+        pdfViewerObserver = new PDFViewerObserver();
+
         //PDF Viewer
         pdfViewer = new PDFViewer(pdfViewerObserver ,stage , this , sceneWidth,sceneHeight * 0.935);
         mainGrid.setCenter(pdfViewer);
-
         this.sceneHeight = sceneHeight;
 
         //AuthLayoutController
-        authLayoutController = new AuthLayoutController(UserType.HOST_PRESENTER,this);
+        authLayoutController = new AuthLayoutController(this);
 
-        //PDF Viewer Observer
-        pdfViewerObserver = new PDFViewerObserver();
     }
 
     public void setResponsiveWidth(double width) {

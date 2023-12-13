@@ -1,5 +1,10 @@
 package com.harun.liveSlide.screens.loginScreen;
 
+import com.harun.liveSlide.LiveSlideManager;
+import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.global.GlobalVariables;
+import com.harun.liveSlide.model.network.SessionInitialResponse;
+import com.harun.liveSlide.model.network.SessionInitializeType;
 import com.harun.liveSlide.network.NetworkLoginManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -7,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+
 
 public class LoginScreen extends Pane {
     private final VBox mainVbox;
@@ -19,10 +25,12 @@ public class LoginScreen extends Pane {
     private final Button hostMeetingButton;
 
     private final NetworkLoginManager networkLoginManager;
+    private final LiveSlideManager liveSlideManager;
 
-    public LoginScreen(double sceneWidth , double sceneHeight) {
+    public LoginScreen(LiveSlideManager liveSlideManager , double sceneWidth , double sceneHeight) {
         this.setId("login-screen");
         this.networkLoginManager = new NetworkLoginManager(this);
+        this.liveSlideManager = liveSlideManager;
 
         // Main VBox
         mainVbox = new VBox();
@@ -110,5 +118,27 @@ public class LoginScreen extends Pane {
 
     public void setResponsiveHeight(double height) {
         mainVbox.setPrefHeight(height);
+    }
+
+    public void showHostError(String message) {
+
+    }
+
+    public void showLoginError(String message) {
+
+    }
+
+    public void showMainScreen(String sessionID , SessionInitializeType sessionInitializeType) {
+        switch (sessionInitializeType) {
+            case HOST:
+                GlobalVariables.userType = UserType.HOST_PRESENTER;
+                break;
+            case JOIN:
+                GlobalVariables.userType = UserType.PARTICIPANT_SPECTATOR;
+                break;
+        }
+        GlobalVariables.SESSION_ID = sessionID;
+        liveSlideManager.showMainScreen();
+        networkLoginManager.unsubscribeFromLogin();
     }
 }

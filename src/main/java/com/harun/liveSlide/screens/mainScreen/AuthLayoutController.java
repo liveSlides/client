@@ -1,19 +1,19 @@
 package com.harun.liveSlide.screens.mainScreen;
 
 import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.global.GlobalVariables;
 
 public class AuthLayoutController {
-    private UserType userType;
     private final MainScreen mainScreen;
 
-    public AuthLayoutController(UserType userType , MainScreen mainScreen) {
-        this.userType = userType;
+    public AuthLayoutController(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
         updateLayoutAccordingToUserType();
     }
 
     public void updateLayoutAccordingToUserType() {
-        switch (userType) {
+        System.out.println("Layout set : " + GlobalVariables.userType);
+        switch (GlobalVariables.userType) {
             case HOST_PRESENTER:
             case PARTICIPANT_PRESENTER:
                 mainScreen.pdfViewer.setToolsVisible(true);
@@ -30,10 +30,4 @@ public class AuthLayoutController {
         }
     }
 
-    public UserType getUserType() {
-        return userType;
-    }
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
 }
