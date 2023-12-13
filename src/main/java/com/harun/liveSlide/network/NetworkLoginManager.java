@@ -45,7 +45,7 @@ public class NetworkLoginManager{
         }
         else if (sessionInitialResponse.getType() == SessionInitializeType.HOST &&
                 sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {
-            loginScreen.showHostError("An error has occured while trying to host!");
+            loginScreen.showHostError("An error has occurred while trying to host!");
         }
         else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
                 sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS) {
@@ -53,10 +53,10 @@ public class NetworkLoginManager{
         }
         else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
                 sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {
-            loginScreen.showHostError("An error has occured while trying to join!");
+            loginScreen.showJoinError("An error has occurred while trying to join!");
         }
         else {
-            loginScreen.showHostError("An error has occured!");
+            loginScreen.showHostError("An error has occurred!");
         }
     }
 }

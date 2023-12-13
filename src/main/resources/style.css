@@ -154,9 +154,15 @@
 
 }
 
-#login-screen .label {
+#login-screen #login-logo {
     -fx-text-fill: white;
     -fx-font-size : 30pt;
+    -fx-font-family:"Source Code Pro"
+}
+
+#login-screen .label {
+    -fx-text-fill: white;
+    -fx-font-size : 10pt;
     -fx-font-family:"Source Code Pro"
 }
 

@@ -6,6 +6,7 @@ import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.SessionInitialResponse;
 import com.harun.liveSlide.model.network.SessionInitializeType;
 import com.harun.liveSlide.network.NetworkLoginManager;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -25,6 +26,7 @@ public class LoginScreen extends Pane {
     private final Button joinMeeetingButton;
     private final TextField nameTextField2;
     private final Button hostMeetingButton;
+    private final Label errorLabel;
 
     private final NetworkLoginManager networkLoginManager;
     private final LiveSlideManager liveSlideManager;
@@ -45,6 +47,7 @@ public class LoginScreen extends Pane {
         //Logo
         logo = new Label("LiveSlide");
         mainVbox.getChildren().add(logo);
+        logo.setId("login-logo");
 
         //Spacer
         Pane spacer0 = new Pane();
@@ -112,6 +115,15 @@ public class LoginScreen extends Pane {
             networkLoginManager.host(nameTextField2.getText());
         });
         mainVbox.getChildren().add(hostMeetingButton);
+
+        //Spacer
+        Pane spacer5 = new Pane();
+        spacer5.setPrefHeight(10);
+        mainVbox.getChildren().add(spacer5);
+
+        //Error Label
+        errorLabel = new Label();
+        mainVbox.getChildren().add(errorLabel);
     }
 
     public void setResponsiveWidth(double width) {
@@ -123,11 +135,13 @@ public class LoginScreen extends Pane {
     }
 
     public void showHostError(String message) {
-
+        errorLabel.setText(message);
     }
 
-    public void showLoginError(String message) {
-
+    public void showJoinError(String message) {
+        Platform.runLater(() -> {
+            errorLabel.setText(message);
+        });
     }
 
     public void showMainScreen(String sessionID , String sessionCreationTime , SessionInitializeType sessionInitializeType) {
