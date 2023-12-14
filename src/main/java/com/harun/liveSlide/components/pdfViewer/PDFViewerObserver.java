@@ -2,16 +2,16 @@ package com.harun.liveSlide.components.pdfViewer;
 
 import com.harun.liveSlide.network.INetworkSenderManager;
 import com.harun.liveSlide.model.MouseCoordinate;
+import com.harun.liveSlide.network.NetworkMainManager;
 
 public class PDFViewerObserver {
-    private INetworkSenderManager networkManager;
+    private NetworkMainManager networkMainManager;
 
     public PDFViewerObserver() {
-
     }
 
-    public PDFViewerObserver(INetworkSenderManager networkManager) {
-        this.networkManager = networkManager;
+    public PDFViewerObserver(NetworkMainManager networkMainManager) {
+        this.networkMainManager = networkMainManager;
     }
 
     public void pageChanged(int index) {
@@ -70,7 +70,7 @@ public class PDFViewerObserver {
         System.out.println("Pointer x : " + x + " y : " + y);
     }
 
-    public void loadedPDF(String path ,int index) {
-        System.out.println("File loaded at : " + path + " at : " + index);
+    public void loadedPDF(String path) {
+        networkMainManager.uploadPDF(path);
     }
 }

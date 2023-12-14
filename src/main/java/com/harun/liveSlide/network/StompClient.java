@@ -2,6 +2,7 @@ package com.harun.liveSlide.network;
 
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
+import org.springframework.web.socket.client.jetty.JettyWebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.messaging.simp.stomp.StompSession.Subscription;
@@ -25,6 +26,7 @@ public class StompClient {
     public static void initialize() {
         stompClient = new WebSocketStompClient(new StandardWebSocketClient());
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        stompClient.setInboundMessageSizeLimit(1024*1024*1024);
     }
 
     public static void connect() {
@@ -50,6 +52,7 @@ public class StompClient {
             @Override
             public void handleTransportError(StompSession session, Throwable exception) {
                 System.out.println("Transport Error: " + exception.getMessage());
+                exception.printStackTrace();
             }
         });
     }

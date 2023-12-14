@@ -205,7 +205,7 @@ public class PDFViewer extends BorderPane {
 
     public void loadPDF(String path) {
         pdfViewerFileController.loadPDF(path , 1 , true);
-        pdfViewerObserver.loadedPDF(path,1);
+        pdfViewerObserver.loadedPDF(path);
     }
 
     public void loadPDF(String path , int index) throws IOException {

@@ -48,7 +48,7 @@ public class MainScreen extends Pane {
         mainGrid.setRight(participantTab);
 
         //PDF Viewer Observer
-        pdfViewerObserver = new PDFViewerObserver();
+        pdfViewerObserver = new PDFViewerObserver(networkMainManager);
 
         //PDF Viewer
         pdfViewer = new PDFViewer(pdfViewerObserver ,stage , this , sceneWidth,sceneHeight * 0.935);

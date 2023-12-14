@@ -26,4 +26,5 @@ module com.example.demo {
     opens com.harun.liveSlide.model.network to com.fasterxml.jackson.databind;
     opens com.harun.liveSlide.model.network.login to com.fasterxml.jackson.databind;
     opens com.harun.liveSlide.model.network.participantList to com.fasterxml.jackson.databind;
+    opens com.harun.liveSlide.model.network.pdfFile to com.fasterxml.jackson.databind;
 }
