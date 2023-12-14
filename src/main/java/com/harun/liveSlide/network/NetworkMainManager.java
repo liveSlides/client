@@ -1,30 +1,28 @@
 package com.harun.liveSlide.network;
 
+import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.ResponseStatus;
 import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
 import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsRequest;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsResponse;
-import com.harun.liveSlide.model.network.pdfFile.UploadPDFRequest;
+import com.harun.liveSlide.model.network.pdfFile.DownloadPDFResponse;
 import com.harun.liveSlide.model.network.pdfFile.UploadPDFResponse;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Base64;
 
 public class NetworkMainManager {
     private final MainScreen mainScreen;
     private final SlideUploader slideUploader;
+    private final SlideDownloader slideDownloader;
 
     public NetworkMainManager(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
         this.slideUploader = new SlideUploader();
+        this.slideDownloader = new SlideDownloader();
 
         StompClient.subscribeRaw(
                 "/topic/getParticipants/"
@@ -47,8 +45,17 @@ public class NetworkMainManager {
                         + GlobalVariables.SESSION_ID,
                 UploadPDFResponse.class, response -> {
                     handleUploadPdfResponse(((UploadPDFResponse) response));
-                });
+        });
+
+        StompClient.subscribeRaw(
+                "/topic/downloadPDF/"
+                        + GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID,
+                DownloadPDFResponse.class, response -> {
+                    handleDownloadPdfResponse(((DownloadPDFResponse) response));
+        });
     }
+
+
 
     public void getParticipants() {
         SessionParticipantsRequest req = new SessionParticipantsRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
@@ -61,8 +68,10 @@ public class NetworkMainManager {
     }
 
     public void uploadPDF(String path) {
-        slideUploader.setFilePath(path);
-        slideUploader.startToUploadSlide();
+        if(GlobalVariables.userType == UserType.HOST_PRESENTER) {
+            slideUploader.setFilePath(path);
+            slideUploader.startToUploadSlide();
+        }
     }
 
 
@@ -82,6 +91,22 @@ public class NetworkMainManager {
     }
 
     private void handleUploadPdfResponse(UploadPDFResponse response) {
-        System.out.println("PDF Servera yüklendi");
+        if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR){
+            System.out.println("PDF Servera yüklendi");
+            slideDownloader.downloadSlide();
+        }
+    }
+
+    private void handleDownloadPdfResponse(DownloadPDFResponse response) {
+        System.out.println("PDF tamamı yüklendi");
+
+        slideDownloader.pdfFile = null;
+        String folderPath = "src/meetingSlides";
+        String filePath = folderPath + File.separator + response.getFileName();
+
+        Platform.runLater(() -> {
+            mainScreen.pdfViewer.loadPDF(filePath);
+        });
+
     }
 }
