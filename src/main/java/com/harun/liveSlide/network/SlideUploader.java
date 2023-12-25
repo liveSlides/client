@@ -11,7 +11,7 @@ import java.util.Base64;
 
 public class SlideUploader {
     private String filePath;
-    private int chunkSize = 1024;
+    private int chunkSize = 1024*10;
     private FileInputStream fileInputStream;
     private File file;
 

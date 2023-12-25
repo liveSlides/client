@@ -118,7 +118,7 @@
 }
 
 .side-participant-tab {
-    -fx-background-color: #262627;
+    -fx-background-color: #262627;;
     -fx-text-fill: white;
     -fx-font-size : 13pt;
 }
@@ -135,6 +135,7 @@
 .participant-component {
     -fx-padding-left : 20px;
     -fx-padding-right : 20px;
+    -fx-background-color: #262627;
 }
 
 .participant-component:hover {

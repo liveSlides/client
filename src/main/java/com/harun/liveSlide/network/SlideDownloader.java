@@ -1,6 +1,7 @@
 package com.harun.liveSlide.network;
 
 import com.harun.liveSlide.global.GlobalVariables;
+import com.harun.liveSlide.model.network.ResponseStatus;
 import com.harun.liveSlide.model.network.pdfFile.DownloadPDFRequest;
 import com.harun.liveSlide.model.network.pdfFile.DownloadPartOfPDFResponse;
 import com.harun.liveSlide.model.network.pdfFile.UploadPartOfPDFResponse;
@@ -71,7 +72,8 @@ public class SlideDownloader {
     }
 
     private void handleDownloadPartOfPDFResponse(DownloadPartOfPDFResponse response) {
-        System.out.println(response);
+        if (response.status == ResponseStatus.ERROR)
+            System.out.println(response);
         writeFile(response);
         downloadSlide();
     }

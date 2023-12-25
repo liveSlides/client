@@ -14,16 +14,8 @@ public class PDFViewerObserver {
         this.networkMainManager = networkMainManager;
     }
 
-    public void pageChanged(int index) {
-        System.out.println("Page changed : " + index);
-    }
-
-    public void pageChangedGoBack() {
-        System.out.println("Bir önceki sayfaya gidildi");
-    }
-
-    public void pageChangedGoNext() {
-        System.out.println("Bir sonraki sayfaya gidildi");
+    public void pageChanged(int index, PDFPage pdfPage) {
+        networkMainManager.pageChanged(index,pdfPage);
     }
 
     public void zoomed(double zoomFactor) {

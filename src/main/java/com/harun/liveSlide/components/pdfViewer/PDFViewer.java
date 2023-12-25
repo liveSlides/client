@@ -116,17 +116,21 @@ public class PDFViewer extends BorderPane {
 
     public void goPage(int index) {
         pdfViewerNavigationController.goPage(index);
-        pdfViewerObserver.pageChanged(index);
+        pdfViewerObserver.pageChanged(index,pdfPages.get(index - 1).getPDFPage());
     }
 
     public void goBackPage() {
-        pdfViewerNavigationController.goBackPage();
-        pdfViewerObserver.pageChangedGoBack();
+        if (pdfViewerNavigationController.goBackPage()){
+            int index = pdfViewerNavigationController.getCurrentPageIndex();
+            pdfViewerObserver.pageChanged(index,pdfPages.get(index - 1).getPDFPage());
+        }
     }
 
     public void goNextPage() {
-        pdfViewerNavigationController.goNextPage();
-        pdfViewerObserver.pageChangedGoNext();
+        if (pdfViewerNavigationController.goNextPage()) {
+            int index = pdfViewerNavigationController.getCurrentPageIndex();
+            pdfViewerObserver.pageChanged(index,pdfPages.get(index - 1).getPDFPage());
+        }
     }
 
     public void zoom(double zoomFactor) {
@@ -205,7 +209,7 @@ public class PDFViewer extends BorderPane {
 
     public void loadPDF(String path) {
         pdfViewerFileController.loadPDF(path , 1 , true);
-        pdfViewerObserver.loadedPDF(path);
+        //pdfViewerObserver.loadedPDF(path);
     }
 
     public void loadPDF(String path , int index) throws IOException {

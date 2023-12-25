@@ -1,8 +1,11 @@
 package com.harun.liveSlide.network;
 
+import com.harun.liveSlide.components.pdfViewer.PDFPage;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.ResponseStatus;
+import com.harun.liveSlide.model.network.meeting.PageChangedRequest;
+import com.harun.liveSlide.model.network.meeting.PageChangedResponse;
 import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
 import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsRequest;
@@ -11,7 +14,6 @@ import com.harun.liveSlide.model.network.pdfFile.DownloadPDFResponse;
 import com.harun.liveSlide.model.network.pdfFile.UploadPDFResponse;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
-
 import java.io.File;
 
 public class NetworkMainManager {
@@ -53,6 +55,13 @@ public class NetworkMainManager {
                 DownloadPDFResponse.class, response -> {
                     handleDownloadPdfResponse(((DownloadPDFResponse) response));
         });
+
+        StompClient.subscribeRaw(
+                "/topic/pageChanged/"
+                        + GlobalVariables.SESSION_ID ,
+                PageChangedResponse.class, response -> {
+                    handlePageChangedResponse(((PageChangedResponse) response));
+        });
     }
 
 
@@ -74,6 +83,9 @@ public class NetworkMainManager {
         }
     }
 
+    public void pageChanged(int index , PDFPage pdfPage) {
+    }
+
 
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
@@ -92,8 +104,21 @@ public class NetworkMainManager {
 
     private void handleUploadPdfResponse(UploadPDFResponse response) {
         if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR){
-            System.out.println("PDF Servera yüklendi");
-            slideDownloader.downloadSlide();
+            // Get File
+            String filePath = "src/meetingSlides/" + response.getFileName();
+            File file = new File(filePath);
+
+            // If file is exist load directly
+            if (file.exists()) {
+                System.out.println(filePath + " is exist");
+                Platform.runLater(() -> {
+                    mainScreen.pdfViewer.loadPDF(filePath);
+                });
+            }
+            else {
+                System.out.println(filePath + " is not exist");
+                slideDownloader.downloadSlide();
+            }
         }
     }
 
@@ -108,5 +133,9 @@ public class NetworkMainManager {
             mainScreen.pdfViewer.loadPDF(filePath);
         });
 
+    }
+
+    private void handlePageChangedResponse(PageChangedResponse response) {
+        System.out.println("Sayfa Değişti");
     }
 }

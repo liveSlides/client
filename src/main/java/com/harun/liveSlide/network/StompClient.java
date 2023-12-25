@@ -2,6 +2,7 @@ package com.harun.liveSlide.network;
 
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
+import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.jetty.JettyWebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -11,6 +12,10 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import org.springframework.util.concurrent.ListenableFuture;
+
+import javax.websocket.ContainerProvider;
+import javax.websocket.WebSocketContainer;
 
 public class StompClient {
     private static final String URL = "ws://localhost:8080/liveSlideSocket";
@@ -24,7 +29,11 @@ public class StompClient {
     }
 
     public static void initialize() {
-        stompClient = new WebSocketStompClient(new StandardWebSocketClient());
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        container.setDefaultMaxTextMessageBufferSize(1024*1024*10);
+        container.setDefaultMaxBinaryMessageBufferSize(1024*1024*10);
+        WebSocketClient wsClient = new StandardWebSocketClient(container);
+        stompClient = new WebSocketStompClient(wsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
         stompClient.setInboundMessageSizeLimit(1024*1024*1024);
     }
@@ -94,7 +103,7 @@ public class StompClient {
     public static <T> void sendMessage(String destination, T message) {
         if (stompSession != null && stompSession.isConnected()) {
             stompSession.send(destination, message);
-            System.out.println("Message sent to " + destination + ": " + message);
+            System.out.println("Message sent to " + destination);
         } else {
             System.out.println("Stomp session is not connected.");
         }

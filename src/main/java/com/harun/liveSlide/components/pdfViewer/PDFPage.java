@@ -11,6 +11,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
+import java.awt.image.BufferedImage;
+
 public class PDFPage extends StackPane {
     public PDFViewer pdfViewer;
     public PDFViewerDrawController pdfViewerDrawController;
@@ -18,12 +20,14 @@ public class PDFPage extends StackPane {
     public ImageView image;
     public Canvas canvas;
 
+    public BufferedImage bufferedImage;
+
     public PDFPage() {
         this.image = null;
         this.canvas = null;
     }
 
-    public PDFPage(PDFViewer pdfViewer ,ImageView image , Canvas canvas , PDFViewerDrawController pdfViewerDrawController , PDFViewerPointerController pdfViewerPointerController) {
+    public PDFPage(PDFViewer pdfViewer , ImageView image , Canvas canvas , PDFViewerDrawController pdfViewerDrawController , PDFViewerPointerController pdfViewerPointerController, BufferedImage bim) {
         if (image != null && pdfViewerDrawController != null) {
             this.pdfViewer = pdfViewer;
             this.image = image;
@@ -32,8 +36,17 @@ public class PDFPage extends StackPane {
             canvas.setHeight(image.getFitHeight());
             this.pdfViewerDrawController = pdfViewerDrawController;
             this.pdfViewerPointerController = pdfViewerPointerController;
+            this.bufferedImage = bim;
             setupLayout();
         }
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public ImageView getImage() {
+        return image;
     }
 
     void setImageView(ImageView image){

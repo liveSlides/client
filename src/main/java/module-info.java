@@ -11,6 +11,7 @@ module com.example.demo {
     requires spring.websocket;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires spring.core;
 
     opens com.harun.liveSlide to javafx.fxml;
     exports com.harun.liveSlide;
@@ -27,4 +28,6 @@ module com.example.demo {
     opens com.harun.liveSlide.model.network.login to com.fasterxml.jackson.databind;
     opens com.harun.liveSlide.model.network.participantList to com.fasterxml.jackson.databind;
     opens com.harun.liveSlide.model.network.pdfFile to com.fasterxml.jackson.databind;
+    opens com.harun.liveSlide.model.network.meeting to com.fasterxml.jackson.databind;
+
 }

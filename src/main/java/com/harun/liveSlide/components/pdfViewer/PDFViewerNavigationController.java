@@ -41,25 +41,26 @@ public class PDFViewerNavigationController {
         manageNavigationButtons();
     }
 
-    public void goBackPage() {
+    public boolean goBackPage() {
         if (currentPageIndex == 1 || pageCount == 0){
-            return;
+            return false;
         }
 
         currentPageIndex--;
         showPage();
         manageNavigationButtons();
+        return true;
     }
 
-    public void goNextPage() {
+    public boolean goNextPage() {
         if (currentPageIndex == pageCount || pageCount == 0){
-            return;
+            return false;
         }
 
         currentPageIndex++;
-
         showPage();
         manageNavigationButtons();
+        return true;
     }
 
     public void goBackPage(ActionEvent actionEvent) {
@@ -80,6 +81,14 @@ public class PDFViewerNavigationController {
         if (currentPageIndex == pageCount) {
             pdfViewer.toolBar.setDisableNextButton(true);
         }
+    }
+
+    public int getCurrentPageIndex() {
+        return currentPageIndex;
+    }
+
+    public void setCurrentPageIndex(int currentPageIndex) {
+        this.currentPageIndex = currentPageIndex;
     }
 
     public void setPageCount(int pageCount) {
