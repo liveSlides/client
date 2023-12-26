@@ -60,8 +60,8 @@ public class NetworkMainManager {
         StompClient.subscribeRaw(
                 "/topic/pageChanged/"
                         + GlobalVariables.SESSION_ID ,
-                PageChangedResponse.class, response -> {
-                    handlePageChangedResponse(((PageChangedResponse) response));
+                int.class, response -> {
+                    handlePageChangedResponse(((int) response));
         });
 
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
@@ -95,9 +95,12 @@ public class NetworkMainManager {
         });
     }
 
-    public void loadPDF(String path) {
+    public void loadPDF(String path , MeetingInitialInformationResponse response) {
         Platform.runLater(() -> {
             mainScreen.pdfViewer.loadPDF(path);
+            if(response != null) {
+                mainScreen.pdfViewer.goPage(response.getIndex());
+            }
         });
     }
 
@@ -109,7 +112,12 @@ public class NetworkMainManager {
                 );
     }
 
-    public void pageChanged(int index , PDFPage pdfPage) {
+    public void pageChanged(int index) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/pageChanged/" +
+                    GlobalVariables.SESSION_ID ,index
+            );
+        }
     }
 
 
@@ -121,7 +129,6 @@ public class NetworkMainManager {
 
     private void handleDisconnectResponse(DisconnectResponse response) {
         Platform.runLater(() -> {
-            System.out.println(response.status);
             if (response.status == ResponseStatus.SUCCESS) {
                 Platform.exit();
                 System.exit(0);
@@ -141,13 +148,18 @@ public class NetworkMainManager {
         if (response.getFileName() != null || !response.getFileName().equals("") && mainScreen.pdfViewer.pdfPages.isEmpty()) {
             File file = new File("src/meetingSlides/" + response.getFileName());
             if (!file.exists())
-                s3Manager.downloadFile(response.getFileName(),"src/meetingSlides");
+                s3Manager.downloadFile(response.getFileName(),"src/meetingSlides",response);
             else
-                loadPDF(file.getAbsolutePath());
+                loadPDF(file.getAbsolutePath(),response);
         }
     }
 
-    private void handlePageChangedResponse(PageChangedResponse response) {
-        System.out.println("Sayfa Değişti");
+    private void handlePageChangedResponse(int index) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER)
+            if (!mainScreen.pdfViewer.pdfPages.isEmpty()){
+                Platform.runLater(() -> {
+                    mainScreen.pdfViewer.goPage(index);
+                });
+            }
     }
 }
