@@ -4,6 +4,7 @@ import com.harun.liveSlide.components.pdfViewer.PDFPage;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.ResponseStatus;
+import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
 import com.harun.liveSlide.model.network.meeting.PageChangedRequest;
 import com.harun.liveSlide.model.network.meeting.PageChangedResponse;
 import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
@@ -50,12 +51,23 @@ public class NetworkMainManager {
         });
 
         StompClient.subscribeRaw(
+                "/topic/meetingInitialInformation/"
+                        + GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID,
+                MeetingInitialInformationResponse.class, response -> {
+                    handleMeetingInitialInformationResponse(((MeetingInitialInformationResponse) response));
+                });
+
+        StompClient.subscribeRaw(
                 "/topic/pageChanged/"
                         + GlobalVariables.SESSION_ID ,
                 PageChangedResponse.class, response -> {
                     handlePageChangedResponse(((PageChangedResponse) response));
         });
+
+        if(GlobalVariables.userType != UserType.HOST_PRESENTER)
+            getMeetingInitialInformation();
     }
+
 
 
 
@@ -89,6 +101,14 @@ public class NetworkMainManager {
         });
     }
 
+    public void getMeetingInitialInformation() {
+        StompClient.sendMessage("/app/getMeetingInitialInformation/" +
+                GlobalVariables.SESSION_ID +
+                "/" +
+                GlobalVariables.USER_ID,""
+                );
+    }
+
     public void pageChanged(int index , PDFPage pdfPage) {
     }
 
@@ -98,7 +118,6 @@ public class NetworkMainManager {
             mainScreen.participantTab.setParticipants(response.getParticipants());
         });
     }
-
 
     private void handleDisconnectResponse(DisconnectResponse response) {
         Platform.runLater(() -> {
@@ -114,6 +133,17 @@ public class NetworkMainManager {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER &&
         GlobalVariables.userType != UserType.HOST_SPECTATOR){
             s3Manager.downloadFile(response.fileName, "src/meetingSlides");
+        }
+    }
+
+    private void handleMeetingInitialInformationResponse(MeetingInitialInformationResponse response) {
+        System.out.println(response);
+        if (response.getFileName() != null || !response.getFileName().equals("") && mainScreen.pdfViewer.pdfPages.isEmpty()) {
+            File file = new File("src/meetingSlides/" + response.getFileName());
+            if (!file.exists())
+                s3Manager.downloadFile(response.getFileName(),"src/meetingSlides");
+            else
+                loadPDF(file.getAbsolutePath());
         }
     }
 

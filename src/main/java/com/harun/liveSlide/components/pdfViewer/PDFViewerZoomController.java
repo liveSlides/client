@@ -37,7 +37,7 @@ public class PDFViewerZoomController {
                 else{
                     currentZoomRate -= 5;
                 }
-
+                System.out.println("Current Zoom Rate : " + currentZoomRate);
                 pdfViewer.toolBar.updateZoomRateLabelText(currentZoomRate);
             }
         }
