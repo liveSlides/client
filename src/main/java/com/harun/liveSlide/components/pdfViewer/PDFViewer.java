@@ -207,9 +207,12 @@ public class PDFViewer extends BorderPane {
         pdfViewerObserver.eraserSizeChanged(size);
     }
 
+    public void notifyLoadPdf(String path) {
+        pdfViewerObserver.loadedPDF(path);
+    }
+
     public void loadPDF(String path) {
         pdfViewerFileController.loadPDF(path , 1 , true);
-        pdfViewerObserver.loadedPDF(path);
     }
 
     public void loadPDF(String path , int index) throws IOException {

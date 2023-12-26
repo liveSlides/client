@@ -1,5 +1,7 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.utils.BFImageConverter;
 import com.harun.liveSlide.utils.FileNameExtractor;
 import javafx.event.ActionEvent;
@@ -105,7 +107,10 @@ public class PDFViewerFileController {
             }
         }
 
-        pdfViewer.loadPDF(file.getAbsolutePath());
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER)
+            pdfViewer.loadPDF(file.getAbsolutePath());
+        else
+            pdfViewer.notifyLoadPdf(file.getAbsolutePath());
 
         //PDF Viewer initializing when file is uploaded
         pdfViewer.viewArea.setVvalue(0.5);

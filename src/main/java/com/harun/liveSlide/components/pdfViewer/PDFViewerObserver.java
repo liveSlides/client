@@ -63,6 +63,6 @@ public class PDFViewerObserver {
     }
 
     public void loadedPDF(String path) {
-        networkMainManager.uploadPDF(path);
+        networkMainManager.uploadPDFToS3(path);
     }
 }

@@ -12,6 +12,12 @@ module com.example.demo {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires spring.core;
+    requires software.amazon.awssdk.auth;
+    requires software.amazon.awssdk.core;
+    requires software.amazon.awssdk.regions;
+    requires software.amazon.awssdk.services.s3;
+    requires spring.beans;
+    requires spring.context;
 
     opens com.harun.liveSlide to javafx.fxml;
     exports com.harun.liveSlide;

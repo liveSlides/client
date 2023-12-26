@@ -14,17 +14,17 @@ import com.harun.liveSlide.model.network.pdfFile.DownloadPDFResponse;
 import com.harun.liveSlide.model.network.pdfFile.UploadPDFResponse;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.File;
 
 public class NetworkMainManager {
     private final MainScreen mainScreen;
-    private final SlideUploader slideUploader;
-    private final SlideDownloader slideDownloader;
+    private final S3Manager s3Manager;
 
     public NetworkMainManager(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
-        this.slideUploader = new SlideUploader();
-        this.slideDownloader = new SlideDownloader();
+        this.s3Manager = new S3Manager(this);
 
         StompClient.subscribeRaw(
                 "/topic/getParticipants/"
@@ -43,17 +43,10 @@ public class NetworkMainManager {
         });
 
         StompClient.subscribeRaw(
-                "/topic/uploadPDF/"
+                "/topic/fileUploaded/"
                         + GlobalVariables.SESSION_ID,
                 UploadPDFResponse.class, response -> {
                     handleUploadPdfResponse(((UploadPDFResponse) response));
-        });
-
-        StompClient.subscribeRaw(
-                "/topic/downloadPDF/"
-                        + GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID,
-                DownloadPDFResponse.class, response -> {
-                    handleDownloadPdfResponse(((DownloadPDFResponse) response));
         });
 
         StompClient.subscribeRaw(
@@ -76,11 +69,24 @@ public class NetworkMainManager {
         StompClient.sendMessage("/app/disconnect",req);
     }
 
-    public void uploadPDF(String path) {
+    public void uploadPDFToS3(String path) {
         if(GlobalVariables.userType == UserType.HOST_PRESENTER) {
-            slideUploader.setFilePath(path);
-            slideUploader.startToUploadSlide();
+            File file = new File(path);
+            s3Manager.uploadFile(file.getName(),path);
         }
+    }
+
+    public void loadPDFWithNotify(String fileName , String path) {
+        Platform.runLater(() -> {
+            mainScreen.pdfViewer.loadPDF(path);
+            StompClient.sendMessage("/app/fileUploaded/" + GlobalVariables.SESSION_ID,fileName);
+        });
+    }
+
+    public void loadPDF(String path) {
+        Platform.runLater(() -> {
+            mainScreen.pdfViewer.loadPDF(path);
+        });
     }
 
     public void pageChanged(int index , PDFPage pdfPage) {
@@ -96,43 +102,19 @@ public class NetworkMainManager {
 
     private void handleDisconnectResponse(DisconnectResponse response) {
         Platform.runLater(() -> {
+            System.out.println(response.status);
             if (response.status == ResponseStatus.SUCCESS) {
                 Platform.exit();
+                System.exit(0);
             }
         });
     }
 
     private void handleUploadPdfResponse(UploadPDFResponse response) {
-        if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR){
-            // Get File
-            String filePath = "src/meetingSlides/" + response.getFileName();
-            File file = new File(filePath);
-
-            // If file is exist load directly
-            if (file.exists()) {
-                System.out.println(filePath + " is exist");
-                Platform.runLater(() -> {
-                    mainScreen.pdfViewer.loadPDF(filePath);
-                });
-            }
-            else {
-                System.out.println(filePath + " is not exist");
-                slideDownloader.downloadSlide();
-            }
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER &&
+        GlobalVariables.userType != UserType.HOST_SPECTATOR){
+            s3Manager.downloadFile(response.fileName, "src/meetingSlides");
         }
-    }
-
-    private void handleDownloadPdfResponse(DownloadPDFResponse response) {
-        System.out.println("PDF tamamı yüklendi");
-
-        slideDownloader.pdfFile = null;
-        String folderPath = "src/meetingSlides";
-        String filePath = folderPath + File.separator + response.getFileName();
-
-        Platform.runLater(() -> {
-            mainScreen.pdfViewer.loadPDF(filePath);
-        });
-
     }
 
     private void handlePageChangedResponse(PageChangedResponse response) {
