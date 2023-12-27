@@ -36,7 +36,7 @@ public class PDFViewer extends BorderPane {
         this.setId("pdf-viewer");
         this.pdfViewerZoomController = new PDFViewerZoomController(this);
         this.pdfViewerScrollController = new PDFViewerScrollController();
-        this.pdfViewerRotateController = new PDFViewerRotateController();
+        this.pdfViewerRotateController = new PDFViewerRotateController(this);
         this.pdfViewerDrawController = new PDFViewerDrawController(this);
         this.pdfViewerPointerController = new PDFViewerPointerController(this);
         this.pdfViewerNavigationController = new PDFViewerNavigationController(this,0);
@@ -111,7 +111,6 @@ public class PDFViewer extends BorderPane {
 
     private void setViewAreaToControllers(){
         pdfViewerScrollController.setViewArea(viewArea);
-        pdfViewerRotateController.setViewArea(viewArea);
         pdfViewerDrawController.setViewArea(viewArea);
     }
 
@@ -168,7 +167,12 @@ public class PDFViewer extends BorderPane {
 
     public void rotate() {
         pdfViewerRotateController.rotate();
-        pdfViewerObserver.rotated();
+        pdfViewerObserver.rotated(pdfViewerRotateController.getRotateRate());
+    }
+
+    public void rotateToRotateRate(int rotateRate) {
+        pdfViewerRotateController.rotateToRotateRate(rotateRate);
+        pdfViewerObserver.rotated(pdfViewerRotateController.getRotateRate());
     }
 
     public void canvasPressed(MouseCoordinate mouseCoordinate) {

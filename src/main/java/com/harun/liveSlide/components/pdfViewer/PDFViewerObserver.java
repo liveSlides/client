@@ -30,8 +30,8 @@ public class PDFViewerObserver {
         networkMainManager.scrolledHorizontallyTo(hValue);
     }
 
-    public void rotated() {
-        System.out.println("Rotated");
+    public void rotated(int rotateRate) {
+        networkMainManager.rotated(rotateRate);
     }
 
     public void canvasPressed(MouseCoordinate mouseCoordinate) {

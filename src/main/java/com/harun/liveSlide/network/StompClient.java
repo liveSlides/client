@@ -3,7 +3,6 @@ package com.harun.liveSlide.network;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.WebSocketClient;
-import org.springframework.web.socket.client.jetty.JettyWebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.messaging.simp.stomp.StompSession.Subscription;
@@ -12,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import org.springframework.util.concurrent.ListenableFuture;
+
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.WebSocketContainer;

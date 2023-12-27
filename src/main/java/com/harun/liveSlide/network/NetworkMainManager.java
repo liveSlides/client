@@ -80,6 +80,13 @@ public class NetworkMainManager {
                     handleZoomedResponse(((int) response));
                 });
 
+        StompClient.subscribeRaw(
+                "/topic/rotated/"
+                        + GlobalVariables.SESSION_ID ,
+                int.class, response -> {
+                    handleRotatedResponse(((int) response));
+                });
+
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
             getMeetingInitialInformation();
     }
@@ -113,7 +120,7 @@ public class NetworkMainManager {
             mainScreen.pdfViewer.loadPDF(path);
             if(response != null) {
                 mainScreen.pdfViewer.goPage(response.getIndex());
-                System.out.println("Meeting Zoom rate : " + response.getZoomRate());
+                mainScreen.pdfViewer.rotateToRotateRate(response.getRotateRate());
                 mainScreen.pdfViewer.zoomToZoomRate(response.getZoomRate());
                 mainScreen.pdfViewer.scrollVerticallyTo(response.getvScrollValue());
                 mainScreen.pdfViewer.scrollHorizontallyTo(response.gethScrollValue());
@@ -157,6 +164,14 @@ public class NetworkMainManager {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
             StompClient.sendMessage("/app/zoomed/" +
                     GlobalVariables.SESSION_ID ,zoomRate
+            );
+        }
+    }
+
+    public void rotated(int rotateRate) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/rotated/" +
+                    GlobalVariables.SESSION_ID ,rotateRate
             );
         }
     }
@@ -226,4 +241,13 @@ public class NetworkMainManager {
             });
         }
     }
+
+    private void handleRotatedResponse(int rotateRate) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.rotateToRotateRate(rotateRate);
+            });
+        }
+    }
+
 }
