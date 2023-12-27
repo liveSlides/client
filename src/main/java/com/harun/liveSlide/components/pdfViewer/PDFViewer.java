@@ -1,9 +1,13 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.model.MouseCoordinate;
+import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -68,10 +72,13 @@ public class PDFViewer extends BorderPane {
         viewArea = new ScrollPane();
         viewArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         viewArea.setOnZoom((ZoomEvent event) -> {
-            double zoomFactor = event.getZoomFactor();
-            zoom(zoomFactor > 1 ? 2 : 0);
-            event.consume();
+            if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+                double zoomFactor = event.getZoomFactor();
+                zoom(zoomFactor > 1 ? 2 : 0);
+                event.consume();
+            }
         });
+
         viewArea.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case LEFT:
@@ -84,9 +91,15 @@ public class PDFViewer extends BorderPane {
                     break;
             }
         });
+
         viewArea.vvalueProperty().addListener((observable, oldValue, newValue) -> {pdfViewerObserver.scrolledVerticallyTo((Double) newValue);});
         viewArea.hvalueProperty().addListener((observable, oldValue, newValue) -> {pdfViewerObserver.scrolledHorizontallyTo((Double) newValue);});
 
+        if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR || GlobalVariables.userType == UserType.HOST_SPECTATOR) {
+            viewArea.addEventFilter(ScrollEvent.SCROLL, Event::consume);
+            viewArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            viewArea.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        }
         this.setCenter(viewArea);
         
         this.widthProperty().addListener((observable, oldValue, newValue) -> {
