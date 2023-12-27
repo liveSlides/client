@@ -64,12 +64,23 @@ public class NetworkMainManager {
                     handlePageChangedResponse(((int) response));
         });
 
+        StompClient.subscribeRaw(
+                "/topic/scrolledVertically/"
+                        + GlobalVariables.SESSION_ID ,
+                double.class, response -> {
+                    handleScrolledVerticallyResponse(((double) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/scrolledHorizontally/"
+                        + GlobalVariables.SESSION_ID ,
+                double.class, response -> {
+                    handleScrolledHorizontallyResponse(((double) response));
+                });
+
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
             getMeetingInitialInformation();
     }
-
-
-
 
     public void getParticipants() {
         SessionParticipantsRequest req = new SessionParticipantsRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
@@ -100,6 +111,8 @@ public class NetworkMainManager {
             mainScreen.pdfViewer.loadPDF(path);
             if(response != null) {
                 mainScreen.pdfViewer.goPage(response.getIndex());
+                mainScreen.pdfViewer.scrollVerticallyTo(response.getvScrollValue());
+                mainScreen.pdfViewer.scrollHorizontallyTo(response.gethScrollValue());
             }
         });
     }
@@ -120,6 +133,21 @@ public class NetworkMainManager {
         }
     }
 
+    public void scrolledVerticallyTo(double vValue) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/scrolledVertically/" +
+                    GlobalVariables.SESSION_ID ,vValue
+            );
+        }
+    }
+
+    public void scrolledHorizontallyTo(double hValue) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/scrolledHorizontally/" +
+                    GlobalVariables.SESSION_ID ,hValue
+            );
+        }
+    }
 
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
@@ -161,5 +189,21 @@ public class NetworkMainManager {
                     mainScreen.pdfViewer.goPage(index);
                 });
             }
+    }
+
+    private void handleScrolledHorizontallyResponse(double hValue) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.scrollHorizontallyTo(hValue);
+            });
+        }
+    }
+
+    private void handleScrolledVerticallyResponse(double vValue) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.scrollVerticallyTo(vValue);
+            });
+        }
     }
 }

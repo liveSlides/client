@@ -23,11 +23,11 @@ public class PDFViewerObserver {
     }
 
     public void scrolledVerticallyTo(double vValue) {
-        System.out.println("Scrolled Vertically To : " + vValue);
+        networkMainManager.scrolledVerticallyTo(vValue);
     }
 
     public void scrolledHorizontallyTo(double hValue) {
-        System.out.println("Scrolled horizontally To : " + hValue);
+        networkMainManager.scrolledHorizontallyTo(hValue);
     }
 
     public void rotated() {
