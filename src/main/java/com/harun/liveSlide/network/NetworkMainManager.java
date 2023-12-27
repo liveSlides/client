@@ -1,21 +1,16 @@
 package com.harun.liveSlide.network;
 
-import com.harun.liveSlide.components.pdfViewer.PDFPage;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.ResponseStatus;
 import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
-import com.harun.liveSlide.model.network.meeting.PageChangedRequest;
-import com.harun.liveSlide.model.network.meeting.PageChangedResponse;
 import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
 import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsRequest;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsResponse;
-import com.harun.liveSlide.model.network.pdfFile.DownloadPDFResponse;
 import com.harun.liveSlide.model.network.pdfFile.UploadPDFResponse;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 
@@ -78,6 +73,13 @@ public class NetworkMainManager {
                     handleScrolledHorizontallyResponse(((double) response));
                 });
 
+        StompClient.subscribeRaw(
+                "/topic/zoomed/"
+                        + GlobalVariables.SESSION_ID ,
+                int.class, response -> {
+                    handleZoomedResponse(((int) response));
+                });
+
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
             getMeetingInitialInformation();
     }
@@ -111,6 +113,8 @@ public class NetworkMainManager {
             mainScreen.pdfViewer.loadPDF(path);
             if(response != null) {
                 mainScreen.pdfViewer.goPage(response.getIndex());
+                System.out.println("Meeting Zoom rate : " + response.getZoomRate());
+                mainScreen.pdfViewer.zoomToZoomRate(response.getZoomRate());
                 mainScreen.pdfViewer.scrollVerticallyTo(response.getvScrollValue());
                 mainScreen.pdfViewer.scrollHorizontallyTo(response.gethScrollValue());
             }
@@ -145,6 +149,14 @@ public class NetworkMainManager {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
             StompClient.sendMessage("/app/scrolledHorizontally/" +
                     GlobalVariables.SESSION_ID ,hValue
+            );
+        }
+    }
+
+    public void zoomed(int zoomRate) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/zoomed/" +
+                    GlobalVariables.SESSION_ID ,zoomRate
             );
         }
     }
@@ -203,6 +215,14 @@ public class NetworkMainManager {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
                 mainScreen.pdfViewer.scrollVerticallyTo(vValue);
+            });
+        }
+    }
+
+    private void handleZoomedResponse(int zoomRate) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.zoomToZoomRate(zoomRate);
             });
         }
     }

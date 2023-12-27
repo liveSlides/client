@@ -148,7 +148,12 @@ public class PDFViewer extends BorderPane {
 
     public void zoom(double zoomFactor) {
         pdfViewerZoomController.zoom(zoomFactor);
-        pdfViewerObserver.zoomed(zoomFactor);
+        pdfViewerObserver.zoomed(pdfViewerZoomController.currentZoomRate);
+    }
+
+    public void zoomToZoomRate(int zoomRate) {
+        pdfViewerZoomController.zoomToZoomRate(zoomRate);
+        pdfViewerObserver.zoomed(pdfViewerZoomController.currentZoomRate);
     }
 
     public void scrollVerticallyTo(double vValue) {
@@ -262,6 +267,7 @@ public class PDFViewer extends BorderPane {
     public PDFViewerPointerController getPdfViewerPointerController() {
         return pdfViewerPointerController;
     }
+
 
 
 }

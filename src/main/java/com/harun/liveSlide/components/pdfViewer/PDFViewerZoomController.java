@@ -37,7 +37,7 @@ public class PDFViewerZoomController {
                 else{
                     currentZoomRate -= 5;
                 }
-                System.out.println("Current Zoom Rate : " + currentZoomRate);
+
                 pdfViewer.toolBar.updateZoomRateLabelText(currentZoomRate);
             }
         }
@@ -54,6 +54,22 @@ public class PDFViewerZoomController {
 
     private boolean isZoomable (double totalZoom , double zoomRate) {
         return (totalZoom > 0.7 || zoomRate > 1) && ((totalZoom < 3) || zoomRate < 1);
+    }
+
+    public void zoomToZoomRate(int zoomRate) {
+        if (zoomRate == currentZoomRate)
+            return;
+
+        while (zoomRate > currentZoomRate) {
+            zoom(2);
+        }
+
+        while (zoomRate < currentZoomRate) {
+            zoom(0);
+        }
+
+        System.out.println("Zoom rate : " + zoomRate);
+        System.out.println("Current Zoom rate : " + currentZoomRate);
     }
 
 

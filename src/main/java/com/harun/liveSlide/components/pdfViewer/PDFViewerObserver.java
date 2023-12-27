@@ -18,8 +18,8 @@ public class PDFViewerObserver {
         networkMainManager.pageChanged(index);
     }
 
-    public void zoomed(double zoomFactor) {
-        System.out.println("Zoom : " + zoomFactor);
+    public void zoomed(int zoomRate) {
+        networkMainManager.zoomed(zoomRate);
     }
 
     public void scrolledVerticallyTo(double vValue) {
