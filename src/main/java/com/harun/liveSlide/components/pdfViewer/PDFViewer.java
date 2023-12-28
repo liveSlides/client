@@ -101,10 +101,6 @@ public class PDFViewer extends BorderPane {
             viewArea.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         }
         this.setCenter(viewArea);
-        
-        this.widthProperty().addListener((observable, oldValue, newValue) -> {
-            updateSizeOfPdfPages((Double) newValue);
-        });
 
         setViewAreaToControllers();
     }
@@ -112,18 +108,6 @@ public class PDFViewer extends BorderPane {
     private void setViewAreaToControllers(){
         pdfViewerScrollController.setViewArea(viewArea);
         pdfViewerDrawController.setViewArea(viewArea);
-    }
-
-    public void updateSizeOfPdfPages(double newWidth) {
-        double viewportHeight = viewArea.getViewportBounds().getHeight();
-
-        if (pdfPages != null) {
-            for (PDFPageContainer pdfPageContainer : pdfPages) {
-                PDFPage pdfPage = pdfPageContainer.getPDFPage();
-                pdfPage.setMinWidth(newWidth);
-                pdfPage.setMinHeight(viewportHeight);
-            }
-        }
     }
 
     public void goPage(int index) {

@@ -67,9 +67,6 @@ public class PDFViewerZoomController {
         while (zoomRate < currentZoomRate) {
             zoom(0);
         }
-
-        System.out.println("Zoom rate : " + zoomRate);
-        System.out.println("Current Zoom rate : " + currentZoomRate);
     }
 
 

@@ -59,7 +59,7 @@ public class PDFViewerObserver {
     }
 
     public void pointed(double x , double y) {
-        System.out.println("Pointer x : " + x + " y : " + y);
+        networkMainManager.pointed(x,y);
     }
 
     public void loadedPDF(String path) {

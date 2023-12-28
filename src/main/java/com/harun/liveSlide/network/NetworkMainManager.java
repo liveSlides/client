@@ -7,6 +7,7 @@ import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.ResponseStatus;
 import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
+import com.harun.liveSlide.model.network.meeting.PointedEvent;
 import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
 import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsRequest;
@@ -116,6 +117,13 @@ public class NetworkMainManager {
                         + GlobalVariables.SESSION_ID ,
                 PenEraserSize.class, response -> {
                     handleEraserSizeChangedResponse(((PenEraserSize) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/pointed/"
+                        + GlobalVariables.SESSION_ID ,
+                PointedEvent.class, response -> {
+                    handlePointedResponse(((PointedEvent) response));
                 });
 
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
@@ -239,6 +247,14 @@ public class NetworkMainManager {
         }
     }
 
+    public void pointed(double x, double y) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/pointed/" +
+                    GlobalVariables.SESSION_ID , new PointedEvent(x,y)
+            );
+        }
+    }
+
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
             mainScreen.participantTab.setParticipants(response.getParticipants());
@@ -341,6 +357,14 @@ public class NetworkMainManager {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
                 mainScreen.pdfViewer.changeActiveEraserSize(size);
+            });
+        }
+    }
+
+    private void handlePointedResponse(PointedEvent response) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.point(response.getX(),response.getY());
             });
         }
     }
