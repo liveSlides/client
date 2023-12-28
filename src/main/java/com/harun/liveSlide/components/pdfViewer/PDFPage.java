@@ -1,5 +1,7 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.MouseCoordinate;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;

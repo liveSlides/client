@@ -185,6 +185,15 @@ public class PDFViewer extends BorderPane {
         pdfViewerObserver.canvasDragged(mouseCoordinate);
     }
 
+    public void pointByPresenter(double x , double y) {
+        if (pdfViewerToolController.getCurrentPdfTool() == PDFTool.POINTER &&
+                GlobalVariables.userType == UserType.HOST_PRESENTER ||
+                GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER) {
+            pdfViewerPointerController.point(x ,y);
+            pdfViewerObserver.pointed(x,y);
+        }
+    }
+
     public void point(double x , double y) {
         if (pdfViewerToolController.getCurrentPdfTool() == PDFTool.POINTER) {
             pdfViewerPointerController.point(x ,y);

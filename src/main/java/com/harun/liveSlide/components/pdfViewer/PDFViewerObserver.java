@@ -43,7 +43,7 @@ public class PDFViewerObserver {
     }
 
     public void activeToolChanged(PDFTool pdfTool) {
-        System.out.println("Active tool changed : " + pdfTool);
+        networkMainManager.activeToolChanged(pdfTool);
     }
 
     public void penSizeChanged(PenEraserSize size) {

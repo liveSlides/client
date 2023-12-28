@@ -32,12 +32,6 @@ public class PDFViewerPointerController {
         }
     }
 
-    public void onMouseMoved(MouseEvent mouseEvent) {
-        if (pdfViewer.getPdfViewerToolController().getCurrentPdfTool() == PDFTool.POINTER){
-            point(mouseEvent.getX(), mouseEvent.getY());
-        }
-    }
-
     public void isPointerVisible(boolean isVisible) {
         pointerShape.setVisible(isVisible);
     }

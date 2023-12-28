@@ -1,5 +1,7 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.global.GlobalVariables;
 import javafx.event.ActionEvent;
 
 public class PDFViewerToolController {
@@ -28,7 +30,8 @@ public class PDFViewerToolController {
             PDFPage pdfPage = pdfPageContainer.getPDFPage();
 
             if (newPdfTool == PDFTool.CURSOR) {
-                pdfViewer.viewArea.setPannable(true);
+                if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER)
+                    pdfViewer.viewArea.setPannable(true);
                 pdfPage.canvas.setMouseTransparent(true);
                 pdfViewer.toolBar.setCursorSelected();
             }
@@ -39,12 +42,18 @@ public class PDFViewerToolController {
             }
             else if(newPdfTool == PDFTool.DRAW){
                 pdfViewer.viewArea.setPannable(false);
-                pdfPage.canvas.setMouseTransparent(false);
+                if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER)
+                    pdfPage.canvas.setMouseTransparent(false);
+                else
+                    pdfPage.canvas.setMouseTransparent(true);
                 pdfViewer.toolBar.setDrawSelected();
             }
             else if(newPdfTool == PDFTool.ERASER){
                 pdfViewer.viewArea.setPannable(false);
-                pdfPage.canvas.setMouseTransparent(false);
+                if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER)
+                    pdfPage.canvas.setMouseTransparent(false);
+                else
+                    pdfPage.canvas.setMouseTransparent(true);
                 pdfViewer.toolBar.setEraserSelected();
             }
         }

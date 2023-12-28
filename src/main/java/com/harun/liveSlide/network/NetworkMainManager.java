@@ -1,5 +1,6 @@
 package com.harun.liveSlide.network;
 
+import com.harun.liveSlide.components.pdfViewer.PDFTool;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.ResponseStatus;
@@ -85,6 +86,13 @@ public class NetworkMainManager {
                         + GlobalVariables.SESSION_ID ,
                 int.class, response -> {
                     handleRotatedResponse(((int) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/activeToolChanged/"
+                        + GlobalVariables.SESSION_ID ,
+                PDFTool.class, response -> {
+                    handleActiveToolChangedResponse(((PDFTool) response));
                 });
 
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
@@ -176,6 +184,14 @@ public class NetworkMainManager {
         }
     }
 
+    public void activeToolChanged(PDFTool pdfTool) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/activeToolChanged/" +
+                    GlobalVariables.SESSION_ID ,pdfTool
+            );
+        }
+    }
+
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
             mainScreen.participantTab.setParticipants(response.getParticipants());
@@ -250,4 +266,11 @@ public class NetworkMainManager {
         }
     }
 
+    private void handleActiveToolChangedResponse(PDFTool activeTool) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.changeActiveTool(activeTool);
+            });
+        }
+    }
 }

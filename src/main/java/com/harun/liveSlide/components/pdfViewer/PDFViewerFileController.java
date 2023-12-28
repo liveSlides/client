@@ -84,8 +84,8 @@ public class PDFViewerFileController {
 
                 //Encapsulate PDF Page with PdfPageContainer
                 PDFPageContainer pdfPageContainer = new PDFPageContainer(pdfPage);
-                pdfPageContainer.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {pdfViewer.point(event.getX(),event.getY());});
-                pdfPageContainer.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {pdfViewer.point(event.getX(),event.getY());});
+                pdfPageContainer.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {pdfViewer.pointByPresenter(event.getX(),event.getY());});
+                pdfPageContainer.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {pdfViewer.pointByPresenter(event.getX(),event.getY());});
 
                 pdfViewer.pdfPages.add(pdfPageContainer);
             }
@@ -114,10 +114,10 @@ public class PDFViewerFileController {
 
         //PDF Viewer initializing when file is uploaded
         pdfViewer.viewArea.setVvalue(0.5);
-        pdfViewer.getPdfViewerToolController().setCurrentPdfTool(PDFTool.CURSOR);
-        pdfViewer.getPdfViewerToolController().setCurrentDrawColor(PenColor.BLACK);
-        pdfViewer.getPdfViewerToolController().setCurrentDrawSize(PenEraserSize.SMALL);
-        pdfViewer.getPdfViewerToolController().setCurrentEraserSize(PenEraserSize.SMALL);
+        pdfViewer.changeActiveTool(PDFTool.CURSOR);
+        pdfViewer.changeActivePenColor(PenColor.BLACK);
+        pdfViewer.changeActivePenSize(PenEraserSize.SMALL);
+        pdfViewer.changeActiveEraserSize(PenEraserSize.SMALL);
     }
 
     private void clearPdfPages() {
