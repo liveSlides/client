@@ -5,7 +5,9 @@ import com.harun.liveSlide.components.pdfViewer.PenColor;
 import com.harun.liveSlide.components.pdfViewer.PenEraserSize;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
+import com.harun.liveSlide.model.MouseCoordinate;
 import com.harun.liveSlide.model.network.ResponseStatus;
+import com.harun.liveSlide.model.network.meeting.CanvasEvent;
 import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
 import com.harun.liveSlide.model.network.meeting.PointedEvent;
 import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
@@ -124,6 +126,20 @@ public class NetworkMainManager {
                         + GlobalVariables.SESSION_ID ,
                 PointedEvent.class, response -> {
                     handlePointedResponse(((PointedEvent) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/canvasPressed/"
+                        + GlobalVariables.SESSION_ID ,
+                CanvasEvent.class, response -> {
+                    handleCanvasPressedResponse(((CanvasEvent) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/canvasDragged/"
+                        + GlobalVariables.SESSION_ID ,
+                CanvasEvent.class, response -> {
+                    handleCanvasDraggedResponse(((CanvasEvent) response));
                 });
 
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
@@ -255,6 +271,22 @@ public class NetworkMainManager {
         }
     }
 
+    public void canvasPressed(MouseCoordinate mouseCoordinate) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/canvasPressed/" +
+                    GlobalVariables.SESSION_ID , new CanvasEvent(mouseCoordinate.x, mouseCoordinate.y)
+            );
+        }
+    }
+
+    public void canvasDragged(MouseCoordinate mouseCoordinate) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/canvasDragged/" +
+                    GlobalVariables.SESSION_ID , new CanvasEvent(mouseCoordinate.x, mouseCoordinate.y)
+            );
+        }
+    }
+
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
             mainScreen.participantTab.setParticipants(response.getParticipants());
@@ -365,6 +397,22 @@ public class NetworkMainManager {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
                 mainScreen.pdfViewer.point(response.getX(),response.getY());
+            });
+        }
+    }
+
+    private void handleCanvasPressedResponse(CanvasEvent response) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.canvasPressed(new MouseCoordinate(response.getX(), response.getY()));
+            });
+        }
+    }
+
+    private void handleCanvasDraggedResponse(CanvasEvent response) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.canvasDragged(new MouseCoordinate(response.getX(), response.getY()));
             });
         }
     }

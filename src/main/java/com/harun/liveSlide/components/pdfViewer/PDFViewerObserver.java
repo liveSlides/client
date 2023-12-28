@@ -35,11 +35,11 @@ public class PDFViewerObserver {
     }
 
     public void canvasPressed(MouseCoordinate mouseCoordinate) {
-        System.out.println("Canvas Pressed x :" + mouseCoordinate.x + " y : " + mouseCoordinate.y);
+        networkMainManager.canvasPressed(mouseCoordinate);
     }
 
     public void canvasDragged(MouseCoordinate mouseCoordinate) {
-        System.out.println("Canvas Dragged x :" + mouseCoordinate.x + " y : " + mouseCoordinate.y);
+        networkMainManager.canvasDragged(mouseCoordinate);
     }
 
     public void activeToolChanged(PDFTool pdfTool) {
