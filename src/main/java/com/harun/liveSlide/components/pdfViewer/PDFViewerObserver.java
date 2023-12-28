@@ -47,15 +47,15 @@ public class PDFViewerObserver {
     }
 
     public void penSizeChanged(PenEraserSize size) {
-        System.out.println("Pen size changed : " + size);
+        networkMainManager.penSizeChanged(size);
     }
 
     public void penColorChanged(PenColor penColor) {
-        System.out.println("Pen color changed : " + penColor);
+        networkMainManager.penColorChanged(penColor);
     }
 
     public void eraserSizeChanged(PenEraserSize size) {
-        System.out.println("Eraser size changed : " + size);
+        networkMainManager.eraserSizeChanged(size);
     }
 
     public void pointed(double x , double y) {

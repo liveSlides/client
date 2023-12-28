@@ -1,6 +1,8 @@
 package com.harun.liveSlide.network;
 
 import com.harun.liveSlide.components.pdfViewer.PDFTool;
+import com.harun.liveSlide.components.pdfViewer.PenColor;
+import com.harun.liveSlide.components.pdfViewer.PenEraserSize;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.ResponseStatus;
@@ -93,6 +95,27 @@ public class NetworkMainManager {
                         + GlobalVariables.SESSION_ID ,
                 PDFTool.class, response -> {
                     handleActiveToolChangedResponse(((PDFTool) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/penSizeChanged/"
+                        + GlobalVariables.SESSION_ID ,
+                PenEraserSize.class, response -> {
+                    handlePenSizeChangedResponse(((PenEraserSize) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/penColorChanged/"
+                        + GlobalVariables.SESSION_ID ,
+                PenColor.class, response -> {
+                    handlePenColorChangedResponse(((PenColor) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/eraserSizeChanged/"
+                        + GlobalVariables.SESSION_ID ,
+                PenEraserSize.class, response -> {
+                    handleEraserSizeChangedResponse(((PenEraserSize) response));
                 });
 
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
@@ -192,6 +215,30 @@ public class NetworkMainManager {
         }
     }
 
+    public void penSizeChanged(PenEraserSize size) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/penSizeChanged/" +
+                    GlobalVariables.SESSION_ID ,size
+            );
+        }
+    }
+
+    public void penColorChanged(PenColor penColor) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/penColorChanged/" +
+                    GlobalVariables.SESSION_ID ,penColor
+            );
+        }
+    }
+
+    public void eraserSizeChanged(PenEraserSize size) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
+            StompClient.sendMessage("/app/eraserSizeChanged/" +
+                    GlobalVariables.SESSION_ID ,size
+            );
+        }
+    }
+
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
             mainScreen.participantTab.setParticipants(response.getParticipants());
@@ -270,6 +317,30 @@ public class NetworkMainManager {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
                 mainScreen.pdfViewer.changeActiveTool(activeTool);
+            });
+        }
+    }
+
+    private void handlePenSizeChangedResponse(PenEraserSize size) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.changeActivePenSize(size);
+            });
+        }
+    }
+
+    private void handlePenColorChangedResponse(PenColor color) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.changeActivePenColor(color);
+            });
+        }
+    }
+
+    private void handleEraserSizeChangedResponse(PenEraserSize size) {
+        if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.pdfViewer.changeActiveEraserSize(size);
             });
         }
     }

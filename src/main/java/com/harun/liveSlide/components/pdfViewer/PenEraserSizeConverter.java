@@ -1,11 +1,5 @@
 package com.harun.liveSlide.components.pdfViewer;
 
-enum PenEraserSize {
-    SMALL,
-    MEDIUM,
-    BIG
-}
-
 public class PenEraserSizeConverter {
     public static int convertSize(PenEraserSize size) {
         switch (size) {
