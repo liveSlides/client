@@ -26,6 +26,7 @@ public class PDFViewerNavigationController {
         }
         else{
             pdfViewer.viewArea.setContent(pdfViewer.pdfPages.get(currentPageIndex - pageStartIndex));
+            pdfViewer.toolBar.updateZoomRateLabelText(pdfViewer.pdfPages.get(currentPageIndex - pageStartIndex).getPDFPage().getCurrentZoomRate());
         }
         pdfViewer.toolBar.updatePageIndicatorLabelText(currentPageIndex , pageCount);
         pdfViewer.reloadGraphicsContext();

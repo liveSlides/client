@@ -21,7 +21,7 @@ public class PDFPage extends StackPane {
     public PDFViewerPointerController pdfViewerPointerController;
     public ImageView image;
     public Canvas canvas;
-
+    private Integer currentZoomRate = 100;
     public BufferedImage bufferedImage;
 
     public PDFPage() {
@@ -70,5 +70,13 @@ public class PDFPage extends StackPane {
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
             pdfViewer.canvasDragged(new MouseCoordinate(event.getX(),event.getY()));
         });
+    }
+
+    public Integer getCurrentZoomRate() {
+        return currentZoomRate;
+    }
+
+    public void setCurrentZoomRate(Integer currentZoomRate) {
+        this.currentZoomRate = currentZoomRate;
     }
 }

@@ -6,10 +6,8 @@ import javafx.scene.control.ScrollPane;
 
 public class PDFViewerZoomController {
     private PDFViewer pdfViewer;
-    private double totalZoom = 1;
     final private double ZOOM_SPEED = 1.020;
     final private double NEGATIVE_ZOOM_SPEED = 2 - ZOOM_SPEED;
-    int currentZoomRate = 100;
 
     public PDFViewerZoomController(PDFViewer pdfViewer){
         this.pdfViewer = pdfViewer;
@@ -18,10 +16,14 @@ public class PDFViewerZoomController {
     public void zoom(double zoomFactor) {
         double zoomRate = getStaticZoomRate(zoomFactor);
 
-        // If Zoom is in limited rate
-        if (isZoomable(totalZoom,zoomRate)) {
-            totalZoom *= zoomRate;
+        PDFPage currentPDFPage = getCurrentPdfPage();
+        if (currentPDFPage == null)
+            return;
 
+        Integer currentZoomRate = getCurrentPdfPage().getCurrentZoomRate();
+
+        // If Zoom is in limited rate
+        if (isZoomable(zoomRate)) {
             PDFPageContainer pdfPageContainer = (PDFPageContainer) pdfViewer.viewArea.getContent();
             if (pdfPageContainer != null) {
                 PDFPage pdfPage = pdfPageContainer.getPDFPage();
@@ -32,13 +34,13 @@ public class PDFViewerZoomController {
                 pdfPage.canvas.setScaleY(pdfPage.canvas.getScaleY() * zoomRate);
 
                 if (zoomRate > 1) {
-                    currentZoomRate += 5;
+                    currentPDFPage.setCurrentZoomRate(currentZoomRate + 5);
                 }
                 else{
-                    currentZoomRate -= 5;
+                    currentPDFPage.setCurrentZoomRate(currentZoomRate - 5);
                 }
 
-                pdfViewer.toolBar.updateZoomRateLabelText(currentZoomRate);
+                pdfViewer.toolBar.updateZoomRateLabelText(currentPDFPage.getCurrentZoomRate());
             }
         }
     }
@@ -52,21 +54,39 @@ public class PDFViewerZoomController {
         }
     }
 
-    private boolean isZoomable (double totalZoom , double zoomRate) {
-        return (totalZoom > 0.7 || zoomRate > 1) && ((totalZoom < 3) || zoomRate < 1);
+    private boolean isZoomable (double zoomRate) {
+        PDFPage currentPDFPage = getCurrentPdfPage();
+        if (currentPDFPage == null)
+            return false;
+
+        Integer currentZoomRate = getCurrentPdfPage().getCurrentZoomRate();
+
+        return (currentZoomRate > 10 || zoomRate > 1) && ((currentZoomRate < 300) || zoomRate < 1);
     }
 
     public void zoomToZoomRate(int zoomRate) {
-        if (zoomRate == currentZoomRate)
+        PDFPage currentPDFPage = getCurrentPdfPage();
+        if (currentPDFPage == null)
             return;
 
-        while (zoomRate > currentZoomRate) {
+        if (zoomRate == currentPDFPage.getCurrentZoomRate())
+            return;
+
+        while (zoomRate > currentPDFPage.getCurrentZoomRate()) {
             zoom(2);
         }
 
-        while (zoomRate < currentZoomRate) {
+        while (zoomRate < currentPDFPage.getCurrentZoomRate()) {
             zoom(0);
         }
+    }
+
+    public PDFPage getCurrentPdfPage() {
+        // Get current page zoom rate
+        if (pdfViewer.viewArea.getContent() == null || !(pdfViewer.viewArea.getContent() instanceof PDFPageContainer))
+            return null;
+
+        return ((PDFPageContainer) pdfViewer.viewArea.getContent()).getPDFPage();
     }
 
 
