@@ -5,6 +5,7 @@ import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.components.meetingTopBar.meetingTimer.MeetingTimer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -26,6 +27,7 @@ public class MeetingTopBar extends ToolBar {
     private Button takeControlButton;
     private Button requestControlButton;
     private Button participantButton;
+    private Label statusLabel;
 
     public MeetingTopBar(Stage stage , MainScreen mainScreen, double prefHeight , double prefWidth) {
         controller = new MeetingTopBarController(this);
@@ -51,6 +53,19 @@ public class MeetingTopBar extends ToolBar {
                 Priority.SOMETIMES
         );
         this.getItems().add(spacer);
+
+        //Status Label
+        statusLabel = new Label();
+        statusLabel.setPadding(new Insets(0,0,0,250));
+        this.getItems().add(statusLabel);
+
+        //Right Spacer
+        Pane spacerRight = new Pane();
+        HBox.setHgrow(
+                spacerRight,
+                Priority.SOMETIMES
+        );
+        this.getItems().add(spacerRight);
 
         //Take Control Back Button
         takeControlButton = new Button("");
@@ -100,6 +115,10 @@ public class MeetingTopBar extends ToolBar {
 
     public void setVisibleControlBackButton(boolean visibility) {
         takeControlButton.setVisible(visibility);
+    }
+
+    public void setStatusLabelText(String text) {
+        statusLabel.setText(text);
     }
 
     public Stage getStage() {

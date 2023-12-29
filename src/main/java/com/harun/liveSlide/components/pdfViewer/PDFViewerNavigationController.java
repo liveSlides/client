@@ -1,5 +1,7 @@
 package com.harun.liveSlide.components.pdfViewer;
 
+import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.global.GlobalVariables;
 import javafx.event.ActionEvent;
 
 import java.io.IOException;
@@ -20,6 +22,9 @@ public class PDFViewerNavigationController {
         if (currentPageIndex > pageEndIndex || currentPageIndex < pageStartIndex) {
             try {
                 pdfViewer.loadPDF(pdfViewer.currentFilePath,currentPageIndex);
+                if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR || GlobalVariables.userType == UserType.HOST_SPECTATOR){
+                    pdfViewer.getPdfViewerObserver().synchSlide();
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

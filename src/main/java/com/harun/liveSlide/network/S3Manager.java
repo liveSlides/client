@@ -1,7 +1,6 @@
 package com.harun.liveSlide.network;
 
 import com.harun.liveSlide.global.GlobalVariables;
-import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -71,30 +70,7 @@ public class S3Manager {
                 while ((read_len = s3Object.read(read_buf)) > 0) {
                     fos.write(read_buf, 0, read_len);
                 }
-                networkMainManager.loadPDF(downloadPath + "/" + fileName , null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        });
-    }
-
-    public void downloadFile(String fileName, String downloadPath , MeetingInitialInformationResponse response) {
-        executorService.submit(() -> {
-            String s3Key = GlobalVariables.SESSION_ID + "/" + fileName;
-            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(s3Key)
-                    .build();
-
-            try (ResponseInputStream<GetObjectResponse> s3Object = s3.getObject(getObjectRequest);
-                 FileOutputStream fos = new FileOutputStream(new File(downloadPath + "/" + fileName))) {
-                byte[] read_buf = new byte[1024];
-                int read_len;
-                while ((read_len = s3Object.read(read_buf)) > 0) {
-                    fos.write(read_buf, 0, read_len);
-                }
-                networkMainManager.loadPDF(downloadPath + "/" + fileName , response);
+                networkMainManager.loadPDF(downloadPath + "/" + fileName);
             } catch (Exception e) {
                 e.printStackTrace();
             }

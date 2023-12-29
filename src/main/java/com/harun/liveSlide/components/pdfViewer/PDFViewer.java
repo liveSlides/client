@@ -277,6 +277,7 @@ public class PDFViewer extends BorderPane {
         return pdfViewerPointerController;
     }
 
-
-
+    public PDFViewerObserver getPdfViewerObserver() {
+        return pdfViewerObserver;
+    }
 }
