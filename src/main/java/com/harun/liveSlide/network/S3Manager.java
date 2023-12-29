@@ -1,6 +1,7 @@
 package com.harun.liveSlide.network;
 
 import com.harun.liveSlide.global.GlobalVariables;
+import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -55,7 +56,7 @@ public class S3Manager {
         });
     }
 
-    public void downloadFile(String fileName, String downloadPath) {
+    public void downloadFile(String fileName, String downloadPath, MeetingInitialInformationResponse initialResponse) {
         executorService.submit(() -> {
             String s3Key = GlobalVariables.SESSION_ID + "/" + fileName;
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
@@ -70,7 +71,7 @@ public class S3Manager {
                 while ((read_len = s3Object.read(read_buf)) > 0) {
                     fos.write(read_buf, 0, read_len);
                 }
-                networkMainManager.loadPDF(downloadPath + "/" + fileName);
+                networkMainManager.loadPDF(downloadPath + "/" + fileName , initialResponse);
             } catch (Exception e) {
                 e.printStackTrace();
             }

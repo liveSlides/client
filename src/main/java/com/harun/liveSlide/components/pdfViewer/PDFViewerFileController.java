@@ -127,4 +127,8 @@ public class PDFViewerFileController {
             pdfViewer.pdfPages = new ArrayList<>();
         }
     }
+
+    public Canvas[] getCanvases() {
+        return canvases;
+    }
 }

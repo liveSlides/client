@@ -2,9 +2,12 @@ package com.harun.liveSlide.components.pdfViewer;
 
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
+import com.harun.liveSlide.model.network.meeting.CanvasEventLog;
+import com.harun.liveSlide.model.network.meeting.CanvasEventType;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.model.MouseCoordinate;
 import javafx.event.Event;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
@@ -14,6 +17,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class PDFViewer extends BorderPane {
     private PDFViewerObserver pdfViewerObserver;
@@ -279,5 +284,28 @@ public class PDFViewer extends BorderPane {
 
     public PDFViewerObserver getPdfViewerObserver() {
         return pdfViewerObserver;
+    }
+
+    public void drawPages(LinkedList<CanvasEventLog>[] canvasEvents) {
+        int index = 0;
+        for (LinkedList i : canvasEvents) {
+            Iterator iterator = i.iterator();
+
+            while (iterator.hasNext()) {
+                CanvasEventLog event = (CanvasEventLog) iterator.next();
+                GraphicsContext gc = pdfViewerFileController.getCanvases()[index].getGraphicsContext2D();
+                pdfViewerDrawController.drawPage(
+                        event.getEventType() ,
+                        event.getCanvasEvent().getX(),
+                        event.getCanvasEvent().getY(),
+                        event.getActiveTool(),
+                        event.getPenSize(),
+                        event.getEraserSize(),
+                        event.getPenColor(),
+                        gc );
+            }
+
+            index += 1;
+        }
     }
 }

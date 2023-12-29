@@ -12,7 +12,6 @@ import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
 import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsRequest;
 import com.harun.liveSlide.model.network.participantList.SessionParticipantsResponse;
-import com.harun.liveSlide.model.network.pdfFile.UploadPDFResponse;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
 
@@ -45,8 +44,8 @@ public class NetworkMainManager {
         StompClient.subscribeRaw(
                 "/topic/fileUploaded/"
                         + GlobalVariables.SESSION_ID,
-                UploadPDFResponse.class, response -> {
-                    handleUploadPdfResponse(((UploadPDFResponse) response));
+                FileUploadedEvent.class, response -> {
+                    handleUploadPdfResponse(((FileUploadedEvent) response));
         });
 
         StompClient.subscribeRaw(
@@ -57,10 +56,10 @@ public class NetworkMainManager {
                 });
 
         StompClient.subscribeRaw(
-                "/topic/meetingFileInformation/"
+                "/topic/meetingInitialInformation/"
                         + GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID,
-                MeetingFileInformationResponse.class, response -> {
-                    handleMeetingFileInformationResponse(((MeetingFileInformationResponse) response));
+                MeetingInitialInformationResponse.class, response -> {
+                    handleMeetingInitialInformationResponse(((MeetingInitialInformationResponse) response));
                 });
 
         StompClient.subscribeRaw(
@@ -148,7 +147,7 @@ public class NetworkMainManager {
                 });
 
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
-            getMeetingFileInformation();
+            getMeetingInitialInformation();
     }
 
 
@@ -173,15 +172,22 @@ public class NetworkMainManager {
     public void loadPDFWithNotify(String fileName , String path) {
         Platform.runLater(() -> {
             mainScreen.pdfViewer.loadPDF(path);
-            StompClient.sendMessage("/app/fileUploaded/" + GlobalVariables.SESSION_ID,fileName);
+            StompClient.sendMessage("/app/fileUploaded/" + GlobalVariables.SESSION_ID,
+                    new FileUploadedEvent(
+                            fileName,
+                            mainScreen.pdfViewer.getPdfViewerNavigationController().getPageCount()));
             mainScreen.topSide.setStatusLabelText("You are presenting");
         });
     }
 
-    public void loadPDF(String path) {
+    public void loadPDF(String path , MeetingInitialInformationResponse initialResponse) {
         Platform.runLater(() -> {
             mainScreen.pdfViewer.loadPDF(path);
-            mainScreen.topSide.setStatusLabelText("");
+            if (initialResponse != null) {
+                mainScreen.topSide.setStatusLabelText("Loading drawings...");
+                mainScreen.pdfViewer.drawPages(initialResponse.getCanvasEvents());
+            }
+            mainScreen.topSide.setStatusLabelText("Synchronizing...");
             getMeetingSynchInformation();
         });
     }
@@ -194,8 +200,8 @@ public class NetworkMainManager {
                 );
     }
 
-    private void getMeetingFileInformation() {
-        StompClient.sendMessage("/app/getMeetingFileInformation/" +
+    private void getMeetingInitialInformation() {
+        StompClient.sendMessage("/app/getMeetingInitialInformation/" +
                 GlobalVariables.SESSION_ID +
                 "/" +
                 GlobalVariables.USER_ID,""
@@ -313,15 +319,16 @@ public class NetworkMainManager {
         });
     }
 
-    private void handleUploadPdfResponse(UploadPDFResponse response) {
+    private void handleUploadPdfResponse(FileUploadedEvent response) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER &&
         GlobalVariables.userType != UserType.HOST_SPECTATOR){
             Platform.runLater(() -> {
                 mainScreen.topSide.setStatusLabelText("Slide is downloading from server...");
-                mainScreen.pdfViewer.pdfPages.clear();
+                if (mainScreen.pdfViewer.pdfPages != null)
+                    mainScreen.pdfViewer.pdfPages.clear();
                 mainScreen.pdfViewer.viewArea.setContent(null);
             });
-            s3Manager.downloadFile(response.fileName, "src/meetingSlides");
+            s3Manager.downloadFile(response.getFileName(), "src/meetingSlides" , null);
         }
     }
 
@@ -332,22 +339,28 @@ public class NetworkMainManager {
             mainScreen.pdfViewer.zoomToZoomRate(response.getZoomRate());
             mainScreen.pdfViewer.scrollVerticallyTo(response.getvScrollValue());
             mainScreen.pdfViewer.scrollHorizontallyTo(response.gethScrollValue());
+            mainScreen.pdfViewer.changeActiveTool(response.getActiveTool());
+            mainScreen.pdfViewer.changeActiveEraserSize(response.getEraserSize());
+            mainScreen.pdfViewer.changeActivePenSize(response.getPenSize());
+            mainScreen.pdfViewer.changeActivePenColor(response.getPenColor());
+            mainScreen.topSide.setStatusLabelText("Senkronize edildi");
         });
     }
 
-    private void handleMeetingFileInformationResponse(MeetingFileInformationResponse fileResponse) {
-        if (fileResponse.getFileName() != null || mainScreen.pdfViewer.pdfPages.isEmpty()) {
-            File file = new File("src/meetingSlides/" + fileResponse.getFileName());
+    private void handleMeetingInitialInformationResponse(MeetingInitialInformationResponse initialResponse) {
+        System.out.println(initialResponse);
+        if (initialResponse.getFileName() != null || mainScreen.pdfViewer.pdfPages.isEmpty()) {
+            File file = new File("src/meetingSlides/" + initialResponse.getFileName());
             if (!file.exists())
-                s3Manager.downloadFile(fileResponse.getFileName(), "src/meetingSlides");
+                s3Manager.downloadFile(initialResponse.getFileName(), "src/meetingSlides" , initialResponse);
             else
-                loadPDF(file.getAbsolutePath());
+                loadPDF(file.getAbsolutePath(),initialResponse);
         }
     }
 
     private void handlePageChangedResponse(PageChangedEvent event) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER)
-            if (!mainScreen.pdfViewer.pdfPages.isEmpty()){
+            if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty()){
                 Platform.runLater(() -> {
                     mainScreen.pdfViewer.goPage(event.getIndex());
                     mainScreen.pdfViewer.zoomToZoomRate(event.getZoomRate());
@@ -360,7 +373,7 @@ public class NetworkMainManager {
     private void handleScrolledHorizontallyResponse(double hValue) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.scrollHorizontallyTo(hValue);
             });
         }
@@ -369,7 +382,7 @@ public class NetworkMainManager {
     private void handleScrolledVerticallyResponse(double vValue) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.scrollVerticallyTo(vValue);
             });
         }
@@ -378,7 +391,7 @@ public class NetworkMainManager {
     private void handleZoomedResponse(int zoomRate) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.zoomToZoomRate(zoomRate);
             });
         }
@@ -387,7 +400,7 @@ public class NetworkMainManager {
     private void handleRotatedResponse(int rotateRate) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.rotateToRotateRate(rotateRate);
             });
         }
@@ -396,7 +409,7 @@ public class NetworkMainManager {
     private void handleActiveToolChangedResponse(PDFTool activeTool) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.changeActiveTool(activeTool);
             });
         }
@@ -405,7 +418,7 @@ public class NetworkMainManager {
     private void handlePenSizeChangedResponse(PenEraserSize size) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.changeActivePenSize(size);
             });
         }
@@ -414,7 +427,7 @@ public class NetworkMainManager {
     private void handlePenColorChangedResponse(PenColor color) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.changeActivePenColor(color);
             });
         }
@@ -423,7 +436,7 @@ public class NetworkMainManager {
     private void handleEraserSizeChangedResponse(PenEraserSize size) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.changeActiveEraserSize(size);
             });
         }
@@ -432,7 +445,7 @@ public class NetworkMainManager {
     private void handlePointedResponse(PointedEvent response) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.point(response.getX(),response.getY());
             });
         }
@@ -441,7 +454,7 @@ public class NetworkMainManager {
     private void handleCanvasPressedResponse(CanvasEvent response) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.canvasPressed(new MouseCoordinate(response.getX(), response.getY()));
             });
         }
@@ -450,7 +463,7 @@ public class NetworkMainManager {
     private void handleCanvasDraggedResponse(CanvasEvent response) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER) {
             Platform.runLater(() -> {
-                if (!mainScreen.pdfViewer.pdfPages.isEmpty())
+                if (mainScreen.pdfViewer.pdfPages != null && !mainScreen.pdfViewer.pdfPages.isEmpty())
                     mainScreen.pdfViewer.canvasDragged(new MouseCoordinate(response.getX(), response.getY()));
             });
         }

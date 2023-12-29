@@ -1,20 +1,18 @@
 package com.harun.liveSlide.model.network.meeting;
 
-import com.harun.liveSlide.components.pdfViewer.PDFTool;
-import com.harun.liveSlide.components.pdfViewer.PenColor;
-import com.harun.liveSlide.components.pdfViewer.PenEraserSize;
-
 import java.util.Objects;
 
-public class MeetingFileInformationResponse {
+public class FileUploadedEvent {
     private String fileName;
+    private int pageCount;
 
-    public MeetingFileInformationResponse() {
+    public FileUploadedEvent() {
 
     }
 
-    public MeetingFileInformationResponse(String fileName) {
+    public FileUploadedEvent(String fileName, int pageCount) {
         this.fileName = fileName;
+        this.pageCount = pageCount;
     }
 
     public String getFileName() {
@@ -25,24 +23,32 @@ public class MeetingFileInformationResponse {
         this.fileName = fileName;
     }
 
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MeetingFileInformationResponse that = (MeetingFileInformationResponse) o;
-        return Objects.equals(fileName, that.fileName);
+        FileUploadedEvent that = (FileUploadedEvent) o;
+        return pageCount == that.pageCount && Objects.equals(fileName, that.fileName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fileName);
+        return Objects.hash(fileName, pageCount);
     }
 
     @Override
     public String toString() {
-        return "MeetingFileInformationResponse{" +
+        return "FileUploadedEvent{" +
                 "fileName='" + fileName + '\'' +
+                ", pageCount=" + pageCount +
                 '}';
     }
 }
-
