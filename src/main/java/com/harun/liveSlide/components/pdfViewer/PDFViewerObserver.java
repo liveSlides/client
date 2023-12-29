@@ -14,8 +14,8 @@ public class PDFViewerObserver {
         this.networkMainManager = networkMainManager;
     }
 
-    public void pageChanged(int index) {
-        networkMainManager.pageChanged(index);
+    public void pageChanged(int index,int zoomRate,double vValue,double hValue) {
+        networkMainManager.pageChanged(index, zoomRate, vValue, hValue);
     }
 
     public void zoomed(int zoomRate) {

@@ -9,6 +9,7 @@ import com.harun.liveSlide.model.MouseCoordinate;
 import com.harun.liveSlide.model.network.ResponseStatus;
 import com.harun.liveSlide.model.network.meeting.CanvasEvent;
 import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
+import com.harun.liveSlide.model.network.meeting.PageChangedEvent;
 import com.harun.liveSlide.model.network.meeting.PointedEvent;
 import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
 import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
@@ -61,8 +62,8 @@ public class NetworkMainManager {
         StompClient.subscribeRaw(
                 "/topic/pageChanged/"
                         + GlobalVariables.SESSION_ID ,
-                int.class, response -> {
-                    handlePageChangedResponse(((int) response));
+                PageChangedEvent.class, response -> {
+                    handlePageChangedResponse(((PageChangedEvent) response));
         });
 
         StompClient.subscribeRaw(
@@ -191,10 +192,10 @@ public class NetworkMainManager {
                 );
     }
 
-    public void pageChanged(int index) {
+    public void pageChanged(int index,int zoomRate,double vValue,double hValue) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
             StompClient.sendMessage("/app/pageChanged/" +
-                    GlobalVariables.SESSION_ID ,index
+                    GlobalVariables.SESSION_ID , new PageChangedEvent(index , zoomRate ,vValue, hValue)
             );
         }
     }
@@ -320,11 +321,14 @@ public class NetworkMainManager {
         }
     }
 
-    private void handlePageChangedResponse(int index) {
+    private void handlePageChangedResponse(PageChangedEvent event) {
         if (GlobalVariables.userType != UserType.HOST_PRESENTER && GlobalVariables.userType != UserType.PARTICIPANT_PRESENTER)
             if (!mainScreen.pdfViewer.pdfPages.isEmpty()){
                 Platform.runLater(() -> {
-                    mainScreen.pdfViewer.goPage(index);
+                    mainScreen.pdfViewer.goPage(event.getIndex());
+                    mainScreen.pdfViewer.zoomToZoomRate(event.getZoomRate());
+                    mainScreen.pdfViewer.scrollVerticallyTo(event.getvValue());
+                    mainScreen.pdfViewer.scrollHorizontallyTo(event.gethValue());
                 });
             }
     }

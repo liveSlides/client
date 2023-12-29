@@ -112,20 +112,32 @@ public class PDFViewer extends BorderPane {
 
     public void goPage(int index) {
         pdfViewerNavigationController.goPage(index);
-        pdfViewerObserver.pageChanged(index);
+        pdfViewerObserver.pageChanged(
+                index,
+                pdfViewerZoomController.getCurrentPdfPage().getCurrentZoomRate(),
+                viewArea.getVvalue(),
+                viewArea.getHvalue());
     }
 
     public void goBackPage() {
         if (pdfViewerNavigationController.goBackPage()){
             int index = pdfViewerNavigationController.getCurrentPageIndex();
-            pdfViewerObserver.pageChanged(index);
+            pdfViewerObserver.pageChanged(
+                    index,
+                    pdfViewerZoomController.getCurrentPdfPage().getCurrentZoomRate(),
+                    viewArea.getVvalue(),
+                    viewArea.getHvalue());
         }
     }
 
     public void goNextPage() {
         if (pdfViewerNavigationController.goNextPage()) {
             int index = pdfViewerNavigationController.getCurrentPageIndex();
-            pdfViewerObserver.pageChanged(index);
+            pdfViewerObserver.pageChanged(
+                    index,
+                    pdfViewerZoomController.getCurrentPdfPage().getCurrentZoomRate(),
+                    viewArea.getVvalue(),
+                    viewArea.getHvalue());
         }
     }
 
