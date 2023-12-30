@@ -7,6 +7,7 @@ import com.harun.liveSlide.model.network.meeting.CanvasEventType;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.model.MouseCoordinate;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -16,6 +17,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import javax.xml.stream.EventFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,6 +39,14 @@ public class PDFViewer extends BorderPane {
     public String currentFilePath;
     private final Stage stage;
     private final MainScreen mainScreen;
+    private final EventHandler<ZoomEvent> viewAreaZoomEventHandler = (ZoomEvent event) -> {
+            double zoomFactor = event.getZoomFactor();
+            zoom(zoomFactor > 1 ? 2 : 0);
+            event.consume();
+    };
+
+    private EventHandler<ScrollEvent> scrollHandler = Event::consume;
+
 
     public PDFViewer(Stage stage , MainScreen mainScreen, double prefWidth, double prefHeight) {
         this.setId("pdf-viewer");
@@ -76,15 +86,9 @@ public class PDFViewer extends BorderPane {
 
         // View Area
         viewArea = new ScrollPane();
-        viewArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        viewArea.setOnZoom((ZoomEvent event) -> {
-            if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-                double zoomFactor = event.getZoomFactor();
-                zoom(zoomFactor > 1 ? 2 : 0);
-                event.consume();
-            }
-        });
 
+        //TODO
+        /*
         viewArea.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case LEFT:
@@ -96,16 +100,11 @@ public class PDFViewer extends BorderPane {
                 default:
                     break;
             }
-        });
+        });*/
 
         viewArea.vvalueProperty().addListener((observable, oldValue, newValue) -> {pdfViewerObserver.scrolledVerticallyTo((Double) newValue);});
         viewArea.hvalueProperty().addListener((observable, oldValue, newValue) -> {pdfViewerObserver.scrolledHorizontallyTo((Double) newValue);});
 
-        if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR || GlobalVariables.userType == UserType.HOST_SPECTATOR) {
-            viewArea.addEventFilter(ScrollEvent.SCROLL, Event::consume);
-            viewArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            viewArea.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        }
         this.setCenter(viewArea);
 
         setViewAreaToControllers();
@@ -261,6 +260,10 @@ public class PDFViewer extends BorderPane {
         toolBar.setToolsVisible(visibility);
     }
 
+    public void setFileUploadToolVisible(boolean visibility) {
+        toolBar.setFileUploadToolVisible(visibility);
+    }
+
     public void reloadGraphicsContext(){
         pdfViewerDrawController.reloadGraphicsContext();
     }
@@ -313,5 +316,20 @@ public class PDFViewer extends BorderPane {
 
             index += 1;
         }
+    }
+
+
+    public void setActiveZoomingGesture(boolean isActive) {
+        if (isActive)
+            viewArea.setOnZoom(viewAreaZoomEventHandler);
+        else
+            viewArea.setOnZoom(null);
+    }
+
+    public void setActiveScrollingGesture(boolean isActive) {
+        if (isActive)
+            viewArea.removeEventFilter(ScrollEvent.SCROLL, scrollHandler);
+        else
+            viewArea.addEventFilter(ScrollEvent.SCROLL, scrollHandler);
     }
 }

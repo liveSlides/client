@@ -69,6 +69,7 @@ public class MeetingParticipantsBarController {
     }
 
     public void allowRequestControl(String participationId) {
+        meetingParticipantsBar.getMainScreen().networkMainManager.changePresenter(participationId);
     }
 
 }

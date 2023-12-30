@@ -239,7 +239,6 @@ public class PDFViewerToolBar extends ToolBar {
 
     public void setToolsVisible(boolean visibility) {
         pdfTitle.setVisible(visibility);
-        pdfTitle.setVisible(visibility);
         changePdfButton.setVisible(visibility);
         pageIndicator.setVisible(visibility);
         backButton.setVisible(visibility);
@@ -442,4 +441,8 @@ public class PDFViewerToolBar extends ToolBar {
     }
 
 
+    public void setFileUploadToolVisible(boolean visibility) {
+        pdfTitle.setVisible(visibility);
+        changePdfButton.setVisible(visibility);
+    }
 }

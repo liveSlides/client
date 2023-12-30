@@ -1,6 +1,7 @@
 package com.harun.liveSlide.components.meetingSideBar;
 
 import com.harun.liveSlide.model.Participant;
+import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -9,6 +10,7 @@ import javafx.scene.layout.*;
 import java.util.Set;
 
 public class MeetingParticipantsBar extends BorderPane {
+    private final MainScreen mainScreen;
     private final MeetingParticipantsBarController meetingParticipantsBarController;
     private final Pane topBar;
     private final Pane participantListArea;
@@ -16,7 +18,8 @@ public class MeetingParticipantsBar extends BorderPane {
     private final ScrollPane scrollPane;
     private final VBox vbox;
 
-    public MeetingParticipantsBar() {
+    public MeetingParticipantsBar(MainScreen mainScreen) {
+        this.mainScreen = mainScreen;
         this.meetingParticipantsBarController = new MeetingParticipantsBarController(this);
         this.participantTitle = new Label("Participants");
         this.topBar = new Pane();
@@ -100,5 +103,9 @@ public class MeetingParticipantsBar extends BorderPane {
 
     public ScrollPane getScrollPane() {
         return scrollPane;
+    }
+
+    public MainScreen getMainScreen() {
+        return mainScreen;
     }
 }

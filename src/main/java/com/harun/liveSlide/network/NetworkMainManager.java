@@ -150,9 +150,17 @@ public class NetworkMainManager {
                     handleRequestControlResponse(((RequestControlEvent) response));
                 });
 
+        StompClient.subscribeRaw(
+                "/topic/presenterChanged/"
+                        + GlobalVariables.SESSION_ID ,
+                PresenterChangedEvent.class, response -> {
+                    handlePresenterChangedResponse(((PresenterChangedEvent) response));
+                });
+
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
             getMeetingInitialInformation();
     }
+
 
     public void getParticipants() {
         SessionParticipantsRequest req = new SessionParticipantsRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
@@ -314,6 +322,15 @@ public class NetworkMainManager {
         if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR){
             StompClient.sendMessage("/app/requestControl/" +
                     GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID , isRequestControl
+            );
+        }
+    }
+
+    public void changePresenter(String userID) {
+        if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.HOST_SPECTATOR){
+            System.out.println("Change presenter : " + userID);
+            StompClient.sendMessage("/app/presenterChanged/" +
+                    GlobalVariables.SESSION_ID , userID
             );
         }
     }
@@ -487,5 +504,60 @@ public class NetworkMainManager {
         Platform.runLater(() -> {
             mainScreen.participantTab.changeParticipantRequestStatus(event.getUserID(),event.isRequestControl());
         });
+    }
+
+    private void handlePresenterChangedResponse(PresenterChangedEvent event) {
+        String userID = event.getUserID();
+        System.out.println("Handle Presenter changed : " + userID);
+        if (GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR) {
+            GlobalVariables.userType = UserType.PARTICIPANT_PRESENTER;
+            Platform.runLater(() -> {
+                mainScreen.topSide.getController().changeRequestControlStatus(false);
+                mainScreen.topSide.setStatusLabelText("You are presenting");
+                mainScreen.authLayoutController.updateLayoutAccordingToUserType();
+            });
+        }
+        else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR) {
+            Platform.runLater(() -> {
+                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+            });
+        }
+        else if(GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.HOST_SPECTATOR) {
+            GlobalVariables.userType = UserType.HOST_PRESENTER;
+            Platform.runLater(() -> {
+                mainScreen.topSide.setStatusLabelText("You are presenting");
+                mainScreen.authLayoutController.updateLayoutAccordingToUserType();
+            });
+        }
+        else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.HOST_SPECTATOR) {
+            Platform.runLater(() -> {
+                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+            });
+        }
+        else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.HOST_PRESENTER) {
+            GlobalVariables.userType = UserType.HOST_SPECTATOR;
+            Platform.runLater(() -> {
+                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+                mainScreen.authLayoutController.updateLayoutAccordingToUserType();
+            });
+        }
+        else if(GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.HOST_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.topSide.setStatusLabelText("You are presenting");
+            });
+        }
+        else if(GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER) {
+            Platform.runLater(() -> {
+                mainScreen.topSide.setStatusLabelText("You are presenting");
+            });
+        }
+        else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER) {
+            GlobalVariables.userType = UserType.PARTICIPANT_SPECTATOR;
+            Platform.runLater(() -> {
+                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+                mainScreen.authLayoutController.updateLayoutAccordingToUserType();
+            });
+        }
+
     }
 }

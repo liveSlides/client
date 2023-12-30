@@ -1,5 +1,6 @@
 package com.harun.liveSlide.components.meetingTopBar;
 
+import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import com.harun.liveSlide.components.meetingTopBar.meetingTimer.MeetingTimer;
@@ -83,7 +84,8 @@ public class MeetingTopBar extends ToolBar {
         requestControlButton.setOnAction(controller::requestControl);
         requestControlButton.setPadding(new Insets(5,8,5,8));
         requestControlButton.setTooltip(new Tooltip("Request control"));
-        this.getItems().add(requestControlButton);
+        if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER)
+            this.getItems().add(requestControlButton);
 
         //Participants Buttons
         participantButton = new Button();
@@ -116,6 +118,9 @@ public class MeetingTopBar extends ToolBar {
     public void setVisibleControlBackButton(boolean visibility) {
         takeControlButton.setVisible(visibility);
     }
+    public void setVisibleRequestControlButton(boolean visibility) {
+        requestControlButton.setVisible(visibility);
+    }
 
     public void setStatusLabelText(String text) {
         statusLabel.setText(text);
@@ -131,5 +136,9 @@ public class MeetingTopBar extends ToolBar {
 
     public Button getRequestControlButton() {
         return requestControlButton;
+    }
+
+    public MeetingTopBarController getController() {
+        return controller;
     }
 }

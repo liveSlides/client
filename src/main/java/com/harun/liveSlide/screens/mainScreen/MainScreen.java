@@ -43,7 +43,7 @@ public class MainScreen extends Pane {
         mainGrid.setTop(topSide);
 
         //Participant Tab
-        participantTab = new MeetingParticipantsBar();
+        participantTab = new MeetingParticipantsBar(this);
         participantTab.hide();
         mainGrid.setRight(participantTab);
 
@@ -100,5 +100,9 @@ public class MainScreen extends Pane {
 
     public PDFViewer getPdfViewer() {
         return pdfViewer;
+    }
+
+    public LiveSlideManager getLiveSlideManager() {
+        return liveSlideManager;
     }
 }
