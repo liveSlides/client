@@ -1,14 +1,17 @@
 package com.harun.liveSlide.components.meetingTopBar;
 
+import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 
 public class MeetingTopBarController {
+    private final MainScreen mainScreen;
     private boolean isControlRequesting = false;
     private MeetingTopBar meetingTopBar;
-    public MeetingTopBarController(MeetingTopBar meetingTopBar) {
+    public MeetingTopBarController(MeetingTopBar meetingTopBar , MainScreen mainScreen) {
         this.meetingTopBar = meetingTopBar;
+        this.mainScreen = mainScreen;
     }
 
     public void takeControlBack() {
@@ -36,6 +39,7 @@ public class MeetingTopBarController {
 
     public void requestControl(ActionEvent actionEvent) {
         changeRequestControlStatus(!isControlRequesting);
+        mainScreen.networkMainManager.requestControl(isControlRequesting);
     }
 
     public void showParticipants(ActionEvent actionEvent) {

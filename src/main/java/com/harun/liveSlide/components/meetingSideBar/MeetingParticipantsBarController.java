@@ -39,13 +39,13 @@ public class MeetingParticipantsBarController {
         VBox vBox = meetingParticipantsBar.getVbox();
         vBox.getChildren().clear();
         for (Participant p : participants) {
-            vBox.getChildren().add(new ParticipantComponent(p,meetingParticipantsBar.getScrollPane().widthProperty() , meetingParticipantsBar.getMeetingSideBarController()));
+            vBox.getChildren().add(new ParticipantComponent(p,meetingParticipantsBar.getScrollPane().widthProperty() , meetingParticipantsBar.getMeetingSideBarController(), p.isRequestingControl()));
         }
     }
 
     public void addParticipant(Participant participant) {
         VBox vBox = meetingParticipantsBar.getVbox();
-        vBox.getChildren().add(new ParticipantComponent(participant,meetingParticipantsBar.getScrollPane().widthProperty() , meetingParticipantsBar.getMeetingSideBarController()));
+        vBox.getChildren().add(new ParticipantComponent(participant,meetingParticipantsBar.getScrollPane().widthProperty() , meetingParticipantsBar.getMeetingSideBarController(),participant.isRequestingControl()));
     }
 
     public void removeParticipant(Participant participant) {

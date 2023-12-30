@@ -30,7 +30,7 @@ public class MeetingTopBar extends ToolBar {
     private Label statusLabel;
 
     public MeetingTopBar(Stage stage , MainScreen mainScreen, double prefHeight , double prefWidth) {
-        controller = new MeetingTopBarController(this);
+        controller = new MeetingTopBarController(this,mainScreen);
         this.stage = stage;
         this.mainScreen = mainScreen;
         this.prefHeight = prefHeight;

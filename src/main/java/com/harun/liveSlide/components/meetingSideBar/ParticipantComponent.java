@@ -21,7 +21,7 @@ public class ParticipantComponent extends Pane {
     private final Button requestControlButton;
     private final HBox hBox;
 
-    public ParticipantComponent(Participant participant , ReadOnlyDoubleProperty widthProperty , MeetingParticipantsBarController meetingParticipantsBarController) {
+    public ParticipantComponent(Participant participant , ReadOnlyDoubleProperty widthProperty , MeetingParticipantsBarController meetingParticipantsBarController, boolean isControlRequested) {
         this.participant = participant;
         this.meetingParticipantsBarController = meetingParticipantsBarController;
 
@@ -32,6 +32,7 @@ public class ParticipantComponent extends Pane {
 
         this.getStyleClass().add("participant-component");
         setupLayout(widthProperty);
+        changeRequestStatus(isControlRequested);
     }
 
     public void setupLayout(ReadOnlyDoubleProperty widthProperty) {

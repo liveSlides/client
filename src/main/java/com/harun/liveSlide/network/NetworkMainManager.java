@@ -8,10 +8,7 @@ import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.MouseCoordinate;
 import com.harun.liveSlide.model.network.ResponseStatus;
 import com.harun.liveSlide.model.network.meeting.*;
-import com.harun.liveSlide.model.network.participantList.DisconnectRequest;
-import com.harun.liveSlide.model.network.participantList.DisconnectResponse;
-import com.harun.liveSlide.model.network.participantList.SessionParticipantsRequest;
-import com.harun.liveSlide.model.network.participantList.SessionParticipantsResponse;
+import com.harun.liveSlide.model.network.participantList.*;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
 
@@ -146,10 +143,16 @@ public class NetworkMainManager {
                     handleCanvasDraggedResponse(((CanvasEvent) response));
                 });
 
+        StompClient.subscribeRaw(
+                "/topic/requestControl/"
+                        + GlobalVariables.SESSION_ID ,
+                RequestControlEvent.class, response -> {
+                    handleRequestControlResponse(((RequestControlEvent) response));
+                });
+
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
             getMeetingInitialInformation();
     }
-
 
     public void getParticipants() {
         SessionParticipantsRequest req = new SessionParticipantsRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
@@ -303,6 +306,14 @@ public class NetworkMainManager {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
             StompClient.sendMessage("/app/canvasDragged/" +
                     GlobalVariables.SESSION_ID , new CanvasEvent(mouseCoordinate.x, mouseCoordinate.y)
+            );
+        }
+    }
+
+    public void requestControl(boolean isRequestControl) {
+        if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR){
+            StompClient.sendMessage("/app/requestControl/" +
+                    GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID , isRequestControl
             );
         }
     }
@@ -470,5 +481,11 @@ public class NetworkMainManager {
                     mainScreen.pdfViewer.canvasDragged(new MouseCoordinate(response.getX(), response.getY()));
             });
         }
+    }
+
+    private void handleRequestControlResponse(RequestControlEvent event) {
+        Platform.runLater(() -> {
+            mainScreen.participantTab.changeParticipantRequestStatus(event.getUserID(),event.isRequestControl());
+        });
     }
 }
