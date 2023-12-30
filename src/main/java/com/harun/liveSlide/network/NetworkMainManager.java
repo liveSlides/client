@@ -161,28 +161,31 @@ public class NetworkMainManager {
         StompClient.sendMessage("/app/disconnect",req);
     }
 
-    public void uploadPDFToS3(String path) {
+    public void uploadPDFToS3(String path,double hostScreenWidth) {
         if(GlobalVariables.userType == UserType.HOST_PRESENTER) {
             File file = new File(path);
             mainScreen.topSide.setStatusLabelText("Slide is uploading to server...");
-            s3Manager.uploadFile(file.getName(),path);
+            s3Manager.uploadFile(file.getName(),path,hostScreenWidth);
         }
     }
 
-    public void loadPDFWithNotify(String fileName , String path) {
+    public void loadPDFWithNotify(String fileName , String path, double hostScreenWidth) {
         Platform.runLater(() -> {
             mainScreen.pdfViewer.loadPDF(path);
             StompClient.sendMessage("/app/fileUploaded/" + GlobalVariables.SESSION_ID,
                     new FileUploadedEvent(
                             fileName,
-                            mainScreen.pdfViewer.getPdfViewerNavigationController().getPageCount()));
+                            mainScreen.pdfViewer.getPdfViewerNavigationController().getPageCount(),
+                            hostScreenWidth));
             mainScreen.topSide.setStatusLabelText("You are presenting");
         });
     }
 
-    public void loadPDF(String path , MeetingInitialInformationResponse initialResponse) {
+    public void loadPDF(String path , MeetingInitialInformationResponse initialResponse, FileUploadedEvent fileUploadedEvent) {
         Platform.runLater(() -> {
-            mainScreen.pdfViewer.loadPDF(path);
+            double hostScreenWidth = initialResponse == null ? fileUploadedEvent.getHostScreenWidth() : initialResponse.getHostScreenWidth();
+
+            mainScreen.pdfViewer.loadPDF(path,hostScreenWidth);
             if (initialResponse != null) {
                 mainScreen.topSide.setStatusLabelText("Loading drawings...");
                 mainScreen.pdfViewer.drawPages(initialResponse.getCanvasEvents());
@@ -328,7 +331,7 @@ public class NetworkMainManager {
                     mainScreen.pdfViewer.pdfPages.clear();
                 mainScreen.pdfViewer.viewArea.setContent(null);
             });
-            s3Manager.downloadFile(response.getFileName(), "src/meetingSlides" , null);
+            s3Manager.downloadFile(response.getFileName(), "src/meetingSlides" , null, response);
         }
     }
 
@@ -352,9 +355,9 @@ public class NetworkMainManager {
         if (initialResponse.getFileName() != null || mainScreen.pdfViewer.pdfPages.isEmpty()) {
             File file = new File("src/meetingSlides/" + initialResponse.getFileName());
             if (!file.exists())
-                s3Manager.downloadFile(initialResponse.getFileName(), "src/meetingSlides" , initialResponse);
+                s3Manager.downloadFile(initialResponse.getFileName(), "src/meetingSlides" , initialResponse , null);
             else
-                loadPDF(file.getAbsolutePath(),initialResponse);
+                loadPDF(file.getAbsolutePath(),initialResponse,null);
         }
     }
 

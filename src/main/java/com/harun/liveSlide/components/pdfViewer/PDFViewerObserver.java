@@ -62,8 +62,8 @@ public class PDFViewerObserver {
         networkMainManager.pointed(x,y);
     }
 
-    public void loadedPDF(String path) {
-        networkMainManager.uploadPDFToS3(path);
+    public void loadedPDF(String path, double hostScreenWidth) {
+        networkMainManager.uploadPDFToS3(path,hostScreenWidth);
     }
 
     public void synchSlide() {

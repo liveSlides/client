@@ -1,6 +1,7 @@
 package com.harun.liveSlide.network;
 
 import com.harun.liveSlide.global.GlobalVariables;
+import com.harun.liveSlide.model.network.meeting.FileUploadedEvent;
 import com.harun.liveSlide.model.network.meeting.MeetingInitialInformationResponse;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -43,7 +44,7 @@ public class S3Manager {
         this.executorService = Executors.newFixedThreadPool(2); // Adjust the number of threads as needed
     }
 
-    public void uploadFile(String fileName, String filePath) {
+    public void uploadFile(String fileName, String filePath, double hostScreenWidth) {
         executorService.submit(() -> {
             String s3Key = GlobalVariables.SESSION_ID + "/" + fileName;
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -52,11 +53,11 @@ public class S3Manager {
                     .build();
 
             s3.putObject(putObjectRequest, Paths.get(filePath));
-            networkMainManager.loadPDFWithNotify(fileName,filePath);
+            networkMainManager.loadPDFWithNotify(fileName,filePath,hostScreenWidth);
         });
     }
 
-    public void downloadFile(String fileName, String downloadPath, MeetingInitialInformationResponse initialResponse) {
+    public void downloadFile(String fileName, String downloadPath, MeetingInitialInformationResponse initialResponse , FileUploadedEvent fileUploadedEvent) {
         executorService.submit(() -> {
             String s3Key = GlobalVariables.SESSION_ID + "/" + fileName;
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
@@ -71,7 +72,7 @@ public class S3Manager {
                 while ((read_len = s3Object.read(read_buf)) > 0) {
                     fos.write(read_buf, 0, read_len);
                 }
-                networkMainManager.loadPDF(downloadPath + "/" + fileName , initialResponse);
+                networkMainManager.loadPDF(downloadPath + "/" + fileName , initialResponse , fileUploadedEvent);
             } catch (Exception e) {
                 e.printStackTrace();
             }

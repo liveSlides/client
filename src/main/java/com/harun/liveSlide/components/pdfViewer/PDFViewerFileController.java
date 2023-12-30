@@ -20,19 +20,21 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.stage.Screen;
 
 public class PDFViewerFileController {
     PDFViewer pdfViewer;
     private PDDocument openDocument = null;
     private Canvas[] canvases;
+    private double screenWidth = -1;
 
     public PDFViewerFileController(PDFViewer pdfViewer) {
         this.pdfViewer = pdfViewer;
     }
 
-    public void loadPDF(String path, int currentIndex , boolean initialization) {
+    public void loadPDF(String path, int currentIndex , boolean initialization , double screenWidth) {
+        this.screenWidth = screenWidth;
         try {
-
             int numberOfPages = 0;
             int range = 10;
 
@@ -78,9 +80,12 @@ public class PDFViewerFileController {
                 BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
 
                 //Create PDF Page
-                PDFPage pdfPage = new PDFPage(pdfViewer,BFImageConverter.imageToImageView(pdfViewer.viewArea.getViewportBounds().getWidth(),bim) ,canvases[page],pdfViewer.getPdfViewerDrawController(),pdfViewer.getPdfViewerPointerController() , bim);
-                pdfPage.setMinWidth(pdfViewer.viewArea.getViewportBounds().getWidth());
-                pdfPage.setMinHeight(pdfViewer.viewArea.getViewportBounds().getWidth());
+                Screen screen = Screen.getPrimary();
+                double viewportBoundsWidth = screenWidth == -1 ? screen.getBounds().getWidth() : screenWidth;
+
+                PDFPage pdfPage = new PDFPage(pdfViewer,BFImageConverter.imageToImageView(viewportBoundsWidth,bim) ,canvases[page],pdfViewer.getPdfViewerDrawController(),pdfViewer.getPdfViewerPointerController() , bim);
+                pdfPage.setMinWidth(viewportBoundsWidth);
+                pdfPage.setMinHeight(viewportBoundsWidth);
 
                 //Encapsulate PDF Page with PdfPageContainer
                 PDFPageContainer pdfPageContainer = new PDFPageContainer(pdfPage);

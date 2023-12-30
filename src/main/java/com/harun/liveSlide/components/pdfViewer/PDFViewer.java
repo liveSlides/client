@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -240,15 +241,20 @@ public class PDFViewer extends BorderPane {
     }
 
     public void notifyLoadPdf(String path) {
-        pdfViewerObserver.loadedPDF(path);
+        double hostScreenWidth = Screen.getPrimary().getBounds().getWidth();
+        pdfViewerObserver.loadedPDF(path,hostScreenWidth);
     }
 
     public void loadPDF(String path) {
-        pdfViewerFileController.loadPDF(path , 1 , true);
+        pdfViewerFileController.loadPDF(path , 1 , true , -1);
+    }
+
+    public void loadPDF(String path, double screenWidth) {
+        pdfViewerFileController.loadPDF(path , 1 , true , screenWidth);
     }
 
     public void loadPDF(String path , int index) throws IOException {
-        pdfViewerFileController.loadPDF(path , index , false);
+        pdfViewerFileController.loadPDF(path , index , false, -1);
     }
 
     public void setToolsVisible(boolean visibility) {
