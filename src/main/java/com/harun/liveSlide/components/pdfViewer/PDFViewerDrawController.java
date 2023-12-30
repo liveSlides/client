@@ -1,16 +1,11 @@
 package com.harun.liveSlide.components.pdfViewer;
 
-import com.harun.liveSlide.model.MouseCoordinate;
 import com.harun.liveSlide.model.network.meeting.CanvasEventType;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import java.util.ArrayList;
 
 public class PDFViewerDrawController {
     private PDFViewer pdfViewer;
@@ -52,7 +47,7 @@ public class PDFViewerDrawController {
             gct.moveTo(x, y);
         }
         else if(pdfTool == PDFTool.ERASER) {
-            int prefferedEraserSize = PenEraserSizeConverter.convertSize(eraserSize);
+            int prefferedEraserSize = PenEraserSizeConverter.convertSize(eraserSize) * 30;
             gct.clearRect(x,y,prefferedEraserSize,prefferedEraserSize);
         }
     }
@@ -71,7 +66,7 @@ public class PDFViewerDrawController {
             gct.stroke();
         }
         else if(pdfTool == PDFTool.ERASER) {
-            int prefferedEraserSize = PenEraserSizeConverter.convertSize(eraserSize);
+            int prefferedEraserSize = PenEraserSizeConverter.convertSize(eraserSize) * 30;
             gct.clearRect(x,y,prefferedEraserSize,prefferedEraserSize);
         }
     }

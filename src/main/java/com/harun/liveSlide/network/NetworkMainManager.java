@@ -348,7 +348,7 @@ public class NetworkMainManager {
     }
 
     private void handleMeetingInitialInformationResponse(MeetingInitialInformationResponse initialResponse) {
-        System.out.println(initialResponse);
+        //System.out.println(initialResponse);
         if (initialResponse.getFileName() != null || mainScreen.pdfViewer.pdfPages.isEmpty()) {
             File file = new File("src/meetingSlides/" + initialResponse.getFileName());
             if (!file.exists())
