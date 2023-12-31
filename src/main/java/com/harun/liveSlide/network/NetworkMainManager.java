@@ -374,7 +374,7 @@ public class NetworkMainManager {
             mainScreen.pdfViewer.changeActiveEraserSize(response.getEraserSize());
             mainScreen.pdfViewer.changeActivePenSize(response.getPenSize());
             mainScreen.pdfViewer.changeActivePenColor(response.getPenColor());
-            mainScreen.topSide.setStatusLabelText("Senkronize edildi");
+            mainScreen.topSide.setStatusLabelText(response.getPresenterName() + " is presenting");
         });
     }
 
@@ -508,7 +508,6 @@ public class NetworkMainManager {
 
     private void handlePresenterChangedResponse(PresenterChangedEvent event) {
         String userID = event.getUserID();
-        System.out.println("Handle Presenter changed : " + userID);
         if (GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR) {
             GlobalVariables.userType = UserType.PARTICIPANT_PRESENTER;
             Platform.runLater(() -> {
@@ -519,7 +518,7 @@ public class NetworkMainManager {
         }
         else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR) {
             Platform.runLater(() -> {
-                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+                mainScreen.topSide.setStatusLabelText(event.getUserName() + " is presenting");
             });
         }
         else if(GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.HOST_SPECTATOR) {
@@ -531,13 +530,13 @@ public class NetworkMainManager {
         }
         else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.HOST_SPECTATOR) {
             Platform.runLater(() -> {
-                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+                mainScreen.topSide.setStatusLabelText(event.getUserName() + " is presenting");
             });
         }
         else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.HOST_PRESENTER) {
             GlobalVariables.userType = UserType.HOST_SPECTATOR;
             Platform.runLater(() -> {
-                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+                mainScreen.topSide.setStatusLabelText(event.getUserName() + " is presenting");
                 mainScreen.authLayoutController.updateLayoutAccordingToUserType();
             });
         }
@@ -554,7 +553,7 @@ public class NetworkMainManager {
         else if(!GlobalVariables.USER_ID.equals(userID) && GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER) {
             GlobalVariables.userType = UserType.PARTICIPANT_SPECTATOR;
             Platform.runLater(() -> {
-                mainScreen.topSide.setStatusLabelText(userID + "is presenting : ");
+                mainScreen.topSide.setStatusLabelText(event.getUserName() + " is presenting");
                 mainScreen.authLayoutController.updateLayoutAccordingToUserType();
             });
         }
