@@ -6,7 +6,9 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class MeetingTimer extends Label {
@@ -16,7 +18,7 @@ public class MeetingTimer extends Label {
     public MeetingTimer() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             // Get the current time
-            LocalTime currentTime = LocalTime.now();
+            LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("UTC"));
 
             // Parse the start time string to LocalTime
             LocalTime parsedStartTime = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
