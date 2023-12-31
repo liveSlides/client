@@ -40,8 +40,6 @@ public class NetworkLoginManager{
     }
 
     private void handleResponse(SessionInitialResponse sessionInitialResponse) {
-        System.out.println(sessionInitialResponse);
-
         if (    sessionInitialResponse.getType() == SessionInitializeType.HOST &&
                 sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS
         ) {

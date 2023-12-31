@@ -6,6 +6,7 @@ import com.harun.liveSlide.components.pdfViewer.PenEraserSize;
 import com.harun.liveSlide.enums.UserType;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.MouseCoordinate;
+import com.harun.liveSlide.model.Participant;
 import com.harun.liveSlide.model.network.ResponseStatus;
 import com.harun.liveSlide.model.network.meeting.*;
 import com.harun.liveSlide.model.network.participantList.*;
@@ -37,6 +38,20 @@ public class NetworkMainManager {
                 DisconnectResponse.class, response -> {
                     handleDisconnectResponse(((DisconnectResponse) response));
         });
+
+        StompClient.subscribeRaw(
+                "/topic/participantJoined/"
+                        + GlobalVariables.SESSION_ID,
+                ParticipantJoinedEvent.class, response -> {
+                    handleParticipantJoinedResponse(((ParticipantJoinedEvent) response));
+                });
+
+        StompClient.subscribeRaw(
+                "/topic/participantDisconnected/"
+                        + GlobalVariables.SESSION_ID,
+                ParticipantDisconnectedEvent.class, response -> {
+                    handleParticipantDisconnectedResponse(((ParticipantDisconnectedEvent) response));
+                });
 
         StompClient.subscribeRaw(
                 "/topic/fileUploaded/"
@@ -160,7 +175,6 @@ public class NetworkMainManager {
         if(GlobalVariables.userType != UserType.HOST_PRESENTER)
             getMeetingInitialInformation();
     }
-
 
     public void getParticipants() {
         SessionParticipantsRequest req = new SessionParticipantsRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
@@ -328,7 +342,6 @@ public class NetworkMainManager {
 
     public void changePresenter(String userID) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.HOST_SPECTATOR){
-            System.out.println("Change presenter : " + userID);
             StompClient.sendMessage("/app/presenterChanged/" +
                     GlobalVariables.SESSION_ID , userID
             );
@@ -338,6 +351,20 @@ public class NetworkMainManager {
     private void handleGetParticipantResponse(SessionParticipantsResponse response) {
         Platform.runLater(() -> {
             mainScreen.participantTab.setParticipants(response.getParticipants());
+        });
+    }
+
+    private void handleParticipantJoinedResponse(ParticipantJoinedEvent response) {
+        Platform.runLater(() -> {
+            mainScreen.participantTab.addParticipant(
+                    new Participant(response.getUserID(), response.getUserName(), UserType.PARTICIPANT_SPECTATOR,false)
+            );
+        });
+    }
+
+    private void handleParticipantDisconnectedResponse(ParticipantDisconnectedEvent response) {
+        Platform.runLater(() -> {
+            mainScreen.participantTab.removeParticipant(response.getUserID());
         });
     }
 

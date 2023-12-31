@@ -2,9 +2,12 @@ package com.harun.liveSlide.components.meetingSideBar;
 
 import com.harun.liveSlide.model.Participant;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MeetingParticipantsBarController {
     private double sideBarWidth = 325;
@@ -45,17 +48,28 @@ public class MeetingParticipantsBarController {
 
     public void addParticipant(Participant participant) {
         VBox vBox = meetingParticipantsBar.getVbox();
-        vBox.getChildren().add(new ParticipantComponent(participant,meetingParticipantsBar.getScrollPane().widthProperty() , meetingParticipantsBar.getMeetingSideBarController(),participant.isRequestingControl()));
+
+        boolean participantExists = vBox.getChildren().stream()
+                .filter(element -> element instanceof ParticipantComponent)
+                .map(element -> (ParticipantComponent) element)
+                .anyMatch(participantComponent -> participantComponent.getParticipant().getUserID().equals(participant.getUserID()));
+
+        if (!participantExists) {
+            vBox.getChildren().add(new ParticipantComponent(participant, meetingParticipantsBar.getScrollPane().widthProperty(), meetingParticipantsBar.getMeetingSideBarController(), participant.isRequestingControl()));
+        }
     }
 
-    public void removeParticipant(Participant participant) {
+    public void removeParticipant(String userID) {
         VBox vBox = meetingParticipantsBar.getVbox();
-        vBox.getChildren()
+
+        List<Node> toRemove = vBox.getChildren()
                 .stream()
-                .filter(element -> element instanceof  ParticipantComponent)
+                .filter(element -> element instanceof ParticipantComponent)
                 .map(element -> (ParticipantComponent) element)
-                .filter(participantComponent -> participantComponent.getParticipant().getUserID().equals(participant.getUserID()) )
-                .forEach(participantComponent -> {vBox.getChildren().remove(participantComponent);});
+                .filter(participantComponent -> participantComponent.getParticipant().getUserID().equals(userID))
+                .collect(Collectors.toList());
+
+        vBox.getChildren().removeAll(toRemove);
     }
 
     public void changeParticipantRequestStatus(String participantId, boolean status) {

@@ -85,8 +85,8 @@ public class MeetingParticipantsBar extends BorderPane {
         meetingParticipantsBarController.addParticipant(participant);
     }
 
-    public void removeParticipant(Participant participant) {
-        meetingParticipantsBarController.removeParticipant(participant);
+    public void removeParticipant(String userID) {
+        meetingParticipantsBarController.removeParticipant(userID);
     }
 
     public void changeParticipantRequestStatus(String participantId ,boolean status) {
