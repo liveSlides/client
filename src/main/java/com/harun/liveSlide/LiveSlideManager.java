@@ -29,7 +29,7 @@ public class LiveSlideManager {
         double sceneHeight = 400;
         loginScreen = new LoginScreen(this,sceneWidth,sceneHeight);
         Scene loginScene = new Scene(loginScreen,sceneWidth,sceneHeight);
-        loginScene.getStylesheets().add("style.css");
+        loginScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
         loginScene.widthProperty().addListener((observable, oldValue, newValue) -> {
             loginScreen.setResponsiveWidth(newValue.doubleValue());
@@ -50,7 +50,7 @@ public class LiveSlideManager {
 
         mainScreen = new MainScreen(this ,stage , sceneWidth , sceneHeight);
         Scene mainScene = new Scene(mainScreen, sceneWidth, sceneHeight);
-        mainScene.getStylesheets().add("style.css");
+        mainScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
         mainScene.widthProperty().addListener((observable, oldValue, newValue) -> {
             mainScreen.setResponsiveWidth(newValue.doubleValue());

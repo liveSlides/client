@@ -27,10 +27,13 @@ public class S3Manager {
         this.networkMainManager = networkMainManager;
 
         Properties props = new Properties();
-        try (InputStream input = new FileInputStream("src/main/resources/config.properties")) {
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                throw new FileNotFoundException("config.properties file not found in resources");
+            }
             props.load(input);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error loading config.properties", e);
         }
 
         this.bucketName = props.getProperty("aws.bucket-name");
@@ -72,7 +75,7 @@ public class S3Manager {
                 while ((read_len = s3Object.read(read_buf)) > 0) {
                     fos.write(read_buf, 0, read_len);
                 }
-                networkMainManager.loadPDF(downloadPath + "/" + fileName , initialResponse , fileUploadedEvent);
+                networkMainManager.loadPDF(downloadPath + File.separator + fileName , initialResponse , fileUploadedEvent);
             } catch (Exception e) {
                 e.printStackTrace();
             }

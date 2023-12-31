@@ -7,6 +7,7 @@ import com.harun.liveSlide.model.network.login.SessionInitialResponse;
 import com.harun.liveSlide.model.network.login.SessionInitializeType;
 import com.harun.liveSlide.model.network.login.SessionJoinRequest;
 import com.harun.liveSlide.screens.loginScreen.LoginScreen;
+import javafx.application.Platform;
 
 import java.util.UUID;
 
@@ -40,26 +41,29 @@ public class NetworkLoginManager{
     }
 
     private void handleResponse(SessionInitialResponse sessionInitialResponse) {
-        if (    sessionInitialResponse.getType() == SessionInitializeType.HOST &&
-                sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS
-        ) {
-            loginScreen.showMainScreen(sessionInitialResponse.getSessionID(), sessionInitialResponse.getCreationTime() ,sessionInitialResponse.getType());
-            loginScreen.showSessionIDInformationScreen(sessionInitialResponse.getSessionID());
-        }
-        else if (sessionInitialResponse.getType() == SessionInitializeType.HOST &&
-                sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {
-            loginScreen.showHostError("An error has occurred while trying to host!");
-        }
-        else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
-                sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS) {
-            loginScreen.showMainScreen(sessionInitialResponse.getSessionID(), sessionInitialResponse.getCreationTime() ,sessionInitialResponse.getType());
-        }
-        else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
-                sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {
-            loginScreen.showJoinError("An error has occurred while trying to join!");
-        }
-        else {
-            loginScreen.showHostError("An error has occurred!");
-        }
+        System.out.println(sessionInitialResponse);
+        Platform.runLater(() -> {
+            if (    sessionInitialResponse.getType() == SessionInitializeType.HOST &&
+                    sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS
+            ) {
+                loginScreen.showMainScreen(sessionInitialResponse.getSessionID(), sessionInitialResponse.getCreationTime() ,sessionInitialResponse.getType());
+                loginScreen.showSessionIDInformationScreen(sessionInitialResponse.getSessionID());
+            }
+            else if (sessionInitialResponse.getType() == SessionInitializeType.HOST &&
+                    sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {
+                loginScreen.showHostError("An error has occurred while trying to host!");
+            }
+            else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
+                    sessionInitialResponse.getStatus() == ResponseStatus.SUCCESS) {
+                loginScreen.showMainScreen(sessionInitialResponse.getSessionID(), sessionInitialResponse.getCreationTime() ,sessionInitialResponse.getType());
+            }
+            else if (sessionInitialResponse.getType() == SessionInitializeType.JOIN &&
+                    sessionInitialResponse.getStatus() == ResponseStatus.ERROR) {
+                loginScreen.showJoinError("An error has occurred while trying to join!");
+            }
+            else {
+                loginScreen.showHostError("An error has occurred!");
+            }
+        });
     }
 }

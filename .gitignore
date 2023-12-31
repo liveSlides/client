@@ -91,4 +91,4 @@ out/artifacts/demo/tyrus-container-grizzly-client-1.15.jar
 out/artifacts/demo/tyrus-core-1.15.jar
 out/artifacts/demo/tyrus-spi-1.15.jar
 out/artifacts/jlink/demo.jar
-src/meetingSlides/
+src/main/resources/meetingSlides/

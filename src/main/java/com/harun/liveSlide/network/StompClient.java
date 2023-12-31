@@ -17,7 +17,7 @@ import javax.websocket.ContainerProvider;
 import javax.websocket.WebSocketContainer;
 
 public class StompClient {
-    private static final String URL = "ws://localhost:8080/liveSlideSocket";
+    private static final String URL = "ws://18.197.102.102:8080/liveSlideSocket";
     private static WebSocketStompClient stompClient;
     private static StompSession stompSession;
     private static Map<String, Class<?>> topicTypeMap = new HashMap<>();

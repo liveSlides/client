@@ -386,7 +386,15 @@ public class NetworkMainManager {
                     mainScreen.pdfViewer.pdfPages.clear();
                 mainScreen.pdfViewer.viewArea.setContent(null);
             });
-            s3Manager.downloadFile(response.getFileName(), "src/meetingSlides" , null, response);
+
+            // Define the directory where files will be downloaded
+            String userHomeDir = System.getProperty("user.home");
+            String downloadDir = userHomeDir + File.separator + "meetingSlides";
+
+            // Create the directory if it doesn't exist
+            new File(downloadDir).mkdirs();
+
+            s3Manager.downloadFile(response.getFileName(), downloadDir , null, response);
         }
     }
 
@@ -408,9 +416,16 @@ public class NetworkMainManager {
     private void handleMeetingInitialInformationResponse(MeetingInitialInformationResponse initialResponse) {
         //System.out.println(initialResponse);
         if (initialResponse.getFileName() != null || mainScreen.pdfViewer.pdfPages.isEmpty()) {
-            File file = new File("src/meetingSlides/" + initialResponse.getFileName());
+            // Define the directory where files will be downloaded
+            String userHomeDir = System.getProperty("user.home");
+            String downloadDir = userHomeDir + File.separator + "meetingSlides";
+
+            // Create the directory if it doesn't exist
+            new File(downloadDir).mkdirs();
+
+            File file = new File(downloadDir + File.separator + initialResponse.getFileName());
             if (!file.exists())
-                s3Manager.downloadFile(initialResponse.getFileName(), "src/meetingSlides" , initialResponse , null);
+                s3Manager.downloadFile(initialResponse.getFileName(), downloadDir , initialResponse , null);
             else
                 loadPDF(file.getAbsolutePath(),initialResponse,null);
         }
