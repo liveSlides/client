@@ -1,5 +1,6 @@
 package com.harun.liveSlide.components.meetingTopBar;
 
+import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Background;
@@ -15,7 +16,7 @@ public class MeetingTopBarController {
     }
 
     public void takeControlBack() {
-
+        mainScreen.networkMainManager.changePresenter(GlobalVariables.USER_ID);
     }
 
     public void changeRequestControlStatus(boolean status) {
