@@ -37,7 +37,7 @@ public class StompClient {
         stompClient.setInboundMessageSizeLimit(1024*1024*1024);
     }
 
-    public static void connect() {
+    public static void connect(Consumer<Throwable> errorCallback) throws Exception {
         stompClient.connect(URL, new StompSessionHandlerAdapter() {
             @Override
             public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
@@ -61,6 +61,9 @@ public class StompClient {
             public void handleTransportError(StompSession session, Throwable exception) {
                 System.out.println("Transport Error: " + exception.getMessage());
                 exception.printStackTrace();
+                if (errorCallback != null) {
+                    errorCallback.accept(exception);
+                }
             }
         });
     }

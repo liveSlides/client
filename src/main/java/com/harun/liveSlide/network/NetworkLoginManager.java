@@ -18,7 +18,14 @@ public class NetworkLoginManager{
         this.loginScreen = loginScreen;
 
         StompClient.initialize();
-        StompClient.connect();
+        try {
+            StompClient.connect(e -> {
+                loginScreen.setErrorLabelText("Couldn't connect to server. Please relaunch again.");
+            });
+        } catch (Exception e) {
+            loginScreen.setErrorLabelText("Couldn't connect to server. Please relaunch again.");
+        }
+
 
         StompClient.subscribeRaw("/topic/sessionStatus", SessionInitialResponse.class, status -> {
             handleResponse(((SessionInitialResponse) status));

@@ -13,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 
@@ -117,12 +119,13 @@ public class LoginScreen extends Pane {
 
         //Spacer
         Pane spacer5 = new Pane();
-        spacer5.setPrefHeight(10);
+        spacer5.setPrefHeight(30);
         mainVbox.getChildren().add(spacer5);
 
         //Error Label
         errorLabel = new Label();
         mainVbox.getChildren().add(errorLabel);
+        errorLabel.setFont(Font.font("Source Code Pro", FontWeight.findByWeight(100),20));
     }
 
     public void setResponsiveWidth(double width) {
@@ -194,5 +197,9 @@ public class LoginScreen extends Pane {
         GlobalVariables.SESSION_ID = sessionID;
         GlobalVariables.SESSION_CREATION_TIME = sessionCreationTime;
         liveSlideManager.showMainScreen();
+    }
+
+    public void setErrorLabelText(String message) {
+        errorLabel.setText(message);
     }
 }
