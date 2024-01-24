@@ -1,5 +1,6 @@
 package com.harun.liveSlide.network;
 
+import com.harun.liveSlide.exceptions.SessionIsNotConnectedException;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -102,12 +103,13 @@ public class StompClient {
         }
     }
 
-    public static <T> void sendMessage(String destination, T message) {
+    public static <T> void sendMessage(String destination, T message) throws SessionIsNotConnectedException {
         if (stompSession != null && stompSession.isConnected()) {
             stompSession.send(destination, message);
             System.out.println("Message sent to " + destination);
         } else {
             System.out.println("Stomp session is not connected.");
+            throw new SessionIsNotConnectedException();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.harun.liveSlide.network;
 
+import com.harun.liveSlide.exceptions.SessionIsNotConnectedException;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.network.*;
 import com.harun.liveSlide.model.network.login.SessionCreationRequest;
@@ -35,12 +36,20 @@ public class NetworkLoginManager{
     public void host(String hostName) {
         UUID id = UUID.randomUUID();
         SessionCreationRequest req = new SessionCreationRequest(GlobalVariables.USER_ID,id.toString(),hostName);
-        StompClient.sendMessage("/app/startSession",req);
+        try {
+            StompClient.sendMessage("/app/startSession",req);
+        } catch (SessionIsNotConnectedException e) {
+            loginScreen.setErrorLabelText("Couldn't connect to server. Please relaunch again.");
+        }
     }
 
     public void join(String sessionID , String participantName) {
         SessionJoinRequest req = new SessionJoinRequest(GlobalVariables.USER_ID,sessionID,participantName);
-        StompClient.sendMessage("/app/joinSession",req);
+        try {
+            StompClient.sendMessage("/app/joinSession",req);
+        } catch (SessionIsNotConnectedException e) {
+            loginScreen.setErrorLabelText("Couldn't connect to server. Please relaunch again.");
+        }
     }
 
     public void unsubscribeFromLogin() {

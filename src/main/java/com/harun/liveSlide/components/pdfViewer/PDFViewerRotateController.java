@@ -26,9 +26,6 @@ public class PDFViewerRotateController {
             pdfPage.getTransforms().add(rotate);
 
             pdfViewer.scrollVerticallyTo(0.5);
-
-            pdfPage.setMinHeight(pdfViewer.viewArea.getViewportBounds().getWidth());
-
             rotateRate = (rotateRate + 90) % 360;
         }
     }

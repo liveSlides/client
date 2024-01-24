@@ -4,6 +4,7 @@ import com.harun.liveSlide.components.pdfViewer.PDFTool;
 import com.harun.liveSlide.components.pdfViewer.PenColor;
 import com.harun.liveSlide.components.pdfViewer.PenEraserSize;
 import com.harun.liveSlide.enums.UserType;
+import com.harun.liveSlide.exceptions.SessionIsNotConnectedException;
 import com.harun.liveSlide.global.GlobalVariables;
 import com.harun.liveSlide.model.MouseCoordinate;
 import com.harun.liveSlide.model.Participant;
@@ -14,6 +15,11 @@ import com.harun.liveSlide.screens.mainScreen.MainScreen;
 import javafx.application.Platform;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalField;
+import java.util.Date;
 
 public class NetworkMainManager {
     private final MainScreen mainScreen;
@@ -178,12 +184,20 @@ public class NetworkMainManager {
 
     public void getParticipants() {
         SessionParticipantsRequest req = new SessionParticipantsRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
-        StompClient.sendMessage("/app/getParticipants",req);
+        try {
+            StompClient.sendMessage("/app/getParticipants",req);
+        } catch (SessionIsNotConnectedException e) {
+            mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+        }
     }
 
     public void disconnect() {
         DisconnectRequest req = new DisconnectRequest(GlobalVariables.SESSION_ID,GlobalVariables.USER_ID);
-        StompClient.sendMessage("/app/disconnect",req);
+        try {
+            StompClient.sendMessage("/app/disconnect",req);
+        } catch (SessionIsNotConnectedException e) {
+            mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+        }
     }
 
     public void uploadPDFToS3(String path,double hostScreenWidth) {
@@ -197,11 +211,15 @@ public class NetworkMainManager {
     public void loadPDFWithNotify(String fileName , String path, double hostScreenWidth) {
         Platform.runLater(() -> {
             mainScreen.pdfViewer.loadPDF(path);
-            StompClient.sendMessage("/app/fileUploaded/" + GlobalVariables.SESSION_ID,
-                    new FileUploadedEvent(
-                            fileName,
-                            mainScreen.pdfViewer.getPdfViewerNavigationController().getPageCount(),
-                            hostScreenWidth));
+            try {
+                StompClient.sendMessage("/app/fileUploaded/" + GlobalVariables.SESSION_ID,
+                        new FileUploadedEvent(
+                                fileName,
+                                mainScreen.pdfViewer.getPdfViewerNavigationController().getPageCount(),
+                                hostScreenWidth));
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
             mainScreen.topSide.setStatusLabelText("You are presenting");
         });
     }
@@ -221,130 +239,194 @@ public class NetworkMainManager {
     }
 
     public void getMeetingSynchInformation() {
-        StompClient.sendMessage("/app/getMeetingSynchInformation/" +
-                GlobalVariables.SESSION_ID +
-                "/" +
-                GlobalVariables.USER_ID,""
-                );
+        try {
+            StompClient.sendMessage("/app/getMeetingSynchInformation/" +
+                    GlobalVariables.SESSION_ID +
+                    "/" +
+                    GlobalVariables.USER_ID,""
+                    );
+        } catch (SessionIsNotConnectedException e) {
+            mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+        }
     }
 
     private void getMeetingInitialInformation() {
-        StompClient.sendMessage("/app/getMeetingInitialInformation/" +
-                GlobalVariables.SESSION_ID +
-                "/" +
-                GlobalVariables.USER_ID,""
-        );
+        try {
+            StompClient.sendMessage("/app/getMeetingInitialInformation/" +
+                    GlobalVariables.SESSION_ID +
+                    "/" +
+                    GlobalVariables.USER_ID,""
+            );
+        } catch (SessionIsNotConnectedException e) {
+            mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+        }
     }
 
     public void pageChanged(int index,int zoomRate,double vValue,double hValue) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/pageChanged/" +
-                    GlobalVariables.SESSION_ID , new PageChangedEvent(index , zoomRate ,vValue, hValue)
-            );
+            try {
+                StompClient.sendMessage("/app/pageChanged/" +
+                        GlobalVariables.SESSION_ID , new PageChangedEvent(index , zoomRate ,vValue, hValue)
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void scrolledVerticallyTo(double vValue) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/scrolledVertically/" +
-                    GlobalVariables.SESSION_ID ,vValue
-            );
+            try {
+                StompClient.sendMessage("/app/scrolledVertically/" +
+                        GlobalVariables.SESSION_ID ,vValue
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void scrolledHorizontallyTo(double hValue) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/scrolledHorizontally/" +
-                    GlobalVariables.SESSION_ID ,hValue
-            );
+            try {
+                StompClient.sendMessage("/app/scrolledHorizontally/" +
+                        GlobalVariables.SESSION_ID ,hValue
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void zoomed(int zoomRate) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/zoomed/" +
-                    GlobalVariables.SESSION_ID ,zoomRate
-            );
+            try {
+                StompClient.sendMessage("/app/zoomed/" +
+                        GlobalVariables.SESSION_ID ,zoomRate
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void rotated(int rotateRate) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/rotated/" +
-                    GlobalVariables.SESSION_ID ,rotateRate
-            );
+            try {
+                StompClient.sendMessage("/app/rotated/" +
+                        GlobalVariables.SESSION_ID ,rotateRate
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void activeToolChanged(PDFTool pdfTool) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/activeToolChanged/" +
-                    GlobalVariables.SESSION_ID ,pdfTool
-            );
+            try {
+                StompClient.sendMessage("/app/activeToolChanged/" +
+                        GlobalVariables.SESSION_ID ,pdfTool
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void penSizeChanged(PenEraserSize size) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/penSizeChanged/" +
-                    GlobalVariables.SESSION_ID ,size
-            );
+            try {
+                StompClient.sendMessage("/app/penSizeChanged/" +
+                        GlobalVariables.SESSION_ID ,size
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void penColorChanged(PenColor penColor) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/penColorChanged/" +
-                    GlobalVariables.SESSION_ID ,penColor
-            );
+            try {
+                StompClient.sendMessage("/app/penColorChanged/" +
+                        GlobalVariables.SESSION_ID ,penColor
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void eraserSizeChanged(PenEraserSize size) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/eraserSizeChanged/" +
-                    GlobalVariables.SESSION_ID ,size
-            );
+            try {
+                StompClient.sendMessage("/app/eraserSizeChanged/" +
+                        GlobalVariables.SESSION_ID ,size
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void pointed(double x, double y) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/pointed/" +
-                    GlobalVariables.SESSION_ID , new PointedEvent(x,y)
-            );
+            try {
+                StompClient.sendMessage("/app/pointed/" +
+                        GlobalVariables.SESSION_ID , new PointedEvent(x,y)
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void canvasPressed(MouseCoordinate mouseCoordinate) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/canvasPressed/" +
-                    GlobalVariables.SESSION_ID , new CanvasEvent(mouseCoordinate.x, mouseCoordinate.y)
-            );
+            try {
+                StompClient.sendMessage("/app/canvasPressed/" +
+                        GlobalVariables.SESSION_ID , new CanvasEvent(mouseCoordinate.x, mouseCoordinate.y)
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void canvasDragged(MouseCoordinate mouseCoordinate) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.PARTICIPANT_PRESENTER){
-            StompClient.sendMessage("/app/canvasDragged/" +
-                    GlobalVariables.SESSION_ID , new CanvasEvent(mouseCoordinate.x, mouseCoordinate.y)
-            );
+            try {
+                StompClient.sendMessage("/app/canvasDragged/" +
+                        GlobalVariables.SESSION_ID , new CanvasEvent(mouseCoordinate.x, mouseCoordinate.y)
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void requestControl(boolean isRequestControl) {
         if (GlobalVariables.userType == UserType.PARTICIPANT_SPECTATOR){
-            StompClient.sendMessage("/app/requestControl/" +
-                    GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID , isRequestControl
-            );
+            try {
+                StompClient.sendMessage("/app/requestControl/" +
+                        GlobalVariables.SESSION_ID + "/" + GlobalVariables.USER_ID , isRequestControl
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
     public void changePresenter(String userID) {
         if (GlobalVariables.userType == UserType.HOST_PRESENTER || GlobalVariables.userType == UserType.HOST_SPECTATOR){
-            StompClient.sendMessage("/app/presenterChanged/" +
-                    GlobalVariables.SESSION_ID , userID
-            );
+            try {
+                StompClient.sendMessage("/app/presenterChanged/" +
+                        GlobalVariables.SESSION_ID , userID
+                );
+            } catch (SessionIsNotConnectedException e) {
+                mainScreen.topSide.setStatusLabelText("Server connection is lost. Please relaunch !");
+            }
         }
     }
 
